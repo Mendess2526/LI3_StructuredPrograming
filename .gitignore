@@ -54,6 +54,8 @@ dkms.conf
 
 #vim
 *.swp
+.color_coded
+.ycm_extra_conf.py
 
 #xml
 *.xml
