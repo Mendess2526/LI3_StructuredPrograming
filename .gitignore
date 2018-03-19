@@ -63,4 +63,7 @@ dkms.conf
 #visual studio code
 .vscode/
 
+#tests
+*test.c
+
 null

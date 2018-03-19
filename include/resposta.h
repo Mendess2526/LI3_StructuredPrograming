@@ -5,12 +5,27 @@
 
 typedef struct _resposta *RESPOSTA;
 
-RESPOSTA create_resposta(int id,
+RESPOSTA resposta_create(long id,
                         Date date,
                         int score,
-                        int ownerId,
+                        long ownerId,
+                        long parentId,
                         char *ownerName);
 
-void destroy_resposta(RESPOSTA resposta);
+long resposta_get_id(RESPOSTA resposta);
+
+Date resposta_get_date(RESPOSTA resposta);
+
+int resposta_get_score(RESPOSTA resposta);
+
+long resposta_get_owner_id(RESPOSTA resposta);
+
+int resposta_get_comment_count(RESPOSTA resposta);
+
+char *resposta_get_owner_name(RESPOSTA resposta);
+
+long resposta_get_parent_id(RESPOSTA resposta);
+
+void resposta_destroy(RESPOSTA resposta);
 
 #endif /*__RESPOSTA_H__*/
