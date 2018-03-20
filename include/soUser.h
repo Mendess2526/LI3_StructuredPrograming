@@ -1,10 +1,13 @@
 #ifndef __SO_USER_H__
 #define __SO_USER_H__
 
+#include "post.h"
+
 typedef struct _so_user *SO_USER;
 
 SO_USER so_user_create(long id,
                         int reputation,
+                        char *name,
                         char *bio);
 
 SO_USER so_user_create_empty(long id);
@@ -12,6 +15,8 @@ SO_USER so_user_create_empty(long id);
 long so_user_get_id(SO_USER user);
 
 int so_user_get_reputation(SO_USER user);
+
+char *so_user_get_name(SO_USER user);
 
 char *so_user_get_bio(SO_USER user);
 

@@ -31,6 +31,8 @@ char **question_get_tags(QUESTION question);
 
 int question_get_answer_count(QUESTION question);
 
+int question_get_favorite_count(QUESTION question);
+
 void question_destroy(gpointer question);
 
 void question_add_answer(QUESTION question, ANSWER answer);
