@@ -31,12 +31,12 @@ char **question_get_tags(QUESTION question);
 
 int question_get_answer_count(QUESTION question);
 
-int question_get_favorite_count(QUESTION question);
+void question_destroy(QUESTION question);
 
-void question_destroy(gpointer question);
+void question_destroy_generic(gpointer question);
 
 void question_add_answer(QUESTION question, ANSWER answer);
-//should free memory
+//should free newP
 QUESTION question_merge(QUESTION oldP, QUESTION newP);
 
 #endif /*__QUESTION_H__*/

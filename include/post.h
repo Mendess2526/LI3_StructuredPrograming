@@ -1,6 +1,8 @@
 #ifndef __POST_H__
 #define __POST_H__
 
+#include "date.h"
+
 typedef struct _post *POST;
 
 long post_get_id(POST post);
@@ -12,6 +14,8 @@ int post_get_score(POST post);
 long post_get_owner_id(POST post);
 
 int post_get_comment_count(POST post);
+
+int post_get_type(POST post);
 
 char *post_get_owner_display_name(POST post);
 

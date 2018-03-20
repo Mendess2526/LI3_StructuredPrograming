@@ -30,4 +30,8 @@ long answer_get_parent_id(ANSWER answer);
 
 void answer_destroy(ANSWER answer);
 
+void answer_destroy_generic(gpointer answer);
+
+void answer_add_favorite(ANSWER answer);
+
 #endif /*__ANSWER_H__*/
