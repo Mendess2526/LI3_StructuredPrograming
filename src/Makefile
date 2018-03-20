@@ -9,7 +9,7 @@ CFLAGS = -Wall -std=c11 `pkg-config --cflags libxml-2.0` `pkg-config --cflags gl
 
 WARNINGS= -Wextra -pedantic
 MEMLEAK= -ggdb -fsanitize=address -fno-ommit-frame-pointer -fsanitize=undifined
-DEBUG= -g -O0 
+DEBUG= -g -O0
 OPTIMUS= -march=native -O3 -pipe -D_GNU_SOURCE
 
 DEPS=$(IDIR)/$(wildcard *.h)

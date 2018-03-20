@@ -3,12 +3,12 @@
 
 #include <glib.h>
 
-#include "pergunta.h"
-#include "resposta.h"
+#include "question.h"
+#include "answer.h"
 #include "soUser.h"
 #include "pair.h"
 
-typedef GHashTable *PERGUNTAS;
+typedef GHashTable *QUESTIONS;
 typedef GHashTable *SO_USERS;
 
 typedef struct _tcd_community *TAD_community;
@@ -17,9 +17,9 @@ TAD_community community_create();
 
 void community_destroy(TAD_community com);
 
-void community_add_pergunta(TAD_community com, PERGUNTA pergunta);
+void community_add_question(TAD_community com, QUESTION question);
 
-void community_add_resposta(TAD_community com, RESPOSTA resposta);
+void community_add_answer(TAD_community com, ANSWER answer);
 
 void community_add_user(TAD_community com, SO_USER user);
 

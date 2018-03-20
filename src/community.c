@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 typedef struct _tcd_community{
-    PERGUNTAS perguntas;
+    QUESTIONS questions;
     SO_USERS users;
 } TCD_community;
 
@@ -29,22 +29,22 @@ static void updateUserPosts(SO_USERS users, POST post){
 
 TAD_community community_create(){
     TAD_community com = (TAD_community) malloc(sizeof(TCD_community));
-    com->perguntas    = g_hash_table_new_full(g_int64_hash,g_int64_equal,NULL,pergunta_destroy);
+    com->questions    = g_hash_table_new_full(g_int64_hash,g_int64_equal,NULL,question_destroy);
     com->users        = g_hash_table_new_full(g_int64_hash,g_int64_equal,NULL,so_user_destroy);
     return com;
 }
 
 void community_destroy(TAD_community com){
-    g_hash_table_destroy(com->perguntas);
+    g_hash_table_destroy(com->questions);
     g_hash_table_destroy(com->users);
     free(com);
 }
 
-void community_add_pergunta(TAD_community com, PERGUNTA pergunta){
-    long id = pergunta_get_id(pergunta);
-    //BEGIN merge pergunta in hash table
+void community_add_question(TAD_community com, QUESTION question){
+    long id = question_get_id(question);
+    //BEGIN merge question in hash table
     long key = 0;
-    PERGUNTA value = NULL;
+    QUESTION value = NULL;
     gboolean exists = g_hash_table_lookup_extended(
             com->users,
             (gconstpointer) &id,
@@ -52,30 +52,30 @@ void community_add_pergunta(TAD_community com, PERGUNTA pergunta){
             (gpointer) &value
     );
     if(exists && value != NULL){
-        pergunta = pergunta_merge(pergunta,value);
+        question = question_merge(question,value);
     }
-    //END merge pergunta in hash table
-    g_hash_table_insert(com->perguntas,(gpointer) &id,pergunta);
-    updateUserPosts(com->users, (POST) pergunta);
+    //END merge question in hash table
+    g_hash_table_insert(com->questions,(gpointer) &id,question);
+    updateUserPosts(com->users, (POST) question);
 }
 
-void community_add_resposta(TAD_community com, RESPOSTA resposta){
+void community_add_answer(TAD_community com, ANSWER answer){
     long key = 0L;
-    PERGUNTA pergunta = NULL;
-    long parentId = resposta_get_parent_id(resposta);
+    QUESTION question = NULL;
+    long parentId = answer_get_parent_id(answer);
     gboolean found = g_hash_table_lookup_extended(
-        com->perguntas,
+        com->questions,
         (gconstpointer) &parentId,
         (gpointer) &key,
-        (gpointer) &pergunta
+        (gpointer) &question
     );
-    if(!found || !pergunta){
-        long ownerId = resposta_get_owner_id(resposta);
-        pergunta = pergunta_create_empty(ownerId);
-        community_add_pergunta(com,pergunta);
+    if(!found || !question){
+        long ownerId = answer_get_owner_id(answer);
+        question = question_create_empty(ownerId);
+        community_add_question(com,question);
     }
-    pergunta_add_resposta(pergunta,resposta);
-    updateUserPosts(com->users, (POST) resposta);
+    question_add_answer(question,answer);
+    updateUserPosts(com->users, (POST) answer);
 }
 
 void community_add_user(TAD_community com, SO_USER user){
