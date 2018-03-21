@@ -2,6 +2,7 @@
 #define __ANSWER_H__
 
 #include "date.h"
+#include <glib.h>
 
 typedef struct _answer *ANSWER;
 

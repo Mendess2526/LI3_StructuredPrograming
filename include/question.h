@@ -3,6 +3,7 @@
 
 #include "date.h"
 #include "answer.h"
+#include <glib.h>
 
 typedef struct _question *QUESTION;
 

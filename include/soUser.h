@@ -2,7 +2,7 @@
 #define __SO_USER_H__
 
 #include "post.h"
-
+#include <glib.h>
 typedef struct _so_user *SO_USER;
 
 SO_USER so_user_create(long id,
