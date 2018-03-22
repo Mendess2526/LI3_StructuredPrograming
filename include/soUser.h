@@ -3,12 +3,15 @@
 
 #include "post.h"
 #include <glib.h>
+
+#include <libxml/parserInternals.h>
+
 typedef struct _so_user *SO_USER;
 
 SO_USER so_user_create(long id,
                         int reputation,
-                        char *name,
-                        char *bio);
+                        xmlChar *name,
+                        xmlChar *bio);
 
 SO_USER so_user_create_empty(long id);
 
@@ -16,9 +19,9 @@ long so_user_get_id(SO_USER user);
 
 int so_user_get_reputation(SO_USER user);
 
-char *so_user_get_name(SO_USER user);
+xmlChar *so_user_get_name(SO_USER user);
 
-char *so_user_get_bio(SO_USER user);
+xmlChar *so_user_get_bio(SO_USER user);
 
 void so_user_add_post(SO_USER user, POST post);
 

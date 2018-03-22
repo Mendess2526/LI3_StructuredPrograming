@@ -5,16 +5,18 @@
 #include "answer.h"
 #include <glib.h>
 
+#include <libxml/parserInternals.h>
+
 typedef struct _question *QUESTION;
 
 QUESTION question_create(long id,
                         Date date,
                         int score,
                         long ownerId,
-                        char *title,
-                        char *tags,
+                        xmlChar *title,
+                        xmlChar *tags,
                         int answerCount,
-                        char *ownerName);
+                        xmlChar *ownerName);
 
 QUESTION question_create_empty(long id);
 
@@ -26,9 +28,9 @@ int question_get_score(QUESTION question);
 
 long question_get_owner_id(QUESTION question);
 
-char *question_get_title(QUESTION question);
+xmlChar *question_get_title(QUESTION question);
 
-char **question_get_tags(QUESTION question);
+xmlChar **question_get_tags(QUESTION question);
 
 int question_get_answer_count(QUESTION question);
 

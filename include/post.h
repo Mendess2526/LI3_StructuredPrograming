@@ -2,6 +2,9 @@
 #define __POST_H__
 
 #include "date.h"
+#include <glib.h>
+
+#include <libxml/parserInternals.h>
 
 typedef struct _post *POST;
 
@@ -17,6 +20,6 @@ int post_get_comment_count(POST post);
 
 int post_get_type(POST post);
 
-char *post_get_owner_display_name(POST post);
+xmlChar *post_get_owner_display_name(POST post);
 
 #endif /*__POST_H__*/
