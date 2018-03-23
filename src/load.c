@@ -2,7 +2,6 @@
 #include "date.h"
 #include "question.h"
 #include "answer.h"
-#include "post.h"
 
 #include <string.h>
 
@@ -51,7 +50,7 @@ static inline Date parseDate(const xmlChar *dateStr){
     sscanf((char *) dateStr,"%d-%d-%dT",&year,&month,&day);
     return createDate(day,month,year);
 }
-//TODO get post type
+
 void start_post_element(void *user_data, const xmlChar *name, const xmlChar **attrs){
     if(name[1] == 'p') return;
     TAD_community com = (TAD_community) user_data;
@@ -109,13 +108,13 @@ void start_post_element(void *user_data, const xmlChar *name, const xmlChar **at
         }
     }
     if(postType == 1){
-        community_add_post(
+        community_add_question(
                 com,
-                (POST) question_create(id,date,score,owner_id,title,tags,anwser_count,owner_name));
+                question_create(id,date,score,owner_id,title,tags,anwser_count,owner_name));
     }else if(postType == 2){
-        community_add_post(
+        community_add_answer(
                 com,
-                (POST) answer_create(id,date,score,owner_id,parentId,owner_name));
+                answer_create(id,date,score,owner_id,parentId,owner_name/*,comment_count*/));
     }
 }
 
@@ -145,7 +144,7 @@ void start_user_element(void *user_data, const xmlChar *name, const xmlChar **at
             default: break;
         }
     }
-    community_add_user(com,so_user_create(id,reputation,name,bio));
+    community_add_user(com,so_user_create(id,reputation,displayName,bio));
 }
 
 void start_vote_element(void *user_data, const xmlChar *name, const xmlChar **attrs){
@@ -183,7 +182,8 @@ TAD_community load(TAD_community com, char *dump_path){
     int n;
     char xmlPath[strlen(dump_path)+9];
     // sax handler
-    xmlSAXHandler saxH = {NULL};
+    xmlSAXHandler saxH;
+    memset(&saxH,0,sizeof(xmlSAXHandler));
     saxH.error = error_handler;
 
     // parse users

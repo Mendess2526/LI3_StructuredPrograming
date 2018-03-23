@@ -4,18 +4,20 @@
 
 #include <stdlib.h>
 
-struct _tcd_community{
+struct TCD_community{
     QUESTIONS questions;
     ANSWERS answers;
     SO_USERS users;
 };
 
-guint mySuperGoodHash(gconstpointer key){
-    return ((guint) (*((long *)key)))+2;
+long *newId(long val){
+    long *id = (long *) malloc(sizeof(long));
+    *id = val;
+    return id;
 }
 
-gint mySuperGoodEqual(gconstpointer a, gconstpointer b){
-    return mySuperGoodHash(a) == mySuperGoodHash(b);
+void free_long(void *id){
+    free((long *)id);
 }
 
 static void updateUserPosts(SO_USERS users, POST post){
@@ -36,8 +38,8 @@ static void updateUserPosts(SO_USERS users, POST post){
     so_user_add_post(user,post);
 }
 
-static void community_add_question(TAD_community com, QUESTION question){
-    long id = question_get_id(question);
+void community_add_question(TAD_community com, QUESTION question){
+    long *id = newId(question_get_id(question));
     //BEGIN merge post in hash table
     long key = 0;
     QUESTION newQuestion = NULL;
@@ -55,8 +57,8 @@ static void community_add_question(TAD_community com, QUESTION question){
     updateUserPosts(com->users, (POST) question);
 }
 
-static void community_add_answer(TAD_community com, ANSWER answer){
-    long id = answer_get_id(answer);
+void community_add_answer(TAD_community com, ANSWER answer){
+    long *id = newId(answer_get_id(answer));
     g_hash_table_insert(com->answers, (gpointer) &id, answer);
     long key = 0L;
     QUESTION question = NULL;
@@ -77,17 +79,20 @@ static void community_add_answer(TAD_community com, ANSWER answer){
 }
 //TODO me no like this
 TAD_community init(){
+    long *id = newId(4L);
+    printf("print long: %ld\n",*id);
+    free_long(id);
     return community_create();
 }
 
 TAD_community community_create(){
-    TAD_community com = (TAD_community) malloc(sizeof(struct _tcd_community));
+    TAD_community com = (TAD_community) malloc(sizeof(struct TCD_community));
     com->questions = g_hash_table_new_full(
-            mySuperGoodHash, mySuperGoodEqual,NULL,question_destroy_generic);
+            g_int64_hash, g_int64_equal,free_long,question_destroy_generic);
     com->answers   = g_hash_table_new_full(
-            mySuperGoodHash, mySuperGoodEqual,NULL,answer_destroy_generic);
+            g_int64_hash, g_int64_equal,free_long,answer_destroy_generic);
     com->users     = g_hash_table_new_full(
-            g_int64_hash,g_int64_equal,NULL,so_user_destroy_generic);
+            g_int64_hash, g_int64_equal,free_long,so_user_destroy_generic);
     return com;
 }
 
@@ -98,16 +103,8 @@ void community_destroy(TAD_community com){
     free(com);
 }
 
-void community_add_post(TAD_community com, POST post){
-    if(post_get_type(post) == 1){
-        community_add_question(com,(QUESTION) post);
-    }else{
-        community_add_answer(com,(ANSWER) post);
-    }
-}
-
 void community_add_user(TAD_community com, SO_USER user){
-    long id = so_user_get_id(user);
+    long *id = newId(so_user_get_id(user));
     //BEGIN merge user in hash table
     long key = 0;
     SO_USER value = NULL;
@@ -147,4 +144,8 @@ void community_add_favorite(TAD_community com, long id){
     if(exists && answer){
         answer_add_favorite(answer);
     }
+}
+
+SO_USER community_get_user(TAD_community com, long id){
+    return g_hash_table_lookup(com->users,(gconstpointer) &id);
 }
