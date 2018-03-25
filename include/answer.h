@@ -13,7 +13,8 @@ ANSWER answer_create(long id,
                         int score,
                         long ownerId,
                         long parentId,
-                        xmlChar *ownerName);
+                        xmlChar *ownerName,
+                        int comment_count);
 
 long answer_get_id(ANSWER answer);
 

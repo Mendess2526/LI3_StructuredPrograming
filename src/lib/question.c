@@ -8,8 +8,7 @@ struct _question{
     Date date;
     xmlChar *ownerName;
     xmlChar *title;
-    xmlChar **tags;
-    struct _post;
+    xmlChar *tags;
 };
 
 QUESTION question_create(long id, Date date, int score, long ownerId,
@@ -29,6 +28,13 @@ QUESTION question_create(long id, Date date, int score, long ownerId,
 QUESTION question_create_empty(long id){
     QUESTION q = malloc(sizeof(struct _question));
     q->id=id;
+    q->date = NULL;
+    q->score = -1;
+    q->owner_id = -2;
+    q->title = NULL;
+    q->tags = NULL;
+    q->answer_count = -1;
+    q->ownerName = NULL;
     return q;
 }
 
@@ -52,9 +58,9 @@ xmlChar *question_get_title(QUESTION question){
     return xmlStrdup(question->title);
 }
 
-//char **question_get_tags(QUESTION question){
-//    return question->tags;
-//}
+char *question_get_tags(QUESTION question){
+    return NULL;
+}
 
 int question_get_answer_count(QUESTION question){
     return question->answer_count;

@@ -9,14 +9,14 @@ struct _answer{
     long owner_id;
     Date date;
     xmlChar *owner_name;
-    struct _post;
 };
 
-ANSWER answer_create(long id, Date date, int score, long ownerId, long parentId, xmlChar *ownerName){
+ANSWER answer_create(long id, Date date, int score, long ownerId, long parentId, xmlChar *ownerName, int comment_count){
     ANSWER answer = malloc(sizeof(struct _answer)); 
     answer->id = id;
     answer->date = date;
     answer->score = score;
+    anser->comment_count = comment_count;
     answer->owner_id = ownerId;
     answer->parent_id = parentId;
     answer->owner_name = xmlStrdup(ownerName);

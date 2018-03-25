@@ -5,7 +5,6 @@ struct _so_user{
     long id;
     xmlChar *name;
     xmlChar *bio;
-    struct _post;
 };
 
 SO_USER so_user_create(long id,int reputation, xmlChar *name, xmlChar *bio){
@@ -20,6 +19,9 @@ SO_USER so_user_create(long id,int reputation, xmlChar *name, xmlChar *bio){
 SO_USER so_user_create_empty(long id){
     SO_USER user = malloc (sizeof(struct _so_user));
     user->id=id;
+    user->reputation = -1;
+    user->name = NULL;    
+    user->bio = NULL;
     return user;
 }
 
@@ -47,7 +49,6 @@ void so_user_destroy(SO_USER user){
     free(user);
 }
 
-//falta
 void so_user_destroy_generic(gpointer user){    
     so_user_destroy((SO_USER) user);
 }

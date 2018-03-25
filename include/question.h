@@ -30,7 +30,7 @@ long question_get_owner_id(QUESTION question);
 
 xmlChar *question_get_title(QUESTION question);
 
-xmlChar **question_get_tags(QUESTION question);
+xmlChar *question_get_tags(QUESTION question);
 
 int question_get_answer_count(QUESTION question);
 
