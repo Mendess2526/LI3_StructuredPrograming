@@ -4,90 +4,59 @@
 
 #include <stdlib.h>
 
-struct _tcd_community{
+struct TCD_community{
     QUESTIONS questions;
     ANSWERS answers;
     SO_USERS users;
 };
 
-guint mySuperGoodHash(gconstpointer key){
-    return ((guint) (*((long *)key)))+2;
+void printAnswer(gpointer key, gpointer value, gpointer user_data);
+void printQuestion(gpointer key, gpointer value, gpointer user_data);
+void printUser(gpointer key, gpointer value, gpointer user_data);
+
+static inline gint64 *newId(long val){
+    gint64 *id = g_new(gint64, 1);
+    *id = val;
+    return id;
 }
 
-gint mySuperGoodEqual(gconstpointer a, gconstpointer b){
-    return mySuperGoodHash(a) == mySuperGoodHash(b);
-}
-
-static void updateUserPosts(SO_USERS users, POST post){
-    long id = post_get_id(post);
-    long key = 0;
-    SO_USER user = NULL;
-    gboolean found = g_hash_table_lookup_extended(
-            users,
-            (gconstpointer) &id,
-            (gpointer) &key,
-            (gpointer) &user
-    );
-    if(!found || !user){
-        long ownerId = post_get_owner_id(post);
-        SO_USER user = so_user_create(ownerId,-1,NULL,NULL);
-        g_hash_table_insert(users,(gpointer) &ownerId,user);
+static inline void updateUserPosts(SO_USERS users, long ownerId){
+    SO_USER user = g_hash_table_lookup(users, &ownerId);
+    if(!user){
+        gint64 *id = newId(ownerId);
+        user = so_user_create(*id, -1, NULL, NULL);
+        g_hash_table_insert(users, (gpointer) id, user);
     }
-    so_user_add_post(user,post);
+    so_user_add_post(user,NULL);
 }
 
-static void community_add_question(TAD_community com, QUESTION question){
-    long id = question_get_id(question);
-    //BEGIN merge post in hash table
-    long key = 0;
-    QUESTION newQuestion = NULL;
-    gboolean exists = g_hash_table_lookup_extended(
-            com->users,
-            (gconstpointer) &id,
-            (gpointer) &key,
-            (gpointer) &newQuestion
-    );
-    if(exists && question != NULL){
-        question = question_merge(question,newQuestion);
-    }
-    //END merge question in hash table
-    g_hash_table_insert(com->questions,(gpointer) &id,question);
-    updateUserPosts(com->users, (POST) question);
-}
-
-static void community_add_answer(TAD_community com, ANSWER answer){
-    long id = answer_get_id(answer);
-    g_hash_table_insert(com->answers, (gpointer) &id, answer);
-    long key = 0L;
-    QUESTION question = NULL;
+static inline void updateQuestionsAnswers(TAD_community com, ANSWER answer){
     long parentId = answer_get_parent_id(answer);
-    gboolean found = g_hash_table_lookup_extended(
-        com->questions,
-        (gconstpointer) &parentId,
-        (gpointer) &key,
-        (gpointer) &question
-    );
-    if(!found || !question){
-        long ownerId = answer_get_owner_id(answer);
-        question = question_create_empty(ownerId);
-        community_add_question(com,question);
+    QUESTION question = g_hash_table_lookup(com->questions, (gconstpointer) &parentId);
+    if(!question){
+        question = question_create_empty(parentId);
+        gint64 *id = newId(parentId);
+        g_hash_table_insert(com->questions, (gpointer) id, question);
     }
     question_add_answer(question,answer);
-    updateUserPosts(com->users, (POST) answer);
 }
+
 //TODO me no like this
 TAD_community init(){
     return community_create();
 }
 
 TAD_community community_create(){
-    TAD_community com = (TAD_community) malloc(sizeof(struct _tcd_community));
+    TAD_community com = (TAD_community) malloc(sizeof(struct TCD_community));
     com->questions = g_hash_table_new_full(
-            mySuperGoodHash, mySuperGoodEqual,NULL,question_destroy_generic);
+            g_int64_hash, g_int64_equal,g_free,question_destroy_generic);
+
     com->answers   = g_hash_table_new_full(
-            mySuperGoodHash, mySuperGoodEqual,NULL,answer_destroy_generic);
+            g_int64_hash, g_int64_equal,g_free,answer_destroy_generic);
+
     com->users     = g_hash_table_new_full(
-            g_int64_hash,g_int64_equal,NULL,so_user_destroy_generic);
+            g_int64_hash, g_int64_equal,g_free,so_user_destroy_generic);
+
     return com;
 }
 
@@ -98,53 +67,117 @@ void community_destroy(TAD_community com){
     free(com);
 }
 
-void community_add_post(TAD_community com, POST post){
-    if(post_get_type(post) == 1){
-        community_add_question(com,(QUESTION) post);
-    }else{
-        community_add_answer(com,(ANSWER) post);
-    }
+void community_add_question(TAD_community com, QUESTION question){
+    gint64 *id = newId(question_get_id(question));
+
+    QUESTION oldQuestion = g_hash_table_lookup(com->users,(gconstpointer) &id);
+    if(oldQuestion)
+        question = question_merge(question,oldQuestion);
+
+    g_hash_table_insert(com->questions, (gpointer) id, question);
+
+    updateUserPosts(com->users, question_get_owner_id(question));
+}
+
+void community_add_answer(TAD_community com, ANSWER answer){
+    gint64 *id = newId(answer_get_id(answer));
+
+    g_hash_table_insert(com->answers, (gpointer) id, answer);
+
+    updateQuestionsAnswers(com,answer);
+    updateUserPosts(com->users, answer_get_owner_id(answer));
 }
 
 void community_add_user(TAD_community com, SO_USER user){
-    long id = so_user_get_id(user);
-    //BEGIN merge user in hash table
-    long key = 0;
-    SO_USER value = NULL;
-    gboolean exists = g_hash_table_lookup_extended(
-            com->users,
-            (gconstpointer) &id,
-            (gpointer) &key,
-            (gpointer) &value
-    );
-    if(exists && value != NULL){
-        user = so_user_merge(user,value);
-    }
-    //END merge user in hash table
-    g_hash_table_insert(com->users, (gpointer) &id, user);
+    gint64 *id = newId(so_user_get_id(user));
+
+    SO_USER oldUser = g_hash_table_lookup(com->users,(gconstpointer) &id);
+    if(oldUser)
+        user = so_user_merge(user,oldUser);
+
+    g_hash_table_insert(com->users, (gpointer) id, user);
 }
 
-//TODO think this through
 void community_add_favorite(TAD_community com, long id){
-    long key = -2;
-    QUESTION question = NULL;
-    gboolean exists = g_hash_table_lookup_extended(
-            com->questions,
-            (gconstpointer) &id,
-            (gpointer) &key,
-            (gpointer) &question
-    );
-    if(exists && question){
-        return;
-    }
-    ANSWER answer = NULL;
-    exists = g_hash_table_lookup_extended(
-            com->questions,
-            (gconstpointer) &id,
-            (gpointer) &key,
-            (gpointer) &answer
-    );
-    if(exists && answer){
-        answer_add_favorite(answer);
-    }
+    QUESTION question = g_hash_table_lookup(com->questions, (gconstpointer) &id);
+    if(question) return;
+
+    ANSWER answer     = g_hash_table_lookup(com->answers  , (gconstpointer) &id);
+    if(answer) answer_add_favorite(answer);
+}
+
+SO_USER community_get_user(TAD_community com, long id){
+    return g_hash_table_lookup(com->users,(gconstpointer) &id);
+}
+
+void printUser(gpointer key, gpointer value, gpointer user_data){
+    long id = so_user_get_id((SO_USER) value);
+    int reputation = so_user_get_reputation((SO_USER) value);
+    xmlChar *name = so_user_get_name((SO_USER) value);
+    xmlChar *bio = so_user_get_bio((SO_USER) value);
+    printf((char *)user_data, *((gint64 *)key), id, reputation, name, bio);
+}
+
+void printUsers(TAD_community com){
+    g_hash_table_foreach(com->users, printUser,
+            "Key{%08ld} User    {id:%3ld, reputation:%4d, name:%.5s, bio:%.5s}\n");
+}
+
+void printQuestion(gpointer key, gpointer value, gpointer user_data){
+    QUESTION question = (QUESTION) value;
+    if(question == NULL){ printf("NULL VALUE: Key:%ld\n",*((gint64 *) key)); return;}
+    long id = question_get_id(question);
+    Date date = question_get_date(question);
+    xmlChar *title = question_get_title(question);
+    int score = question_get_score(question);
+    int answerCount = question_get_answer_count(question);
+    long ownerId = question_get_owner_id(question);
+    char dateStr[11];
+    if(date)
+        sprintf(dateStr, "%02d:%02d:%4d",
+            get_day(date), get_month(date), get_year(date));
+    else
+        sprintf(dateStr,"(null)");
+    printf((char *) user_data,
+            *((long *) key), id, dateStr, title, score, answerCount, ownerId, NULL);
+}
+
+void printQuestions(TAD_community com){
+    g_hash_table_foreach(com->questions, printQuestion,
+            "Key{%08ld} Question{id:%3ld, Date:%s, Title:%.5s, Score:%4d, AnswerCount:%4d, OwnerId:%3ld, OwnerName:%.5s}\n");
+}
+
+void printAnswer(gpointer key, gpointer value, gpointer user_data){
+    ANSWER answer = (ANSWER) value;
+    if(answer == NULL){ printf("NULL VALUE: Key:%ld\n",*((gint64 *) key)); return;}
+    long id = answer_get_id(answer);
+    Date date = answer_get_date(answer);
+    int score = answer_get_score(answer);
+    long ownerId = answer_get_owner_id(answer);
+    char dateStr[11];
+    long parentId = answer_get_parent_id(answer);
+    if(date)
+        sprintf(dateStr, "%02d:%02d:%04d",
+            get_day(date), get_month(date), get_year(date));
+    else
+        sprintf(dateStr,"(null)");
+    printf((char *) user_data,
+            *((long *) key), id, dateStr, score, parentId, ownerId, NULL);
+}
+
+void printAnswers(TAD_community com){
+    g_hash_table_foreach(com->answers, printAnswer,
+            "Key{%08ld} Answer  {id:%3ld, Date:%s, Score:%4d, ParentId:%3ld, OwnerId:%3ld, OwnerName:%.5s}\n");
+}
+
+void pFavCountA(gpointer key, gpointer value, gpointer user_data){
+    ANSWER answer = (ANSWER) value;
+    if(answer == NULL){ printf("NULL VALUE: Key:%ld\n",*((gint64 *) key)); return;}
+    long id = answer_get_id(answer);
+    int favC = answer_get_favorite_count(answer);
+    printf((char *) user_data, id, favC);
+}
+void printFavouritesCount(TAD_community com){
+    printf("ANSWERS FAVOURITE COUNT\n");
+    g_hash_table_foreach(com->answers  , pFavCountA, "Id:%ld, FCount:%d\n");
 }
