@@ -84,7 +84,7 @@ void start_post_element(void *user_data, const xmlChar *name, const xmlChar **at
     }else if(postType == 2){
         community_add_answer(
                 com,
-                answer_create(id,date,score,owner_id,parentId,owner_name/*,comment_count*/));
+                answer_create(id,date,score,owner_id,parentId,owner_name,comment_count));
     }
 }
 
