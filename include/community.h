@@ -29,4 +29,12 @@ void community_add_favorite(TAD_community com, long id);
 
 SO_USER community_get_user(TAD_community com, long id);
 
+void printUsers(TAD_community com);
+
+void printQuestions(TAD_community com);
+
+void printAnswers(TAD_community com);
+
+void printFavouritesCount(TAD_community com);
+
 #endif /*__COMMUNITY_H__*/

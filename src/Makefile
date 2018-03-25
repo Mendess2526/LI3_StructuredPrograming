@@ -5,7 +5,7 @@ OLDIR=$(ODIR)/lib
 EXE=program
 
 CC=gcc
-CFLAGS = -Wall -std=c11 -g `pkg-config --cflags libxml-2.0` `pkg-config --cflags glib-2.0` -I$(IDIR)
+CFLAGS = -Wall -std=c11 `pkg-config --cflags libxml-2.0` `pkg-config --cflags glib-2.0` -I$(IDIR)
 
 WARNINGS= -Wextra -pedantic
 MEMLEAK= -ggdb -fsanitize=address -fno-ommit-frame-pointer -fsanitize=undifined

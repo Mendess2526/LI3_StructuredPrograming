@@ -2,12 +2,11 @@
 #include <stdio.h>
 #include "interface.h"
 #include "pair.h"
+#include "community.h"
 
 int main(){
-    Date d = createDate(1,2,2017);
-    printf("Dia: %i\n", get_day(d));
     TAD_community com = init();
-    com = load(com,"/home/mendes/dump_exemplo/small/");
+    com = load(com,"/home/mendes/dump_exemplo/askubuntu/");
     STR_pair strPair = info_from_post(com,1);
     if(strPair) free_str_pair(strPair);
     top_most_active(com, 1);
