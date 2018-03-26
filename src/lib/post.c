@@ -1,10 +1,7 @@
 #include "post.h"
 
-#define TYPE_QUESTION 1
-#define TYPE_ANSWER   2
-
 struct _post{
-    int type;
+    enum POST_TYPE type;
     void * c;
 };
 
@@ -16,11 +13,11 @@ POST post_create(int type, void *c){
 }
 
 int isQuestion(POST post){
-    return post->type == TYPE_QUESTION;
+    return post->type == QUESTION_T;
 }
 
 int isAnswer(POST post){
-    return post->type == TYPE_ANSWER;
+    return post->type == ANSWER_T;
 }
 
 QUESTION post_get_question(POST post){

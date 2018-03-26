@@ -10,6 +10,11 @@
 
 typedef struct _post *POST;
 
+enum POST_TYPE{
+    QUESTION_T,
+    ANSWER_T
+};
+
 int isQuestion(POST post);
 
 int isAnswer(POST post);
