@@ -146,6 +146,14 @@ void community_add_favorite(TAD_community com, long id){
     if(answer) answer_add_favorite(answer);
 }
 
+QUESTION community_get_question(TAD_community com, long id){
+    return g_hash_table_lookup(com->questions, (gconstpointer) &id);
+}
+
+ANSWER community_get_answer(TAD_community com, long id){
+    return g_hash_table_lookup(com->answers, (gconstpointer) &id);
+}
+
 SO_USER community_get_user(TAD_community com, long id){
     return g_hash_table_lookup(com->users,(gconstpointer) &id);
 }
