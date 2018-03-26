@@ -1,7 +1,14 @@
 #include "calendario.h"
 
-typedef struct _dia DIA;
+typedef GSList * POSTS;
 
+typedef struct _hora{
+    POSTS posts;
+}HORA;
+
+typedef struct _dia{
+    HORA *horas;
+}DIA;
 
 typedef struct _mes{
     DIA *dias; 
