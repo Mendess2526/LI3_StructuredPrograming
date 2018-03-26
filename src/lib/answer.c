@@ -16,7 +16,7 @@ ANSWER answer_create(long id, Date date, int score, long ownerId, long parentId,
     answer->id = id;
     answer->date = date;
     answer->score = score;
-    anser->comment_count = comment_count;
+    answer->comment_count = comment_count;
     answer->owner_id = ownerId;
     answer->parent_id = parentId;
     answer->owner_name = xmlStrdup(ownerName);

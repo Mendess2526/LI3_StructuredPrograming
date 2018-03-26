@@ -58,7 +58,7 @@ xmlChar *question_get_title(QUESTION question){
     return xmlStrdup(question->title);
 }
 
-char *question_get_tags(QUESTION question){
+xmlChar *question_get_tags(QUESTION question){
     return NULL;
 }
 
