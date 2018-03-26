@@ -4,6 +4,8 @@
 #include "date.h"
 #include <glib.h>
 
+#include <libxml/parserInternals.h>
+
 typedef struct _answer *ANSWER;
 
 ANSWER answer_create(long id,
@@ -11,7 +13,8 @@ ANSWER answer_create(long id,
                         int score,
                         long ownerId,
                         long parentId,
-                        char *ownerName);
+                        xmlChar *ownerName,
+                        int comment_count);
 
 long answer_get_id(ANSWER answer);
 
@@ -23,7 +26,7 @@ long answer_get_owner_id(ANSWER answer);
 
 int answer_get_comment_count(ANSWER answer);
 
-char *answer_get_owner_name(ANSWER answer);
+xmlChar *answer_get_owner_name(ANSWER answer);
 
 int answer_get_favorite_count(ANSWER answer);
 
