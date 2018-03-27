@@ -143,7 +143,7 @@ void printQuestion(gpointer key, gpointer value, gpointer user_data){
     QUESTION question = (QUESTION) value;
     if(question == NULL){ printf("NULL VALUE: Key:%ld\n",*((gint64 *) key)); return;}
     long id = question_get_id(question);
-    Date date = question_get_date(question);
+    DATETIME date = question_get_date(question);
     xmlChar *title = question_get_title(question);
     int score = question_get_score(question);
     int answerCount = question_get_answer_count(question);
@@ -151,7 +151,7 @@ void printQuestion(gpointer key, gpointer value, gpointer user_data){
     char dateStr[11];
     if(date)
         sprintf(dateStr, "%02d:%02d:%4d",
-            get_day(date), get_month(date), get_year(date));
+            dateTime_get_dia(date), dateTime_get_mes(date), dateTime_get_ano(date));
     else
         sprintf(dateStr,"(null)");
     printf((char *) user_data,
@@ -167,14 +167,14 @@ void printAnswer(gpointer key, gpointer value, gpointer user_data){
     ANSWER answer = (ANSWER) value;
     if(answer == NULL){ printf("NULL VALUE: Key:%ld\n",*((gint64 *) key)); return;}
     long id = answer_get_id(answer);
-    Date date = answer_get_date(answer);
+    DATETIME date = answer_get_date(answer);
     int score = answer_get_score(answer);
     long ownerId = answer_get_owner_id(answer);
     char dateStr[11];
     long parentId = answer_get_parent_id(answer);
     if(date)
         sprintf(dateStr, "%02d:%02d:%04d",
-            get_day(date), get_month(date), get_year(date));
+            dateTime_get_dia(date), dateTime_get_mes(date), dateTime_get_ano(date));
     else
         sprintf(dateStr,"(null)");
     printf((char *) user_data,
