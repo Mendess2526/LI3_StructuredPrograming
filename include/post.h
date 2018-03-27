@@ -1,7 +1,7 @@
 #ifndef __POST_H__
 #define __POST_H__
 
-#include "date.h"
+#include "dateTime.h"
 #include "question.h"
 #include "answer.h"
 #include <glib.h>
@@ -15,12 +15,22 @@ enum POST_TYPE{
     ANSWER_T
 };
 
-int isQuestion(POST post);
+int post_is_question(POST post);
 
-int isAnswer(POST post);
+int post_is_answer(POST post);
 
 QUESTION post_get_question(POST post);
 
 ANSWER post_get_answer(POST post);
+
+long post_get_id(POST post);
+
+DATETIME post_get_date(POST post);
+
+int post_get_score(POST post);
+
+long post_get_owner_id(POST post);
+
+xmlChar *post_get_owner_name(POST post);
 
 #endif /*__POST_H__*/
