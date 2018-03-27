@@ -1,7 +1,7 @@
 #include "load.h"
-#include "date.h"
 #include "question.h"
 #include "answer.h"
+#include "dateTime.h"
 
 #include <string.h>
 
@@ -19,7 +19,7 @@ static inline int userStrcmp(const xmlChar *attribute);
 
 static inline int voteStrcmp(const xmlChar *attribute);
 
-static inline Date parseDate(const xmlChar *dateStr);
+static inline DATETIME parseDate(const xmlChar *dateStr);
 
 void start_post_element(void *user_data, const xmlChar *name, const xmlChar **attrs){
     if(name[0] == 'p') return;
@@ -27,7 +27,7 @@ void start_post_element(void *user_data, const xmlChar *name, const xmlChar **at
     int numAttr = 9;
     long id = -2, owner_id = -2;
     int score = 0, comment_count = 0;
-    Date date = NULL;
+    DATETIME date = NULL;
     xmlChar *owner_name = NULL;
     //question attr
     xmlChar *title = NULL;
@@ -230,9 +230,9 @@ static inline int voteStrcmp(const xmlChar *attribute){
     }
 }
 
-static inline Date parseDate(const xmlChar *dateStr){
-    int day,month,year;
-    sscanf((char *) dateStr,"%d-%d-%dT",&year,&month,&day);
-    return createDate(day,month,year);
+static inline DATETIME parseDate(const xmlChar *dateStr){
+    int year, month, day, hour, minute, seconds, milisseconds;
+    sscanf((char *) dateStr,"%d-%d-%dT%d:%d:%d.%d",&year,&month,&day,&hour,&minute,&seconds,&milisseconds);
+    return dateTime_create(year,month,day,hour,minute,seconds,milisseconds);
 }
 
