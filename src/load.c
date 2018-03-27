@@ -10,14 +10,11 @@
 #include <libxml/parserInternals.h>
 
 #define POSTS "Posts.xml"
-#define VOTES "Votes.xml"
 #define USERS "Users.xml"
 
 static inline int postStrcmp(const xmlChar *attribute);
 
 static inline int userStrcmp(const xmlChar *attribute);
-
-static inline int voteStrcmp(const xmlChar *attribute);
 
 static inline Date parseDate(const xmlChar *dateStr);
 
@@ -117,27 +114,6 @@ void start_user_element(void *user_data, const xmlChar *name, const xmlChar **at
     community_add_user(com,so_user_create(id,reputation,displayName,bio));
 }
 
-void start_vote_element(void *user_data, const xmlChar *name, const xmlChar **attrs){
-    if(name[0] == 'v') return;
-    TAD_community com = (TAD_community) user_data;
-    int numAttr = 2;
-    long id = -2;
-    int isFavorite = 0;
-    for(;numAttr > 0 && attrs!=NULL && attrs[0]!=NULL;attrs += 2){
-        int atrType = voteStrcmp(attrs[0]);
-        switch(atrType){
-            case 1: id = strtol((char *) attrs[1],NULL,10);
-                    numAttr--;
-                    break;
-            case 2: if(atoi((char *) attrs[1]) == 5)
-                        isFavorite = 1;
-                    numAttr--;
-                    break;
-        }
-    }
-    if(isFavorite) community_add_favorite(com,id);
-}
-
 void error_handler(void *user_data, const char *msg, ...) {
     user_data=0;
     va_list args;
@@ -174,15 +150,6 @@ TAD_community load(TAD_community com, char *dump_path){
         return com;
     }
 
-    // parse votes
-    sprintf(xmlPath,"%s%s",dump_path,VOTES);
-
-    saxH.startElement = start_vote_element;
-
-    if((n=xmlSAXUserParseFile(&saxH,com,xmlPath))){
-        fprintf(stderr,"Couldn't parse xml for file %s. Error: %d",VOTES,n);
-        return com;
-    }
     return com;
 }
 
@@ -216,15 +183,6 @@ static inline int userStrcmp(const xmlChar *attribute){
         case 'R': return 2;                       // Reputation
         case 'D': if(attribute[1]=='i') return 3; // DisplayName
         case 'A': if(attribute[1]=='b') return 4; // AboutMe
-
-        default: return 0;
-    }
-}
-
-static inline int voteStrcmp(const xmlChar *attribute){
-    switch(attribute[0]){
-        case 'P': return 1; // PostId
-        case 'V': return 2; // VoteTypeId
 
         default: return 0;
     }

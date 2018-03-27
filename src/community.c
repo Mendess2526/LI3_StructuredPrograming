@@ -131,21 +131,6 @@ void community_add_user(TAD_community com, SO_USER user){
     g_hash_table_insert(com->users, (gpointer) id, user);
 }
 
-//TODO think this through
-/**
- * Adiciona um favorito à contagem de favoritos de uma resposta.
- * Caso o id seja de uma pergunta a função não faz nada
- * @param com Uma instância da estrutura
- * @param id do post
- */
-void community_add_favorite(TAD_community com, long id){
-    QUESTION question = g_hash_table_lookup(com->questions, (gconstpointer) &id);
-    if(question) return;
-
-    ANSWER answer     = g_hash_table_lookup(com->answers  , (gconstpointer) &id);
-    if(answer) answer_add_favorite(answer);
-}
-
 QUESTION community_get_question(TAD_community com, long id){
     return g_hash_table_lookup(com->questions, (gconstpointer) &id);
 }
