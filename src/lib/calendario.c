@@ -66,7 +66,7 @@ void getId(gpointer data, gpointer user_data){
 
 static inline long* hora_get_post_ids(HORA h){
     long *ids = (long *) malloc(sizeof(long)*h->count + 1);
-    ids[0] = 0L;
+    ids[0] = 1;
     g_slist_foreach(h->posts,getId,ids);
     return ids;
 }
