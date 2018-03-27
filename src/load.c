@@ -9,15 +9,43 @@
 #include <libxml/parser.h>
 #include <libxml/parserInternals.h>
 
-#define POSTS "Posts.xml"
-#define USERS "Users.xml"
+#define POSTS "/Posts.xml"
+#define USERS "/Users.xml"
 
-static inline int postStrcmp(const xmlChar *attribute);
+enum Post_attr{
+    POST_ID,
+    OWNER_USER_ID,
+    SCORE,
+    COMMENT_COUNT,
+    CREATION_DATE,
+    OWNER_DISPLAY_NAME,
+    TITLE,
+    TAGS,
+    ANSWER_COUNT,
+    PARENT_ID,
+    POST_NONE
+};
 
-static inline int userStrcmp(const xmlChar *attribute);
+enum User_attr{
+    USER_ID,
+    REPUTATION,
+    DISPLAY_NAME,
+    ABOUT_ME,
+    USER_NONE
+};
+
+static inline enum Post_attr postStrcmp(const xmlChar *attribute);
+
+static inline enum User_attr userStrcmp(const xmlChar *attribute);
 
 static inline Date parseDate(const xmlChar *dateStr);
 
+/**
+ * Função passada ao saxHandler para fazer parse do ficheiro de posts
+ * @param user_data Apontador generico usado para passar a instancia da estrutura
+ * @param name Nome do elemento de xml encontrado
+ * @param attrs Array de strings onde se encontram os atributos e respetivos valores
+ */
 void start_post_element(void *user_data, const xmlChar *name, const xmlChar **attrs){
     if(name[0] == 'p') return;
     TAD_community com = (TAD_community) user_data;
@@ -37,37 +65,47 @@ void start_post_element(void *user_data, const xmlChar *name, const xmlChar **at
     for(;numAttr > 0 && attrs!=NULL && attrs[0]!=NULL;attrs += 2){
         int atrType = postStrcmp(attrs[0]);
         switch(atrType){
-            case 1: id = strtol((char *) attrs[1],NULL,10);
+            case USER_ID:
+                    id = strtol((char *) attrs[1],NULL,10);
                     numAttr--;
                     break;
-            case 2: owner_id = strtol((char *) attrs[1],NULL,10);
+            case OWNER_USER_ID:
+                    owner_id = strtol((char *) attrs[1],NULL,10);
                     numAttr--;
                     break;
-            case 3: score = atoi((char *) attrs[1]);
+            case SCORE:
+                    score = atoi((char *) attrs[1]);
                     numAttr--;
                     break;
-            case 4: comment_count = atoi((char *) attrs[1]);
+            case COMMENT_COUNT:
+                    comment_count = atoi((char *) attrs[1]);
                     numAttr--;
                     break;
-            case 5: date = parseDate(attrs[1]);
+            case CREATION_DATE:
+                    date = parseDate(attrs[1]);
                     numAttr--;
                     break;
-            case 6: owner_name = xmlStrdup(attrs[1]);
+            case OWNER_DISPLAY_NAME:
+                    owner_name = xmlStrdup(attrs[1]);
                     numAttr--;
                     break;
-            case 10: title = xmlStrdup(attrs[1]);
+            case TITLE:
+                    title = xmlStrdup(attrs[1]);
                      numAttr--;
                      postType = 1;
                      break;
-            case 11: tags = xmlStrdup(attrs[1]);
+            case TAGS:
+                     tags = xmlStrdup(attrs[1]);
                      numAttr--;
                      postType = 1;
                      break;
-            case 12: answer_count = atoi((char *) attrs[1]);
+            case ANSWER_COUNT:
+                     answer_count = atoi((char *) attrs[1]);
                      numAttr--;
                      postType = 1;
                      break;
-            case 20: parentId = strtol((char *) attrs[1],NULL,10);
+            case PARENT_ID:
+                     parentId = strtol((char *) attrs[1],NULL,10);
                      numAttr-=3;
                      postType = 2;
                      break;
@@ -85,6 +123,12 @@ void start_post_element(void *user_data, const xmlChar *name, const xmlChar **at
     }
 }
 
+/**
+ * Função passada ao saxHandler para fazer parse do ficheiro de users
+ * @param user_data Apontador generico usado para passar a instancia da estrutura
+ * @param name Nome do elemento de xml encontrado
+ * @param attrs Array de strings onde se encontram os atributos e respetivos valores
+ */
 void start_user_element(void *user_data, const xmlChar *name, const xmlChar **attrs){
     if(name[0] == 'u') return;
     TAD_community com = (TAD_community) user_data;
@@ -96,16 +140,20 @@ void start_user_element(void *user_data, const xmlChar *name, const xmlChar **at
     for(;numAttr > 0 && attrs!=NULL && attrs[0]!=NULL;attrs += 2){
         int atrType = userStrcmp(attrs[0]);
         switch(atrType){
-            case 1: id = strtol((char *) attrs[1],NULL,10);
+            case USER_ID:
+                    id = strtol((char *) attrs[1],NULL,10);
                     numAttr--;
                     break;
-            case 2: reputation = atoi((char *) attrs[1]);
+            case REPUTATION:
+                    reputation = atoi((char *) attrs[1]);
                     numAttr--;
                     break;
-            case 3: displayName = xmlStrdup(attrs[1]);
+            case DISPLAY_NAME:
+                    displayName = xmlStrdup(attrs[1]);
                     numAttr--;
                     break;
-            case 4: bio = xmlStrdup(attrs[1]);
+            case ABOUT_ME:
+                    bio = xmlStrdup(attrs[1]);
                     numAttr--;
                     break;
             default: break;
@@ -114,6 +162,11 @@ void start_user_element(void *user_data, const xmlChar *name, const xmlChar **at
     community_add_user(com,so_user_create(id,reputation,displayName,bio));
 }
 
+/**
+ * Funcão que é chamada caso o xml estaja mal formatado
+ * @param user_data Apontador generico usado para passar a instancia da estrutura
+ * @param msg Mensagem de erro
+ */
 void error_handler(void *user_data, const char *msg, ...) {
     user_data=0;
     va_list args;
@@ -122,6 +175,12 @@ void error_handler(void *user_data, const char *msg, ...) {
     va_end(args);
 }
 
+/**
+ * Carrega os dados dos ficheiros para um instancia da estrutura
+ * @param com Instancia da estrutura
+ * @param dump_path Caminho para a diretoria dos ficheiros
+ * @returns A instancia da estrutura
+ */
 TAD_community load(TAD_community com, char *dump_path){
     int n;
     char xmlPath[strlen(dump_path)+9];
@@ -153,38 +212,42 @@ TAD_community load(TAD_community com, char *dump_path){
     return com;
 }
 
-
-static inline int postStrcmp(const xmlChar *attribute){
+/**
+ * Retorna o atributo associado a string dada
+ * @param attribute Atributo a testar
+ * @return O enum do atributo correspondente
+ */
+static inline enum Post_attr postStrcmp(const xmlChar *attribute){
     switch(attribute[0]){
-        case 'I': return 1;                          // Id
+        case 'I': return POST_ID;
         case 'O': switch(attribute[5]){
-                      case 'U': return 2;            // OwnerUserId
-                      case 'D': return 6;            // OwnerDisplayName
+                      case 'U': return OWNER_USER_ID;
+                      case 'D': return OWNER_DISPLAY_NAME;
                   };
-        case 'S': return 3;                          // Score
+        case 'S': return SCORE;
         case 'C': switch(attribute[6]){
-                      case 't': return 4;            // CommentCount
-                      case 'o': return 5;            // CreationDate
+                      case 't': return COMMENT_COUNT;
+                      case 'o': return CREATION_DATE;
                   };
         case 'T': switch(attribute[1]){
-                      case 'i': return 10;           // Title
-                      case 'a': return 11;           // Tags
+                      case 'i': return TITLE;
+                      case 'a': return TAGS;
                   };
-        case 'A': if(attribute[1] == 'n') return 12; // AnswerCount
-        case 'P': if(attribute[1] == 'a') return 20; // ParentId
+        case 'A': if(attribute[1] == 'n') return ANSWER_COUNT;
+        case 'P': if(attribute[1] == 'a') return PARENT_ID;
 
-        default: return 0;
+        default: return POST_NONE;
     }
 }
 
-static inline int userStrcmp(const xmlChar *attribute){
+static inline enum User_attr userStrcmp(const xmlChar *attribute){
     switch(attribute[0]){
-        case 'I': return 1;                       // Id
-        case 'R': return 2;                       // Reputation
-        case 'D': if(attribute[1]=='i') return 3; // DisplayName
-        case 'A': if(attribute[1]=='b') return 4; // AboutMe
+        case 'I': return USER_ID;
+        case 'R': return REPUTATION;
+        case 'D': if(attribute[1]=='i') return DISPLAY_NAME;
+        case 'A': if(attribute[1]=='b') return ABOUT_ME;
 
-        default: return 0;
+        default: return USER_NONE;
     }
 }
 

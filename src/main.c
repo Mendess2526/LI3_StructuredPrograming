@@ -1,12 +1,24 @@
 #include <date.h>
 #include <stdio.h>
+#include <string.h>
 #include "interface.h"
 #include "pair.h"
 #include "community.h"
 
-int main(){
+int main(int argc, const char **argv){
+    char dumps[] = "/home/mendes/dump_exemplo/";
+    char folder[26+30];
+    if(argc < 2){
+        sprintf(folder,"%s%s",dumps,"askubuntu/");
+    }else{
+        if(strlen(*(argv+1)) >= 30){
+            printf("Folder name too big. Max 30 char\n");
+            return -1;
+        }
+        sprintf(folder,"%s%s",dumps,*(argv+1));
+    }
     TAD_community com = init();
-    com = load(com,"/home/mendes/dump_exemplo/askubuntu/");
+    com = load(com,folder);
     STR_pair strPair = info_from_post(com,1);
     if(strPair) free_str_pair(strPair);
     top_most_active(com, 1);
