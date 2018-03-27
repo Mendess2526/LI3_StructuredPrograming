@@ -1,4 +1,5 @@
 #include "answer.h"
+#include <stdlib.h>
 
 struct _answer{
     int parent_id;
@@ -7,12 +8,12 @@ struct _answer{
     int comment_count;
     long id;
     long owner_id;
-    Date date;
+    DATETIME date;
     xmlChar *owner_name;
 };
 
-ANSWER answer_create(long id, Date date, int score, long ownerId, long parentId, xmlChar *ownerName, int comment_count){
-    ANSWER answer = malloc(sizeof(struct _answer)); 
+ANSWER answer_create(long id, DATETIME date, int score, long ownerId, long parentId, xmlChar *ownerName, int comment_count){
+    ANSWER answer = (ANSWER) malloc(sizeof(struct _answer));
     answer->id = id;
     answer->date = date;
     answer->score = score;
@@ -27,7 +28,7 @@ long answer_get_id(ANSWER answer){
     return answer->id;
 }
 
-Date answer_get_date(ANSWER answer){
+DATETIME answer_get_date(ANSWER answer){
     return answer->date;
 }
 
@@ -56,10 +57,10 @@ long answer_get_parent_id(ANSWER answer){
 }
 
 void answer_destroy(ANSWER answer){
+    free(answer->owner_name);
     free(answer);
 }
 
-//falta
 void answer_destroy_generic(gpointer answer){
     answer_destroy((ANSWER) answer);
 }

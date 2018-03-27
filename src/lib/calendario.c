@@ -11,7 +11,7 @@ typedef struct _dia{
 }DIA;
 
 typedef struct _mes{
-    DIA *dias; 
+    DIA *dias;
 }MES;
 
 typedef struct _ano{

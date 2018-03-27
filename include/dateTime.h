@@ -1,7 +1,7 @@
 #ifndef __DATE_TIME_H__
 #define __DATE_TIME_H__
 
-typedef struct _dateTime *DATETIME
+typedef struct _dateTime *DATETIME;
 
 DATETIME dateTime_create(int ano,
                         int mes,
@@ -24,3 +24,5 @@ int dateTime_get_minutos(DATETIME d);
 int dateTime_get_segundos(DATETIME d);
 
 int dateTime_get_milissegundos(DATETIME d);
+
+#endif /*__DATE_TIME_H__*/

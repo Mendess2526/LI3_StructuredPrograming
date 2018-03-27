@@ -1,4 +1,5 @@
 #include "post.h"
+#include <stdlib.h>
 
 struct _post{
     enum POST_TYPE type;

@@ -1,7 +1,7 @@
 #ifndef __ANSWER_H__
 #define __ANSWER_H__
 
-#include "date.h"
+#include "dateTime.h"
 #include <glib.h>
 
 #include <libxml/parserInternals.h>
@@ -9,7 +9,7 @@
 typedef struct _answer *ANSWER;
 
 ANSWER answer_create(long id,
-                        Date date,
+                        DATETIME date,
                         int score,
                         long ownerId,
                         long parentId,
@@ -18,7 +18,7 @@ ANSWER answer_create(long id,
 
 long answer_get_id(ANSWER answer);
 
-Date answer_get_date(ANSWER answer);
+DATETIME answer_get_date(ANSWER answer);
 
 int answer_get_score(ANSWER answer);
 

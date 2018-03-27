@@ -1,6 +1,7 @@
 #include "dateTime.h"
+#include <stdlib.h>
 
-struct dateTime{
+struct _dateTime{
     int ano;
     int mes;
     int dia;
@@ -11,7 +12,7 @@ struct dateTime{
 };
 
 DATETIME dateTime_create(int ano, int mes, int dia, int horas, int minutos, int segundos, int milissegundos){
-    DATETIME d = DATETIME malloc (sizeof (struct _dateTime));
+    DATETIME d = (DATETIME) malloc (sizeof (struct _dateTime));
     d->ano = ano;
     d->mes = mes;
     d->dia = dia;
