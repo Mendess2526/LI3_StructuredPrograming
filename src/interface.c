@@ -6,7 +6,7 @@
 STR_pair info_from_post(TAD_community com, int id){
     QUESTION question = community_get_question(com, (long) id);
     if(question){
-        char *name = question_get_owner_name(question);
+        char *name = (char *) question_get_owner_name(question);
         if(name == NULL){
             SO_USER user = community_get_user(
                     com,

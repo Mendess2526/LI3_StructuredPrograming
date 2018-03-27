@@ -3,6 +3,9 @@
 #include "post.h"
 #include <glib.h>
 
+/** Macro para compara dois inteiros positivos */
+#define INT_CMP(a,b) ((a > b) - (a < b))
+
 typedef GSList * POSTS;
 
 typedef struct _hora{
@@ -26,21 +29,17 @@ struct _calendario{
     ANO *anos;
 };
 
-inline int intCmp(int a, int b){
-    return (a > b) - (a < b);
-}
-
 gint timeCompare(gconstpointer a, gconstpointer b){
     DATETIME dataA = post_get_date((POST) a);
     DATETIME dataB = post_get_date((POST) b);
     int c;
-    c = intCmp(dateTime_get_horas(dataA),         dateTime_get_horas(dataB));
+    c = INT_CMP(dateTime_get_horas(dataA),         dateTime_get_horas(dataB));
     if(c) return c;
-    c = intCmp(dateTime_get_minutos(dataA),       dateTime_get_minutos(dataB));
+    c = INT_CMP(dateTime_get_minutos(dataA),       dateTime_get_minutos(dataB));
     if(c) return c;
-    c = intCmp(dateTime_get_segundos(dataA),      dateTime_get_segundos(dataB));
+    c = INT_CMP(dateTime_get_segundos(dataA),      dateTime_get_segundos(dataB));
     if(c) return c;
-    c = intCmp(dateTime_get_milissegundos(dataA), dateTime_get_milissegundos(dataB));
+    c = INT_CMP(dateTime_get_milissegundos(dataA), dateTime_get_milissegundos(dataB));
     if(c) return c;
     return 0;
 }
