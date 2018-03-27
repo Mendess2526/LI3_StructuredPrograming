@@ -1,6 +1,7 @@
 #include "community.h"
 #include "question.h"
 #include "answer.h"
+#include "calendario.h"
 
 #include <stdlib.h>
 
@@ -8,6 +9,7 @@ struct TCD_community{
     QUESTIONS questions;
     ANSWERS answers;
     SO_USERS users;
+    CALENDARIO calendario;
 };
 
 void printAnswer(gpointer key, gpointer value, gpointer user_data);
@@ -48,15 +50,15 @@ TAD_community init(){
 
 TAD_community community_create(){
     TAD_community com = (TAD_community) malloc(sizeof(struct TCD_community));
-    com->questions = g_hash_table_new_full(
+    com->questions  = g_hash_table_new_full(
             g_int64_hash, g_int64_equal,g_free,question_destroy_generic);
 
-    com->answers   = g_hash_table_new_full(
+    com->answers    = g_hash_table_new_full(
             g_int64_hash, g_int64_equal,g_free,answer_destroy_generic);
 
-    com->users     = g_hash_table_new_full(
+    com->users      = g_hash_table_new_full(
             g_int64_hash, g_int64_equal,g_free,so_user_destroy_generic);
-
+    com->calendario = calendario_create();
     return com;
 }
 
@@ -109,6 +111,20 @@ void community_add_favorite(TAD_community com, long id){
 SO_USER community_get_user(TAD_community com, long id){
     return g_hash_table_lookup(com->users,(gconstpointer) &id);
 }
+
+QUESTION community_get_question(TAD_community com, long id){
+    return g_hash_table_lookup(com->questions, (gconstpointer) &id);
+}
+
+ANSWER community_get_answer(TAD_community com, long id){
+    return g_hash_table_lookup(com->answers, (gconstpointer) &id);
+}
+
+
+
+
+/* --------------- PRINTING ------------------- */
+
 
 void printUser(gpointer key, gpointer value, gpointer user_data){
     long id = so_user_get_id((SO_USER) value);

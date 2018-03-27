@@ -29,6 +29,13 @@ void community_add_favorite(TAD_community com, long id);
 
 SO_USER community_get_user(TAD_community com, long id);
 
+QUESTION community_get_question(TAD_community com, long id);
+
+ANSWER community_get_answer(TAD_community com, long id);
+
+/* ------------- PRINTING --------------------- */
+
+
 void printUsers(TAD_community com);
 
 void printQuestions(TAD_community com);
