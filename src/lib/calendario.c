@@ -71,6 +71,48 @@ static inline long* hora_get_post_ids(HORA h){
     return ids;
 }
 
+static DIA dia_create(){
+    DIA d = (DIA) malloc(sizeof(struct _dia));
+    d->horas = (HORA) malloc(sizeof(struct _hora)*24);
+    return d;
+}
+
+static MES mes_create(){
+    MES m = (MES) malloc(sizeof(struct _mes));
+    m->dias = (DIA) malloc(sizeof(struct _dia)*31);
+    return m;
+}
+
+static ANO ano_create(){
+    ANO a = (ANO) malloc(sizeof(struct _ano));
+    a->meses = (MES) malloc(sizeof(struct _mes)*12);
+    return a;
+}
+
+CALENDARIO calendario_create(){
+    CALENDARIO c = (CALENDARIO) malloc(sizeof(struct _calendario));
+    c->anos = (ANO) malloc(sizeof(struct _ano)*10);
+    return c;
+}
+
+
+static void dia_add_post(DIA dia, DATETIME d, POST post){
+    int hora = dateTime_get_horas(d);
+    hora_add_post(dia->horas[hora], post);
+}
+
+static void mes_add_post(MES mes, DATETIME d, POST post){
+    int dia = dateTime_get_dia(d);
+    dia_add_post(mes->dias[dia], d, post);
+}
+
+static void ano_add_post(ANO ano, DATETIME d, POST post){
+    int mes = dateTime_get_mes(d);
+    mes_add_post(ano->meses[mes], d, post);
+}
+
 void calendario_add_post(CALENDARIO cal, POST post){
-    
+    DATETIME d = post_get_date(post);
+    int ano = dateTime_get_ano(d);
+    ano_add_post(calendario->anos[ano], d, post); 
 }
