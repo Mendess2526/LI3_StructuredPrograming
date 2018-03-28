@@ -1,17 +1,18 @@
 #include "question.h"
+#include <stdlib.h>
 
 struct _question{
     int score;
     int answer_count;
     long id;
     long owner_id;
-    Date date;
+    DATETIME date;
     xmlChar *ownerName;
     xmlChar *title;
     xmlChar *tags;
 };
 
-QUESTION question_create(long id, Date date, int score, long ownerId,
+QUESTION question_create(long id, DATETIME date, int score, long ownerId,
                         xmlChar *title, xmlChar *tags, int answerCount, xmlChar *ownerName){
     QUESTION q = malloc(sizeof(struct _question));
     q->id = id;
@@ -19,7 +20,7 @@ QUESTION question_create(long id, Date date, int score, long ownerId,
     q->score = score;
     q->owner_id = ownerId;
     q->title = xmlStrdup(title);
-    q->tags = tags;
+    q->tags = xmlStrdup(tags);
     q->answer_count = answerCount;
     q->ownerName = xmlStrdup(ownerName);
     return q;
@@ -42,7 +43,7 @@ long question_get_id(QUESTION question){
     return question->id;
 }
 
-Date question_get_date(QUESTION question){
+DATETIME question_get_date(QUESTION question){
     return question->date;
 }
 
@@ -58,8 +59,12 @@ xmlChar *question_get_title(QUESTION question){
     return xmlStrdup(question->title);
 }
 
-xmlChar *question_get_tags(QUESTION question){
+xmlChar **question_get_tags(QUESTION question){
     return NULL;
+}
+
+xmlChar *question_get_owner_name(QUESTION question){
+    return xmlStrdup(question->ownerName);
 }
 
 int question_get_answer_count(QUESTION question){
@@ -67,19 +72,42 @@ int question_get_answer_count(QUESTION question){
 }
 
 void question_destroy(QUESTION question){
+    free(question->title);
+    free(question->tags);
+    free(question->ownerName);
     free(question);
 }
 
-//fallta
 void question_destroy_generic(gpointer question){
     question_destroy((QUESTION) question);
 }
 
 void question_add_answer(QUESTION question, ANSWER answer){
-    question->answer_count+= 1;
+    
 }
 
-//should free newP
-QUESTION question_merge(QUESTION oldP, QUESTION newP){
-    return NULL;
+QUESTION question_merge(QUESTION oldQ, QUESTION newQ){
+    if(oldQ->score == -1){
+        oldQ->score = newQ->score;
+    }
+    if(oldQ->answer_count == -1){
+        oldQ->answer_count = newQ->answer_count;
+    }
+    if(oldQ->owner_id == -2){
+        oldQ->owner_id = newQ->owner_id;
+    }
+    if(oldQ->date == NULL){
+        oldQ->date = newQ->date;
+    }
+    if(oldQ->title == NULL){
+        oldQ->title = newQ->title;
+    }
+    if(oldQ->tags == NULL){
+        oldQ->tags = newQ->tags;
+    }
+    if(oldQ->ownerName == NULL){
+        oldQ->ownerName = newQ->ownerName;
+    }
+    question_destroy(newQ);
+    return oldQ;
 }

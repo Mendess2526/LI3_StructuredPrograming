@@ -1,6 +1,7 @@
 #include "community.h"
 #include "question.h"
 #include "answer.h"
+#include "calendario.h"
 
 #include <stdlib.h>
 
@@ -8,6 +9,7 @@ struct TCD_community{
     QUESTIONS questions;
     ANSWERS answers;
     SO_USERS users;
+    CALENDARIO calendario;
 };
 
 void printAnswer(gpointer key, gpointer value, gpointer user_data);
@@ -62,15 +64,15 @@ TAD_community init(){
  */
 TAD_community community_create(){
     TAD_community com = (TAD_community) malloc(sizeof(struct TCD_community));
-    com->questions = g_hash_table_new_full(
+    com->questions  = g_hash_table_new_full(
             g_int64_hash, g_int64_equal,g_free,question_destroy_generic);
 
-    com->answers   = g_hash_table_new_full(
+    com->answers    = g_hash_table_new_full(
             g_int64_hash, g_int64_equal,g_free,answer_destroy_generic);
 
-    com->users     = g_hash_table_new_full(
+    com->users      = g_hash_table_new_full(
             g_int64_hash, g_int64_equal,g_free,so_user_destroy_generic);
-
+    com->calendario = calendario_create(10);
     return com;
 }
 
@@ -82,6 +84,7 @@ void community_destroy(TAD_community com){
     g_hash_table_destroy(com->questions);
     g_hash_table_destroy(com->answers);
     g_hash_table_destroy(com->users);
+    calendario_destroy(com->calendario);
     free(com);
 }
 
@@ -99,6 +102,8 @@ void community_add_question(TAD_community com, QUESTION question){
 
     g_hash_table_insert(com->questions, (gpointer) id, question);
 
+    calendario_add_post(com->calendario, post_create(QUESTION_T, question));
+
     updateUserPosts(com->users, question_get_owner_id(question));
 }
 
@@ -111,6 +116,8 @@ void community_add_answer(TAD_community com, ANSWER answer){
     gint64 *id = newId(answer_get_id(answer));
 
     g_hash_table_insert(com->answers, (gpointer) id, answer);
+
+    calendario_add_post(com->calendario, post_create(ANSWER_T, answer));
 
     updateQuestionsAnswers(com,answer);
     updateUserPosts(com->users, answer_get_owner_id(answer));
@@ -143,6 +150,14 @@ SO_USER community_get_user(TAD_community com, long id){
     return g_hash_table_lookup(com->users,(gconstpointer) &id);
 }
 
+long *community_get_post_ids(TAD_community com, Date from, Date to){
+    return calendario_get_ids(com->calendario, from, to);
+}
+
+
+/* --------------- PRINTING ------------------- */
+
+
 void printUser(gpointer key, gpointer value, gpointer user_data){
     long id = so_user_get_id((SO_USER) value);
     int reputation = so_user_get_reputation((SO_USER) value);
@@ -160,7 +175,7 @@ void printQuestion(gpointer key, gpointer value, gpointer user_data){
     QUESTION question = (QUESTION) value;
     if(question == NULL){ printf("NULL VALUE: Key:%ld\n",*((gint64 *) key)); return;}
     long id = question_get_id(question);
-    Date date = question_get_date(question);
+    DATETIME date = question_get_date(question);
     xmlChar *title = question_get_title(question);
     int score = question_get_score(question);
     int answerCount = question_get_answer_count(question);
@@ -168,7 +183,7 @@ void printQuestion(gpointer key, gpointer value, gpointer user_data){
     char dateStr[11];
     if(date)
         sprintf(dateStr, "%02d:%02d:%4d",
-            get_day(date), get_month(date), get_year(date));
+            dateTime_get_dia(date), dateTime_get_mes(date), dateTime_get_ano(date));
     else
         sprintf(dateStr,"(null)");
     printf((char *) user_data,
@@ -184,14 +199,14 @@ void printAnswer(gpointer key, gpointer value, gpointer user_data){
     ANSWER answer = (ANSWER) value;
     if(answer == NULL){ printf("NULL VALUE: Key:%ld\n",*((gint64 *) key)); return;}
     long id = answer_get_id(answer);
-    Date date = answer_get_date(answer);
+    DATETIME date = answer_get_date(answer);
     int score = answer_get_score(answer);
     long ownerId = answer_get_owner_id(answer);
     char dateStr[11];
     long parentId = answer_get_parent_id(answer);
     if(date)
         sprintf(dateStr, "%02d:%02d:%04d",
-            get_day(date), get_month(date), get_year(date));
+            dateTime_get_dia(date), dateTime_get_mes(date), dateTime_get_ano(date));
     else
         sprintf(dateStr,"(null)");
     printf((char *) user_data,
@@ -213,4 +228,8 @@ void pFavCountA(gpointer key, gpointer value, gpointer user_data){
 void printFavouritesCount(TAD_community com){
     printf("ANSWERS FAVOURITE COUNT\n");
     g_hash_table_foreach(com->answers  , pFavCountA, "Id:%ld, FCount:%d\n");
+}
+
+void community_print_calendario(TAD_community com){
+    printCalendario(com->calendario);
 }

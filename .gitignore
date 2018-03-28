@@ -65,5 +65,5 @@ dkms.conf
 
 #tests
 *test.c
-
+tests/*
 null

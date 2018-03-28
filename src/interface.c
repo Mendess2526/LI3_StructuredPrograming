@@ -4,13 +4,23 @@
 
 // query 1
 STR_pair info_from_post(TAD_community com, int id){
-    SO_USER user = community_get_user(com, id);
-    if(user)
-        return create_str_pair(
-            (char *) so_user_get_name(user),
-            (char *)so_user_get_bio(user));
-    else
-        return NULL;
+    QUESTION question = community_get_question(com, (long) id);
+    if(question){
+        char *name = (char *) question_get_owner_name(question);
+        if(name == NULL){
+            SO_USER user = community_get_user(
+                    com,
+                    question_get_owner_id(question));
+            name = (char *) so_user_get_name(user);
+        }
+        return create_str_pair((char *) question_get_title(question), name);
+    }
+    ANSWER answer = community_get_answer(com, (long) id);
+    if(answer){
+        long qId = answer_get_parent_id(answer);
+        return info_from_post(com, qId);
+    }
+    return NULL;
 }
 // query 2
 LONG_list top_most_active(TAD_community com, int N){

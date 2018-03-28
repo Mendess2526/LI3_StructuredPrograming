@@ -1,7 +1,7 @@
 #include "load.h"
-#include "date.h"
 #include "question.h"
 #include "answer.h"
+#include "dateTime.h"
 
 #include <string.h>
 
@@ -38,7 +38,7 @@ static inline enum Post_attr postStrcmp(const xmlChar *attribute);
 
 static inline enum User_attr userStrcmp(const xmlChar *attribute);
 
-static inline Date parseDate(const xmlChar *dateStr);
+static inline DATETIME parseDate(const xmlChar *dateStr);
 
 /**
  * Função passada ao saxHandler para fazer parse do ficheiro de posts
@@ -52,7 +52,7 @@ void start_post_element(void *user_data, const xmlChar *name, const xmlChar **at
     int numAttr = 9;
     long id = -2, owner_id = -2;
     int score = 0, comment_count = 0;
-    Date date = NULL;
+    DATETIME date = NULL;
     xmlChar *owner_name = NULL;
     //question attr
     xmlChar *title = NULL;
@@ -251,9 +251,9 @@ static inline enum User_attr userStrcmp(const xmlChar *attribute){
     }
 }
 
-static inline Date parseDate(const xmlChar *dateStr){
-    int day,month,year;
-    sscanf((char *) dateStr,"%d-%d-%dT",&year,&month,&day);
-    return createDate(day,month,year);
+static inline DATETIME parseDate(const xmlChar *dateStr){
+    int year, month, day, hour, minute, seconds, milisseconds;
+    sscanf((char *) dateStr,"%d-%d-%dT%d:%d:%d.%d",&year,&month,&day,&hour,&minute,&seconds,&milisseconds);
+    return dateTime_create(year,month-1,day-1,hour,minute,seconds,milisseconds);
 }
 
