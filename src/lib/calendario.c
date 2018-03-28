@@ -56,21 +56,6 @@ static inline void hora_add_post(HORA h, POST p){
     h->posts = g_slist_insert_sorted(h->posts, p, timeCompare);
 }
 
-void getId(gpointer data, gpointer user_data){
-    long id = post_get_id((POST) data);
-    long *ids = (long *) user_data;
-    int idx = (int) ids[0];
-    ids[idx] = id;
-    ids[0]++;
-}
-
-static inline long* hora_get_post_ids(HORA h){
-    long *ids = (long *) malloc(sizeof(long)*h->count + 1);
-    ids[0] = 1;
-    g_slist_foreach(h->posts,getId,ids);
-    return ids;
-}
-
 static DIA dia_create(){
     DIA d = (DIA) malloc(sizeof(struct _dia));
     d->horas = (HORA *) malloc(sizeof(struct _hora)*24);
@@ -115,4 +100,52 @@ void calendario_add_post(CALENDARIO cal, POST post){
     DATETIME d = post_get_date(post);
     int ano = dateTime_get_ano(d);
     ano_add_post(cal->anos[ano], d, post);
+}
+
+static inline GSList* hora_get_post_ids(HORA hora, GSList * ids){
+    return g_slist_concat(ids,hora->posts);
+}
+
+static inline GSList* dia_get_post_ids(DIA dia, GSList *ids){
+    for(int i=0; i<24; i++){
+        ids = hora_get_post_ids(dia->horas[i], ids);
+    }
+    return ids;
+}
+
+static inline GSList* mes_get_post_ids(MES mes, Date from, Date to, GSList *ids){
+    int fromD = get_day(from);
+    int toD = get_day(to);
+    while(fromD < toD)
+        ids = dia_get_post_ids(mes->dias[fromD++], ids);
+
+    return ids;
+}
+
+static inline GSList* ano_get_post_ids(ANO ano, Date from, Date to, GSList *ids){
+    int fromM = get_month(from);
+    int toM = get_month(to);
+    while(fromM <= toM)
+        ids = mes_get_post_ids(ano->meses[fromM++], from, to, ids);
+
+    return ids;
+}
+
+long *calendario_get_ids(CALENDARIO cal, Date from, Date to){
+    int fromY = get_year(from);
+    int toY = get_year(to);
+    GSList * ids = NULL;
+    while(fromY <= toY){
+        ids = ano_get_post_ids(cal->anos[fromY++], from, to, ids);
+    }
+    int len = g_slist_length(ids);
+    long *idArray = malloc(sizeof(long)*len);
+    int i;
+    GSList *cur;
+    for(i = 0, cur = ids; i<len && cur; i++){
+        idArray[i] = post_get_id((POST) cur->data);
+        cur = g_slist_next(cur);
+    }
+    g_slist_free(ids);
+    return idArray;
 }
