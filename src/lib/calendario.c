@@ -79,31 +79,27 @@ static inline void hora_add_post(HORA h, POST p){
 
 static DIA dia_create(){
     DIA d = (DIA) malloc(sizeof(struct _dia));
-    d->horas = (HORA *) malloc(sizeof(struct _hora *)*24);
-    memset(d->horas,0,sizeof(struct _hora *)*24);
+    d->horas = (HORA *) calloc(24, sizeof(struct _hora *));
     return d;
 }
 
 static MES mes_create(int nDias){
     MES m = (MES) malloc(sizeof(struct _mes));
     m->nDias = nDias;
-    m->dias = (DIA *) malloc(sizeof(struct _dia *)*nDias);
-    memset(m->dias,0,sizeof(struct _dia *)*nDias);
+    m->dias = (DIA *) calloc(nDias, sizeof(struct _dia *));
     return m;
 }
 
 static ANO ano_create(){
     ANO a = (ANO) malloc(sizeof(struct _ano));
-    a->meses = (MES *) malloc(sizeof(struct _mes *)*12);
-    memset(a->meses,0,sizeof(struct _mes *)*12);
+    a->meses = (MES *) calloc(12, sizeof(struct _mes *));
     return a;
 }
 
 CALENDARIO calendario_create(int nAnos){
     CALENDARIO c = (CALENDARIO) malloc(sizeof(struct _calendario));
     c->nAnos = nAnos;
-    c->anos = (ANO *) malloc(sizeof(struct _ano *)*nAnos);
-    memset(c->anos,0,sizeof(struct _ano *)*nAnos);
+    c->anos = (ANO *) calloc(nAnos, sizeof(struct _ano *));
     return c;
 }
 
@@ -135,7 +131,7 @@ static void ano_add_post(ANO ano, DATETIME d, POST post){
 void calendario_add_post(CALENDARIO cal, POST post){
     DATETIME d = post_get_date(post);
     int ano = dateTime_get_ano(d);
-    if(cal->anos[ano] == NULL) cal->anos[ano] = ano_create();
+    if(cal->anos[ano-2008] == NULL) cal->anos[ano] = ano_create();
     ano_add_post(cal->anos[ano], d, post);
 }
 

@@ -233,6 +233,6 @@ static inline int voteStrcmp(const xmlChar *attribute){
 static inline DATETIME parseDate(const xmlChar *dateStr){
     int year, month, day, hour, minute, seconds, milisseconds;
     sscanf((char *) dateStr,"%d-%d-%dT%d:%d:%d.%d",&year,&month,&day,&hour,&minute,&seconds,&milisseconds);
-    return dateTime_create(year,month,day,hour,minute,seconds,milisseconds);
+    return dateTime_create(year,month-1,day-1,hour,minute,seconds,milisseconds);
 }
 

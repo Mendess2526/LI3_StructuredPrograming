@@ -7,7 +7,7 @@
 typedef struct _calendario *CALENDARIO;
 
 
-CALENDARIO calendario_create();
+CALENDARIO calendario_create(int nAnos);
 
 void calendario_add_post(CALENDARIO cal, POST post );
 

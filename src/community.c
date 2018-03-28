@@ -58,7 +58,7 @@ TAD_community community_create(){
 
     com->users      = g_hash_table_new_full(
             g_int64_hash, g_int64_equal,g_free,so_user_destroy_generic);
-    com->calendario = calendario_create();
+    com->calendario = calendario_create(10);
     return com;
 }
 
