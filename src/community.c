@@ -58,7 +58,7 @@ TAD_community community_create(){
 
     com->users      = g_hash_table_new_full(
             g_int64_hash, g_int64_equal,g_free,so_user_destroy_generic);
-    com->calendario = NULL;//calendario_create();
+    com->calendario = calendario_create();
     return com;
 }
 
@@ -78,6 +78,8 @@ void community_add_question(TAD_community com, QUESTION question){
 
     g_hash_table_insert(com->questions, (gpointer) id, question);
 
+    calendario_add_post(com->calendario, post_create(QUESTION_T, question));
+
     updateUserPosts(com->users, question_get_owner_id(question));
 }
 
@@ -85,6 +87,8 @@ void community_add_answer(TAD_community com, ANSWER answer){
     gint64 *id = newId(answer_get_id(answer));
 
     g_hash_table_insert(com->answers, (gpointer) id, answer);
+
+    calendario_add_post(com->calendario, post_create(ANSWER_T, answer));
 
     updateQuestionsAnswers(com,answer);
     updateUserPosts(com->users, answer_get_owner_id(answer));
