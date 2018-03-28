@@ -3,8 +3,8 @@
 #include "community.h"
 
 // query 1
-STR_pair info_from_post(TAD_community com, int id){
-    QUESTION question = community_get_question(com, (long) id);
+STR_pair info_from_post(TAD_community com, long id){
+    QUESTION question = community_get_question(com, id);
     if(question){
         char *name = (char *) question_get_owner_name(question);
         if(name == NULL){
@@ -15,7 +15,7 @@ STR_pair info_from_post(TAD_community com, int id){
         }
         return create_str_pair((char *) question_get_title(question), name);
     }
-    ANSWER answer = community_get_answer(com, (long) id);
+    ANSWER answer = community_get_answer(com, id);
     if(answer){
         long qId = answer_get_parent_id(answer);
         return info_from_post(com, qId);
@@ -63,8 +63,8 @@ LONG_list both_participated(TAD_community com, long id1, long id2, int N){
 }
 
 // query 10
-LONG_list better_answer(TAD_community com, int id){
-    return NULL;
+long better_answer(TAD_community com, long id){
+    return 0L;
 }
 
 // query 11
