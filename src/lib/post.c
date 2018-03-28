@@ -94,3 +94,10 @@ xmlChar *post_get_owner_name(POST post){
     }
     return owner_name;
 }
+
+void post_destroy(POST post){
+}
+
+void post_destroy_generic(gpointer post){
+    post_destroy((POST) post);
+}
