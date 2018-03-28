@@ -66,6 +66,7 @@ void community_destroy(TAD_community com){
     g_hash_table_destroy(com->questions);
     g_hash_table_destroy(com->answers);
     g_hash_table_destroy(com->users);
+    calendario_destroy(com->calendario);
     free(com);
 }
 
