@@ -208,7 +208,7 @@ TAD_community load(TAD_community com, char *dump_path){
         fprintf(stderr,"Couldn't parse xml for file %s. Error: %d",POSTS,n);
         return com;
     }
-
+    xmlCleanupParser();
     return com;
 }
 
