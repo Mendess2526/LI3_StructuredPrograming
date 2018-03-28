@@ -35,4 +35,8 @@ long post_get_owner_id(POST post);
 
 xmlChar *post_get_owner_name(POST post);
 
+void post_destroy(POST post);
+
+void post_destroy_generic(gpointer post);
+
 #endif /*__POST_H__*/
