@@ -2,7 +2,7 @@
 #define __COMMUNITY_H__
 
 #include <glib.h>
-
+#include "date.h"
 #include "soUser.h"
 #include "answer.h"
 #include "question.h"
@@ -33,6 +33,8 @@ QUESTION community_get_question(TAD_community com, long id);
 
 ANSWER community_get_answer(TAD_community com, long id);
 
+long *community_get_post_ids(TAD_community com, Date from, Date to);
+
 /* ------------- PRINTING --------------------- */
 
 
@@ -43,5 +45,7 @@ void printQuestions(TAD_community com);
 void printAnswers(TAD_community com);
 
 void printFavouritesCount(TAD_community com);
+
+void community_print_calendario(TAD_community com);
 
 #endif /*__COMMUNITY_H__*/

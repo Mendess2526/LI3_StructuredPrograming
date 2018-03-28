@@ -125,7 +125,9 @@ ANSWER community_get_answer(TAD_community com, long id){
     return g_hash_table_lookup(com->answers, (gconstpointer) &id);
 }
 
-
+long *community_get_post_ids(TAD_community com, Date from, Date to){
+    return calendario_get_ids(com->calendario, from, to);
+}
 
 
 /* --------------- PRINTING ------------------- */
@@ -201,4 +203,8 @@ void pFavCountA(gpointer key, gpointer value, gpointer user_data){
 void printFavouritesCount(TAD_community com){
     printf("ANSWERS FAVOURITE COUNT\n");
     g_hash_table_foreach(com->answers  , pFavCountA, "Id:%ld, FCount:%d\n");
+}
+
+void community_print_calendario(TAD_community com){
+    printCalendario(com->calendario);
 }

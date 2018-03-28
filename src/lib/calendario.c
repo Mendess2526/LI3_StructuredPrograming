@@ -130,8 +130,8 @@ static void ano_add_post(ANO ano, DATETIME d, POST post){
 
 void calendario_add_post(CALENDARIO cal, POST post){
     DATETIME d = post_get_date(post);
-    int ano = dateTime_get_ano(d);
-    if(cal->anos[ano-2008] == NULL) cal->anos[ano] = ano_create();
+    int ano = dateTime_get_ano(d)-2008;
+    if(cal->anos[ano] == NULL) cal->anos[ano] = ano_create();
     ano_add_post(cal->anos[ano], d, post);
 }
 
@@ -185,7 +185,7 @@ long *calendario_get_ids(CALENDARIO cal, Date from, Date to){
 
 static void hora_destroy(HORA h){
     if(h==NULL) return;
-    g_slist_free_full(h->posts, post_destroy_generic);
+    g_slist_free(h->posts);
     free(h);
 }
 
@@ -218,4 +218,41 @@ void calendario_destroy(CALENDARIO cal){
         ano_destroy(cal->anos[i]);
     }
     free(cal);
+}
+
+static void printHora(HORA hora){
+    if(!hora) return;
+    for(GSList *cur = hora->posts; cur; cur = g_slist_next(cur)){
+        printf("\t\t\t\tPost: %ld\n",post_get_id((POST) cur->data));
+    }
+}
+
+static void printDia(DIA dia){
+    if(!dia) return;
+    for(int i=0; i<24; i++){
+        printf("\t\t\tHora: %d\n",i);
+        printHora(dia->horas[i]);
+    }
+}
+
+static void printMes(MES mes){
+    if(!mes) return;
+    for(int i=0; i<mes->nDias; i++){
+        printf("\t\tDia: %d\n",i);
+        printDia(mes->dias[i]);
+    }
+}
+
+static void printAno(ANO ano){
+    if(!ano) return;
+    for(int i=0; i<12;i++){
+        printf("\tMes: %d\n",i);
+        printMes(ano->meses[i]);
+    }
+}
+void printCalendario(CALENDARIO cal){
+    for(int i=0; i< cal->nAnos; i++){
+        printf("Ano: %d\n",i);
+        printAno(cal->anos[i]);
+    }
 }

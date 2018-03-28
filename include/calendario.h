@@ -14,4 +14,6 @@ void calendario_add_post(CALENDARIO cal, POST post );
 long *calendario_get_ids(CALENDARIO cal, Date from, Date to);
 
 void calendario_destroy(CALENDARIO cal);
+
+void printCalendario(CALENDARIO cal);
 #endif
