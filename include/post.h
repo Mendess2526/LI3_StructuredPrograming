@@ -15,6 +15,8 @@ enum POST_TYPE{
     ANSWER_T
 };
 
+POST post_create(enum POST_TYPE type, void *c);
+
 int post_is_question(POST post);
 
 int post_is_answer(POST post);

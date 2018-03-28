@@ -6,7 +6,7 @@ struct _post{
     void * c;
 };
 
-POST post_create(int type, void *c){
+POST post_create(enum POST_TYPE type, void *c){
     POST p = (POST) malloc(sizeof(struct _post));
     p->type = type;
     p->c = c;
