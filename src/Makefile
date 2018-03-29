@@ -5,12 +5,13 @@ OLDIR=$(ODIR)/lib
 EXE=program
 
 CC=gcc
-CFLAGS = -Wall -std=c11 `pkg-config --cflags libxml-2.0` `pkg-config --cflags glib-2.0` -I$(IDIR)
 
 WARNINGS= -Wextra -pedantic
 MEMLEAK= -ggdb -fsanitize=address -fno-ommit-frame-pointer -fsanitize=undifined
 DEBUG= -g -O0
-OPTIMUS= -march=native -O3 -pipe -D_GNU_SOURCE
+OPTIMUS= -march=native -O2 -pipe -D_GNU_SOURCE
+
+CFLAGS = -Wall -std=c11 `pkg-config --cflags libxml-2.0` `pkg-config --cflags glib-2.0` -I$(IDIR) $(OPTIMUS) $(WARNINGS)
 
 DEPS=$(IDIR)/$(wildcard *.h)
 SOURCES=$(wildcard *.c)
