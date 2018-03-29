@@ -23,6 +23,7 @@ enum Post_attr{
     TAGS,
     ANSWER_COUNT,
     PARENT_ID,
+    POST_TYPE,
     POST_NONE
 };
 
@@ -92,23 +93,22 @@ void start_post_element(void *user_data, const xmlChar *name, const xmlChar **at
             case TITLE:
                     title = xmlStrdup(attrs[1]);
                      numAttr--;
-                     postType = 1;
                      break;
             case TAGS:
                      tags = xmlStrdup(attrs[1]);
                      numAttr--;
-                     postType = 1;
                      break;
             case ANSWER_COUNT:
                      answer_count = atoi((char *) attrs[1]);
                      numAttr--;
-                     postType = 1;
                      break;
             case PARENT_ID:
                      parentId = strtol((char *) attrs[1],NULL,10);
                      numAttr-=3;
-                     postType = 2;
                      break;
+            case POST_TYPE: postType = atoi((char *) attrs[1]);
+                            if(postType != 1 && postType != 2)
+                                return;
             default: break;
         }
     }
@@ -234,8 +234,10 @@ static inline enum Post_attr postStrcmp(const xmlChar *attribute){
                       case 'a': return TAGS;
                   };
         case 'A': if(attribute[1] == 'n') return ANSWER_COUNT;
-        case 'P': if(attribute[1] == 'a') return PARENT_ID;
-
+        case 'P': switch(attribute[1]){
+                      case 'a': return PARENT_ID;
+                      case 'o': return POST_TYPE;
+                  };
         default: return POST_NONE;
     }
 }
