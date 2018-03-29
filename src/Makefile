@@ -5,13 +5,12 @@ OLDIR=$(ODIR)/lib
 EXE=program
 
 CC=gcc
-
+CFLAGS = -Wall -std=c11 `pkg-config --cflags libxml-2.0` `pkg-config --cflags glib-2.0` -I$(IDIR)
 WARNINGS= -Wextra -pedantic
-MEMLEAK= -ggdb -fsanitize=address -fno-ommit-frame-pointer -fsanitize=undifined
-DEBUG= -g -O0
-OPTIMUS= -march=native -O2 -pipe -D_GNU_SOURCE
 
-CFLAGS = -Wall -std=c11 `pkg-config --cflags libxml-2.0` `pkg-config --cflags glib-2.0` -I$(IDIR) $(OPTIMUS) $(WARNINGS)
+DEBUG= -g -O0 $(WARNINGS) $(CFLAGS)
+OPTIMUS= -march=native -O3 -pipe -D_GNU_SOURCE $(WARNINGS) $(CFLAGS)
+MEMLEAK= -ggdb -fsanitize=address -fno-ommit-frame-pointer -fsanitize=undifined $(OPTIMUS)
 
 DEPS=$(IDIR)/$(wildcard *.h)
 SOURCES=$(wildcard *.c)
@@ -24,16 +23,16 @@ OBJECTS= $(SOURCES_OBJ) $(MY_LIBS_OBJ)
 print-% : ; @echo $* = $($*)
 
 $(ODIR)/%.o : %.c $(DEPS)
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(OPTIMUS) -c -o $@ $<
 
 program: $(OBJECTS)
-	$(CC) $(CFLAGS) $(WARNINGS) $(OPTIMUS)             $(OBJECTS) -o $(EXE)          $(LIBS)
+	$(CC) $(OPTIMUS)  $(OBJECTS) -o $(EXE)          $(LIBS)
 
 debug: $(OBJECTS)
-	$(CC) $(CFLAGS) $(WARNINGS) $(DEBUG)               $(OBJECTS) -o $(EXE).debug    $(LIBS)
+	$(CC) $(DEBUG)    $(OBJECTS) -o $(EXE).debug    $(LIBS)
 
 memleaks: $(OBJECTS)
-	$(CC) $(CFLAGS) $(WARNINGS) $(OPTIMUS) $(MEMLEAKS) $(OBJECTS) -o $(EXE).memleaks $(LIBS)
+	$(CC) $(MEMLEAKS) $(OBJECTS) -o $(EXE).memleaks $(LIBS)
 
 clean:
 	rm obj/*.o
