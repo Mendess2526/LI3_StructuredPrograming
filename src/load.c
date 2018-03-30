@@ -91,23 +91,23 @@ void start_post_element(void *user_data, const xmlChar *name, const xmlChar **at
                     break;
             case TITLE:
                     title = xmlStrdup(attrs[1]);
-                     numAttr--;
-                     break;
+                    numAttr--;
+                    break;
             case TAGS:
-                     tags = xmlStrdup(attrs[1]);
-                     numAttr--;
-                     break;
+                    tags = xmlStrdup(attrs[1]);
+                    numAttr--;
+                    break;
             case ANSWER_COUNT:
-                     answer_count = atoi((char *) attrs[1]);
-                     numAttr--;
-                     break;
+                    answer_count = atoi((char *) attrs[1]);
+                    numAttr--;
+                    break;
             case PARENT_ID:
-                     parentId = strtol((char *) attrs[1],NULL,10);
-                     numAttr-=3;
-                     break;
-            case POST_TYPE: postType = atoi((char *) attrs[1]);
-                            if(postType != 1 && postType != 2)
-                                return;
+                    parentId = strtol((char *) attrs[1],NULL,10);
+                    numAttr-=3;
+                    break;
+            case POST_TYPE:
+                    postType = atoi((char *) attrs[1]);
+                    if(postType != 1 && postType != 2) return;
             default: break;
         }
     }
@@ -120,6 +120,9 @@ void start_post_element(void *user_data, const xmlChar *name, const xmlChar **at
                 com,
                 answer_create(id,date,score,owner_id,parentId,owner_name,comment_count));
     }
+    if(owner_name) xmlFree(owner_name);
+    if(title) xmlFree(title);
+    if(tags) xmlFree(tags);
 }
 
 /**
@@ -159,6 +162,8 @@ void start_user_element(void *user_data, const xmlChar *name, const xmlChar **at
         }
     }
     community_add_user(com,so_user_create(id,reputation,displayName,bio));
+    if(displayName) xmlFree(displayName);
+    if(bio) xmlFree(bio);
 }
 
 /**
