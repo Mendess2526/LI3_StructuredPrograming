@@ -32,23 +32,34 @@ struct _calendario{
     ANO *anos;
 };
 
+static int nrDias (int m);
+gint timeCompare(gconstpointer a, gconstpointer b);
+
 static HORA hora_create();
-static inline void hora_add_post(HORA h, POST p);
 static DIA dia_create();
 static MES mes_create(int nDias);
 static ANO ano_create();
+
+static inline void hora_add_post(HORA h, POST p);
 static void dia_add_post(DIA dia, DATETIME d, POST post);
 static void mes_add_post(MES mes, DATETIME d, POST post);
 static void ano_add_post(ANO ano, DATETIME d, POST post);
+
 static inline void hora_get_post_ids(HORA hora, void *user_data, GFunc calFunc);
 static inline void dia_get_post_ids(DIA dia, void *user_data, GFunc calFunc);
 static inline void mes_get_post_ids(MES mes, Date from, Date to, int sameMonth, void* user_data, GFunc calFunc);
 static inline void ano_get_post_ids(ANO ano, Date from, Date to, int sameYear, void* user_data, GFunc calFunc);
+
+static void hora_destroy(HORA h);
 static void dia_destroy(DIA d);
 static void mes_destroy(MES m);
 static void ano_destroy(ANO a);
-static int nrDias (int m);
 
+static int nrDias (int m){
+    if(m == 3 || m == 5 || m == 8 || m == 10) return 30;
+    if(m == 1) return 29;
+    return 31;
+}
 
 gint timeCompare(gconstpointer a, gconstpointer b){
     DATETIME dataA = post_get_date((POST) b);
@@ -115,12 +126,6 @@ static void mes_add_post(MES mes, DATETIME d, POST post){
     dia_add_post(mes->dias[dia], d, post);
 }
 
-static int nrDias (int m){
-    if(m == 3 || m == 5 || m == 8 || m == 10) return 30;
-    if(m == 1) return 29;
-    return 31;
-}
-
 static void ano_add_post(ANO ano, DATETIME d, POST post){
     int mes = dateTime_get_mes(d);
     if(ano->meses[mes] == NULL)
@@ -145,7 +150,6 @@ static inline void dia_get_post_ids(DIA dia, void *user_data, GFunc calFunc){
     if(!dia) return;
     for(int i=0; i<24; i++)
         hora_get_post_ids(dia->horas[i], user_data, calFunc);
-
 }
 
 static inline void mes_get_post_ids(MES mes, Date from, Date to, int sameMonth, void *user_data, GFunc calFunc){
@@ -240,6 +244,7 @@ static void printAno(ANO ano){
         printMes(ano->meses[i]);
     }
 }
+
 void printCalendario(CALENDARIO cal){
     for(int i=0; i< cal->nAnos; i++){
         printf("Ano: %d\n",i);

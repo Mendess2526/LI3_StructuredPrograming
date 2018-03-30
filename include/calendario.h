@@ -18,4 +18,5 @@ void calendario_get_ids(CALENDARIO cal, Date from, Date to, void *user_data, GFu
 void calendario_destroy(CALENDARIO cal);
 
 void printCalendario(CALENDARIO cal);
+
 #endif
