@@ -72,9 +72,10 @@ int question_get_answer_count(QUESTION question){
 }
 
 void question_destroy(QUESTION question){
-    free(question->title);
-    free(question->tags);
-    free(question->ownerName);
+    free(question->date);
+    xmlFree(question->title);
+    xmlFree(question->tags);
+    xmlFree(question->ownerName);
     free(question);
 }
 
