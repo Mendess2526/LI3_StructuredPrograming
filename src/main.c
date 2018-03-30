@@ -19,6 +19,7 @@ int main(int argc, const char **argv){
     }
     TAD_community com = init();
     com = load(com,folder);
+    /*
     STR_pair strPair = info_from_post(com,1);
     if(strPair) free_str_pair(strPair);
     top_most_active(com, 1);
@@ -31,5 +32,6 @@ int main(int argc, const char **argv){
     both_participated(com,1,2,3);
     better_answer(com,1);
     most_used_best_rep(com,1,NULL,NULL);
+    */
     clean(com);
 }

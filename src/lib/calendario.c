@@ -1,11 +1,11 @@
 #include "calendario.h"
 #include "dateTime.h"
 #include "post.h"
-#include <glib.h>
 #include <string.h>
 
 /** Macro para compara dois inteiros positivos */
 #define INT_CMP(a,b) ((a > b) - (a < b))
+#define ANO2INDEX(ano) (ano-2008)
 
 typedef GSList * POSTS;
 
@@ -40,10 +40,10 @@ static ANO ano_create();
 static void dia_add_post(DIA dia, DATETIME d, POST post);
 static void mes_add_post(MES mes, DATETIME d, POST post);
 static void ano_add_post(ANO ano, DATETIME d, POST post);
-static inline GSList* hora_get_post_ids(HORA hora, GSList * ids);
-static inline GSList* dia_get_post_ids(DIA dia, GSList *ids);
-static inline GSList* mes_get_post_ids(MES mes, Date from, Date to, GSList *ids);
-static inline GSList* ano_get_post_ids(ANO ano, Date from, Date to, GSList *ids);
+static inline void hora_get_post_ids(HORA hora, void *user_data, GFunc calFunc);
+static inline void dia_get_post_ids(DIA dia, void *user_data, GFunc calFunc);
+static inline void mes_get_post_ids(MES mes, Date from, Date to, int sameMonth, void* user_data, GFunc calFunc);
+static inline void ano_get_post_ids(ANO ano, Date from, Date to, int sameYear, void* user_data, GFunc calFunc);
 static void dia_destroy(DIA d);
 static void mes_destroy(MES m);
 static void ano_destroy(ANO a);
@@ -130,57 +130,47 @@ static void ano_add_post(ANO ano, DATETIME d, POST post){
 
 void calendario_add_post(CALENDARIO cal, POST post){
     DATETIME d = post_get_date(post);
-    int ano = dateTime_get_ano(d)-2008;
+    int ano = ANO2INDEX(dateTime_get_ano(d));
     if(cal->anos[ano] == NULL) cal->anos[ano] = ano_create();
     ano_add_post(cal->anos[ano], d, post);
 }
 
-static inline GSList* hora_get_post_ids(HORA hora, GSList * ids){
-    return g_slist_concat(ids,hora->posts);
+static inline void hora_get_post_ids(HORA hora, void *user_data, GFunc calFunc){
+    if(!hora) return;
+    printf("Count: %d\n", g_slist_length(hora->posts));
+    g_slist_foreach(hora->posts, calFunc, user_data);
 }
 
-static inline GSList* dia_get_post_ids(DIA dia, GSList *ids){
-    for(int i=0; i<24; i++){
-        ids = hora_get_post_ids(dia->horas[i], ids);
-    }
-    return ids;
+static inline void dia_get_post_ids(DIA dia, void *user_data, GFunc calFunc){
+    if(!dia) return;
+    for(int i=0; i<24; i++)
+        hora_get_post_ids(dia->horas[i], user_data, calFunc);
+
 }
 
-static inline GSList* mes_get_post_ids(MES mes, Date from, Date to, GSList *ids){
+static inline void mes_get_post_ids(MES mes, Date from, Date to, int sameMonth, void *user_data, GFunc calFunc){
+    if(!mes) return;
     int fromD = get_day(from);
-    int toD = get_day(to);
+    int toD = sameMonth ? get_day(to) : mes->nDias;
     while(fromD < toD)
-        ids = dia_get_post_ids(mes->dias[fromD++], ids);
-
-    return ids;
+        dia_get_post_ids(mes->dias[fromD++], user_data, calFunc);
 }
 
-static inline GSList* ano_get_post_ids(ANO ano, Date from, Date to, GSList *ids){
+static inline void ano_get_post_ids(ANO ano, Date from, Date to, int sameYear, void *user_data, GFunc calFunc){
+    if(!ano) return;
     int fromM = get_month(from);
-    int toM = get_month(to);
+    int toM = sameYear ? get_month(to) : 11;
+    int sameMonth = sameYear && fromM == toM;
     while(fromM <= toM)
-        ids = mes_get_post_ids(ano->meses[fromM++], from, to, ids);
-
-    return ids;
+        mes_get_post_ids(ano->meses[fromM++], from, to, sameMonth, user_data, calFunc);
 }
 
-long *calendario_get_ids(CALENDARIO cal, Date from, Date to){
-    int fromY = get_year(from);
-    int toY = get_year(to);
-    GSList * ids = NULL;
-    while(fromY <= toY){
-        ids = ano_get_post_ids(cal->anos[fromY++], from, to, ids);
-    }
-    int len = g_slist_length(ids);
-    long *idArray = malloc(sizeof(long)*len);
-    int i;
-    GSList *cur;
-    for(i = 0, cur = ids; i<len && cur; i++){
-        idArray[i] = post_get_id((POST) cur->data);
-        cur = g_slist_next(cur);
-    }
-    g_slist_free(ids);
-    return idArray;
+void calendario_get_ids(CALENDARIO cal, Date from, Date to, void *user_data, GFunc calFunc){
+    int fromY = ANO2INDEX(get_year(from));
+    int toY = ANO2INDEX(get_year(to));
+    int sameYear = fromY == toY;
+    while(fromY <= toY)
+        ano_get_post_ids(cal->anos[fromY++], from, to, sameYear, user_data, calFunc);
 }
 
 static void hora_destroy(HORA h){

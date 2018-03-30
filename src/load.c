@@ -182,7 +182,7 @@ void error_handler(void *user_data, const char *msg, ...) {
  */
 TAD_community load(TAD_community com, char *dump_path){
     int n;
-    char xmlPath[strlen(dump_path)+9];
+    char xmlPath[strlen(dump_path)+10];
     // sax handler
     xmlSAXHandler saxH;
     memset(&saxH,0,sizeof(xmlSAXHandler));

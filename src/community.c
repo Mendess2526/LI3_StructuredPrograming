@@ -150,8 +150,8 @@ SO_USER community_get_user(TAD_community com, long id){
     return g_hash_table_lookup(com->users,(gconstpointer) &id);
 }
 
-long *community_get_post_ids(TAD_community com, Date from, Date to){
-    return calendario_get_ids(com->calendario, from, to);
+void community_get_post_ids(TAD_community com, Date from, Date to, void* user_data, GFunc calFunc){
+    calendario_get_ids(com->calendario, from, to, user_data, calFunc);
 }
 
 
