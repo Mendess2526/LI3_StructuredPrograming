@@ -51,8 +51,8 @@ static int nrDias (int m);
 
 
 gint timeCompare(gconstpointer a, gconstpointer b){
-    DATETIME dataA = post_get_date((POST) a);
-    DATETIME dataB = post_get_date((POST) b);
+    DATETIME dataA = post_get_date((POST) b);
+    DATETIME dataB = post_get_date((POST) a);
     int c;
     c = INT_CMP(dateTime_get_horas(dataA),         dateTime_get_horas(dataB));
     if(c) return c;
@@ -70,11 +70,6 @@ static HORA hora_create(){
     h->count = 0;
     h->posts = NULL;
     return h;
-}
-
-static inline void hora_add_post(HORA h, POST p){
-    h->count += 1;
-    h->posts = g_slist_insert_sorted(h->posts, p, timeCompare);
 }
 
 static DIA dia_create(){
@@ -101,6 +96,11 @@ CALENDARIO calendario_create(int nAnos){
     c->nAnos = nAnos;
     c->anos = (ANO *) calloc(nAnos, sizeof(struct _ano *));
     return c;
+}
+
+static inline void hora_add_post(HORA h, POST p){
+    h->count += 1;
+    h->posts = g_slist_insert_sorted(h->posts, p, timeCompare);
 }
 
 static void dia_add_post(DIA dia, DATETIME d, POST post){
