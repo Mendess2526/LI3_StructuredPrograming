@@ -62,52 +62,51 @@ void start_post_element(void *user_data, const xmlChar *name, const xmlChar **at
     long parentId = -2;
     //boolean
     int postType = 0;
-    for(;numAttr > 0 && attrs!=NULL && attrs[0]!=NULL;attrs += 2){
+    for(;postType < 3 && numAttr > 0 && attrs!=NULL && attrs[0]!=NULL;attrs += 2){
         int atrType = postStrcmp(attrs[0]);
         switch(atrType){
             case USER_ID:
-                    id = strtol((char *) attrs[1],NULL,10);
+            /*long*/id = strtol((char *) attrs[1],NULL,10);
                     numAttr--;
                     break;
             case OWNER_USER_ID:
-                    owner_id = strtol((char *) attrs[1],NULL,10);
+            /*long*/owner_id = strtol((char *) attrs[1],NULL,10);
                     numAttr--;
                     break;
             case SCORE:
-                    score = atoi((char *) attrs[1]);
+            /*int*/ score = atoi((char *) attrs[1]);
                     numAttr--;
                     break;
             case COMMENT_COUNT:
-                    comment_count = atoi((char *) attrs[1]);
+            /*int*/ comment_count = atoi((char *) attrs[1]);
                     numAttr--;
                     break;
             case CREATION_DATE:
-                    date = parseDate(attrs[1]);
+       /*DATETIME*/ date = parseDate(attrs[1]);
                     numAttr--;
                     break;
             case OWNER_DISPLAY_NAME:
-                    owner_name = xmlStrdup(attrs[1]);
+       /*xmlChar* */owner_name = xmlStrdup(attrs[1]);
                     numAttr--;
                     break;
             case TITLE:
-                    title = xmlStrdup(attrs[1]);
+       /*xmlChar* */title = xmlStrdup(attrs[1]);
                     numAttr--;
                     break;
             case TAGS:
-                    tags = xmlStrdup(attrs[1]);
+       /*xmlChar* */tags = xmlStrdup(attrs[1]);
                     numAttr--;
                     break;
             case ANSWER_COUNT:
-                    answer_count = atoi((char *) attrs[1]);
+            /*int*/ answer_count = atoi((char *) attrs[1]);
                     numAttr--;
                     break;
             case PARENT_ID:
-                    parentId = strtol((char *) attrs[1],NULL,10);
+            /*long*/parentId = strtol((char *) attrs[1],NULL,10);
                     numAttr-=3;
                     break;
             case POST_TYPE:
-                    postType = atoi((char *) attrs[1]);
-                    if(postType != 1 && postType != 2) return;
+            /*int*/ postType = atoi((char *) attrs[1]);
             default: break;
         }
     }
@@ -119,10 +118,12 @@ void start_post_element(void *user_data, const xmlChar *name, const xmlChar **at
         community_add_answer(
                 com,
                 answer_create(id,date,score,owner_id,parentId,owner_name,comment_count));
+    }else if(date){
+        dateTime_destroy(date);
     }
     if(owner_name) xmlFree(owner_name);
-    if(title) xmlFree(title);
-    if(tags) xmlFree(tags);
+    if(title)      xmlFree(title);
+    if(tags)       xmlFree(tags);
 }
 
 /**

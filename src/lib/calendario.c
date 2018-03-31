@@ -175,7 +175,7 @@ void calendario_get_ids(CALENDARIO cal, Date from, Date to, void *user_data, GFu
 
 static void hora_destroy(HORA h){
     if(h==NULL) return;
-    g_slist_free(h->posts);
+    g_slist_free_full(h->posts, post_destroy_generic);
     free(h);
 }
 
@@ -184,6 +184,7 @@ static void dia_destroy(DIA d){
     for(int i=0; i<24; i++){
         hora_destroy(d->horas[i]);
     }
+    free(d->horas);
     free(d);
 }
 
@@ -192,6 +193,7 @@ static void mes_destroy(MES m){
     for(int i=0; i<(m->nDias); i++){
         dia_destroy(m->dias[i]);
     }
+    free(m->dias);
     free(m);
 }
 
@@ -200,6 +202,7 @@ static void ano_destroy(ANO a){
     for(int i=0; i<12; i++){
         mes_destroy(a->meses[i]);
     }
+    free(a->meses);
     free(a);
 }
 
@@ -207,6 +210,7 @@ void calendario_destroy(CALENDARIO cal){
     for(int i=0; i<(cal->nAnos); i++){
         ano_destroy(cal->anos[i]);
     }
+    free(cal->anos);
     free(cal);
 }
 
