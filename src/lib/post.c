@@ -95,13 +95,16 @@ xmlChar *post_get_owner_name(POST post){
     return owner_name;
 }
 
-void post_destroy(POST post){
-    if(post->type == QUESTION_T)
-        question_destroy_generic(post->c);
-    else if(post->type == ANSWER_T)
-        answer_destroy_generic(post->c);
+void post_destroy(POST post, int freeQorA){
+    if(freeQorA){
+        if(post->type == QUESTION_T)
+            question_destroy_generic(post->c);
+        else if(post->type == ANSWER_T)
+            answer_destroy_generic(post->c);
+    }
+    free(post);
 }
 
 void post_destroy_generic(gpointer post){
-    post_destroy((POST) post);
+    post_destroy((POST) post, 0);
 }

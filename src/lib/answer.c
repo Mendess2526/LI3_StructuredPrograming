@@ -57,7 +57,8 @@ long answer_get_parent_id(ANSWER answer){
 }
 
 void answer_destroy(ANSWER answer){
-    free(answer->owner_name);
+    dateTime_destroy (answer->date);
+    xmlFree(answer->owner_name);
     free(answer);
 }
 

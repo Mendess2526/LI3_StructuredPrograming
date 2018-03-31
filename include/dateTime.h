@@ -25,4 +25,6 @@ int dateTime_get_segundos(DATETIME d);
 
 int dateTime_get_milissegundos(DATETIME d);
 
+void dateTime_destroy(DATETIME d);
+
 #endif /*__DATE_TIME_H__*/

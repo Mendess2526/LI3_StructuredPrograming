@@ -50,3 +50,7 @@ int dateTime_get_segundos(DATETIME d){
 int dateTime_get_milissegundos(DATETIME d){
     return d->milissegundos;
 }
+
+void dateTime_destroy(DATETIME d){
+    free(d);
+}

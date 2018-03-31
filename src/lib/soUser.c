@@ -47,8 +47,8 @@ void so_user_add_post(SO_USER user, POST post){
 }
 
 void so_user_destroy(SO_USER user){
-    free(user->name);
-    free(user->bio);
+    xmlFree(user->name);
+    xmlFree(user->bio);
     free(user);
 }
 
