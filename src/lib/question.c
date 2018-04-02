@@ -72,9 +72,17 @@ int question_get_answer_count(QUESTION question){
 }
 
 void question_destroy(QUESTION question){
+    if(!question->date && question->date > (DATETIME) 0x500)
+        printf("Fuck this date\n");
     dateTime_destroy (question->date);
+    if(!question->title && question->title > (xmlChar *) 0x500)
+        printf("Fuck this title\n");
     xmlFree(question->title);
+    if(!question->tags && question->tags > (xmlChar *) 0x500)
+        printf("Fuck this tags\n");
     xmlFree(question->tags);
+    if(!question->ownerName && question->ownerName > (xmlChar *) 0x500)
+        printf("Fuck this ownerName\n");
     xmlFree(question->ownerName);
     free(question);
 }

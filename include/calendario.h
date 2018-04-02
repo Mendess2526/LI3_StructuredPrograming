@@ -10,7 +10,7 @@ typedef struct _calendario *CALENDARIO;
 
 typedef GFunc CFunc;
 
-typedef GDestroyNotify CFreeFunc
+typedef GDestroyNotify CFreeFunc;
 
 typedef GCompareFunc CCompareFunc;
 
@@ -23,4 +23,5 @@ void calendario_get_ids(CALENDARIO cal, Date from, Date to, void *user_data, CFu
 void calendario_destroy(CALENDARIO cal);
 
 void printCalendario(CALENDARIO cal);
+
 #endif

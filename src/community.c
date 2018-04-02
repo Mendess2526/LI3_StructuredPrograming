@@ -5,6 +5,9 @@
 
 #include <stdlib.h>
 
+/** Macro para compara dois inteiros positivos */
+#define INT_CMP(a,b) ((a > b) - (a < b))
+
 struct TCD_community{
     QUESTIONS questions;
     ANSWERS answers;
@@ -17,6 +20,37 @@ void printAnswer(gpointer key, gpointer value, gpointer user_data);
 void printQuestion(gpointer key, gpointer value, gpointer user_data);
 void printUser(gpointer key, gpointer value, gpointer user_data);
 
+gint questionTimeCompare(gconstpointer a, gconstpointer b){
+    DATETIME dataA = question_get_date((QUESTION) b);
+    DATETIME dataB = question_get_date((QUESTION) a);
+    int c;
+    c = INT_CMP(dateTime_get_horas(dataA),         dateTime_get_horas(dataB));
+    if(c) return c;
+    c = INT_CMP(dateTime_get_minutos(dataA),       dateTime_get_minutos(dataB));
+    if(c) return c;
+    c = INT_CMP(dateTime_get_segundos(dataA),      dateTime_get_segundos(dataB));
+    if(c) return c;
+    c = INT_CMP(dateTime_get_milissegundos(dataA), dateTime_get_milissegundos(dataB));
+    if(c) return c;
+    return 0;
+}
+
+gint answerTimeCompare(gconstpointer a, gconstpointer b){
+    DATETIME dataA = answer_get_date((ANSWER) b);
+    DATETIME dataB = answer_get_date((ANSWER) a);
+    int c;
+    c = INT_CMP(dateTime_get_horas(dataA),         dateTime_get_horas(dataB));
+    if(c) return c;
+    c = INT_CMP(dateTime_get_minutos(dataA),       dateTime_get_minutos(dataB));
+    if(c) return c;
+    c = INT_CMP(dateTime_get_segundos(dataA),      dateTime_get_segundos(dataB));
+    if(c) return c;
+    c = INT_CMP(dateTime_get_milissegundos(dataA), dateTime_get_milissegundos(dataB));
+    if(c) return c;
+    return 0;
+}
+
+
 static inline gint64 *newId(long val){
     gint64 *id = g_new(gint64, 1);
     *id = val;
@@ -28,14 +62,9 @@ static inline gint64 *newId(long val){
  * @param users Os users a atualizar
  * @param post O post do user
  */
-static inline void updateUserPosts(SO_USERS users, long ownerId){
+static inline void updateUserPosts(SO_USERS users, long ownerId, POST post){
     SO_USER user = g_hash_table_lookup(users, &ownerId);
-    if(!user){
-        gint64 *id = newId(ownerId);
-        user = so_user_create(*id, -1, NULL, NULL);
-        g_hash_table_insert(users, (gpointer) id, user);
-    }
-    so_user_add_post(user,NULL);
+    if(user) so_user_add_post(user,post);
 }
 
 /**
@@ -46,12 +75,7 @@ static inline void updateUserPosts(SO_USERS users, long ownerId){
 static inline void updateQuestionsAnswers(TAD_community com, ANSWER answer){
     long parentId = answer_get_parent_id(answer);
     QUESTION question = g_hash_table_lookup(com->questions, (gconstpointer) &parentId);
-    if(!question){
-        question = question_create_empty(parentId);
-        gint64 *id = newId(parentId);
-        g_hash_table_insert(com->questions, (gpointer) id, question);
-    }
-    question_add_answer(question,answer);
+    if(question) question_add_answer(question,answer);
 }
 
 //TODO me no like this
@@ -73,8 +97,8 @@ TAD_community community_create(){
 
     com->users      = g_hash_table_new_full(
             g_int64_hash, g_int64_equal,g_free,so_user_destroy_generic);
-    com->calendarioQuestions = calendario_create(10);
-    com->calendarioAnswers = calendario_create(10);
+    com->calendarioQuestions = calendario_create(10, questionTimeCompare, NULL);
+    com->calendarioAnswers   = calendario_create(10, answerTimeCompare, NULL);
     return com;
 }
 
@@ -99,15 +123,11 @@ void community_destroy(TAD_community com){
 void community_add_question(TAD_community com, QUESTION question){
     gint64 *id = newId(question_get_id(question));
 
-    QUESTION oldQuestion = g_hash_table_lookup(com->users,(gconstpointer) &id);
-    if(oldQuestion)
-        question = question_merge(question,oldQuestion);
-
     g_hash_table_insert(com->questions, (gpointer) id, question);
 
-    calendario_add_post(com->calendarioQuestions, post_create(QUESTION_T, question));
-
-    updateUserPosts(com->users, question_get_owner_id(question));
+    calendario_add_post(com->calendarioQuestions, question, question_get_date(question));
+    //TODO update this
+    //updateUserPosts(com->users, question_get_owner_id(question), post_create(QUESTION_T, question));
 }
 
 /**
@@ -120,10 +140,11 @@ void community_add_answer(TAD_community com, ANSWER answer){
 
     g_hash_table_insert(com->answers, (gpointer) id, answer);
 
-    calendario_add_post(com->calendarioAnswers, post_create(ANSWER_T, answer));
+    calendario_add_post(com->calendarioAnswers, answer, answer_get_date(answer));
 
     updateQuestionsAnswers(com,answer);
-    updateUserPosts(com->users, answer_get_owner_id(answer));
+    //TODO update this
+    //updateUserPosts(com->users, answer_get_owner_id(answer), post_create(ANSWER_T, answer));
 }
 
 /**
@@ -133,10 +154,6 @@ void community_add_answer(TAD_community com, ANSWER answer){
  */
 void community_add_user(TAD_community com, SO_USER user){
     gint64 *id = newId(so_user_get_id(user));
-
-    SO_USER oldUser = g_hash_table_lookup(com->users,(gconstpointer) &id);
-    if(oldUser)
-        user = so_user_merge(user,oldUser);
 
     g_hash_table_insert(com->users, (gpointer) id, user);
 }
