@@ -12,34 +12,40 @@ typedef GSList * POSTS;
 typedef struct _hora{
     int count;
     POSTS posts;
+    CCompareFunc compareFunc;
 } *HORA;
 
 typedef struct _dia{
     HORA *horas;
+    CCompareFunc compareFunc;
 } *DIA;
 
 typedef struct _mes{
     int nDias;
     DIA *dias;
+    CCompareFunc compareFunc;
 } *MES;
 
 typedef struct _ano{
     MES *meses;
+    CCompareFunc compareFunc;
 } *ANO;
 
 struct _calendario{
     int nAnos;
     ANO *anos;
+    CCompareFunc compareFunc;
+    CFreeFunc freeFunc;
 };
 
-static HORA hora_create();
-static inline void hora_add_post(HORA h, POST p);
+static HORA hora_create(CCompareFunc compareFunc);
+static inline void hora_add_post(HORA h, void* p);
 static DIA dia_create();
 static MES mes_create(int nDias);
 static ANO ano_create();
-static void dia_add_post(DIA dia, DATETIME d, POST post);
-static void mes_add_post(MES mes, DATETIME d, POST post);
-static void ano_add_post(ANO ano, DATETIME d, POST post);
+static void dia_add_post(DIA dia, DATETIME d, void* post);
+static void mes_add_post(MES mes, DATETIME d, void* post);
+static void ano_add_post(ANO ano, DATETIME d, void* post);
 static inline void hora_get_post_ids(HORA hora, void *user_data, GFunc calFunc);
 static inline void dia_get_post_ids(DIA dia, void *user_data, GFunc calFunc);
 static inline void mes_get_post_ids(MES mes, Date from, Date to, int sameMonth, void* user_data, GFunc calFunc);
@@ -49,7 +55,7 @@ static void mes_destroy(MES m);
 static void ano_destroy(ANO a);
 static int nrDias (int m);
 
-
+//TODO make generic struct
 gint timeCompare(gconstpointer a, gconstpointer b){
     DATETIME dataA = post_get_date((POST) b);
     DATETIME dataB = post_get_date((POST) a);
@@ -91,25 +97,27 @@ static ANO ano_create(){
     return a;
 }
 
-CALENDARIO calendario_create(int nAnos){
+CALENDARIO calendario_create(int nAnos, CCompareFunc compareFunc, CFreeFunc freeFunc){
     CALENDARIO c = (CALENDARIO) malloc(sizeof(struct _calendario));
     c->nAnos = nAnos;
     c->anos = (ANO *) calloc(nAnos, sizeof(struct _ano *));
+    c->compareFunc = compareFunc;
+    c->freeFunc = freeFunc;
     return c;
 }
 
-static inline void hora_add_post(HORA h, POST p){
+static inline void hora_add_post(HORA h, void* p){
     h->count += 1;
     h->posts = g_slist_insert_sorted(h->posts, p, timeCompare);
 }
 
-static void dia_add_post(DIA dia, DATETIME d, POST post){
+static void dia_add_post(DIA dia, DATETIME d, void* post){
     int hora = dateTime_get_horas(d);
     if(dia->horas[hora] == NULL) dia->horas[hora] = hora_create();
     hora_add_post(dia->horas[hora], post);
 }
 
-static void mes_add_post(MES mes, DATETIME d, POST post){
+static void mes_add_post(MES mes, DATETIME d, void* post){
     int dia = dateTime_get_dia(d);
     if(mes->dias[dia] == NULL) mes->dias[dia] = dia_create();
     dia_add_post(mes->dias[dia], d, post);
@@ -121,15 +129,14 @@ static int nrDias (int m){
     return 31;
 }
 
-static void ano_add_post(ANO ano, DATETIME d, POST post){
+static void ano_add_post(ANO ano, DATETIME d, void* post){
     int mes = dateTime_get_mes(d);
     if(ano->meses[mes] == NULL)
         ano->meses[mes] = mes_create(nrDias(mes));
     mes_add_post(ano->meses[mes], d, post);
 }
 
-void calendario_add_post(CALENDARIO cal, POST post){
-    DATETIME d = post_get_date(post);
+void calendario_add_post(CALENDARIO cal, void* post, DATETIME d){
     int ano = ANO2INDEX(dateTime_get_ano(d));
     if(cal->anos[ano] == NULL) cal->anos[ano] = ano_create();
     ano_add_post(cal->anos[ano], d, post);
@@ -217,7 +224,7 @@ void calendario_destroy(CALENDARIO cal){
 static void printHora(HORA hora){
     if(!hora) return;
     for(GSList *cur = hora->posts; cur; cur = g_slist_next(cur)){
-        printf("\t\t\t\tPost: %ld\n",post_get_id((POST) cur->data));
+        printf("\t\t\t\tPost: %ld\n",post_get_id((void*) cur->data));
     }
 }
 

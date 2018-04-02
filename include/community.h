@@ -33,7 +33,9 @@ QUESTION community_get_question(TAD_community com, long id);
 
 ANSWER community_get_answer(TAD_community com, long id);
 
-void community_get_post_ids(TAD_community com, Date from, Date to, void *user_data, GFunc calFunc);
+void community_get_question_ids(TAD_community com, Date from, Date to, void *user_data, GFunc calFunc);
+
+void community_get_answer_ids(TAD_community com, Date from, Date to, void *user_data, GFunc calFunc);
 
 /* ------------- PRINTING --------------------- */
 

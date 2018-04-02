@@ -9,7 +9,8 @@ struct TCD_community{
     QUESTIONS questions;
     ANSWERS answers;
     SO_USERS users;
-    CALENDARIO calendario;
+    CALENDARIO calendarioQuestions;
+    CALENDARIO calendarioAnswers;
 };
 
 void printAnswer(gpointer key, gpointer value, gpointer user_data);
@@ -72,7 +73,8 @@ TAD_community community_create(){
 
     com->users      = g_hash_table_new_full(
             g_int64_hash, g_int64_equal,g_free,so_user_destroy_generic);
-    com->calendario = calendario_create(10);
+    com->calendarioQuestions = calendario_create(10);
+    com->calendarioAnswers = calendario_create(10);
     return com;
 }
 
@@ -84,7 +86,8 @@ void community_destroy(TAD_community com){
     g_hash_table_destroy(com->questions);
     g_hash_table_destroy(com->answers);
     g_hash_table_destroy(com->users);
-    calendario_destroy(com->calendario);
+    calendario_destroy(com->calendarioQuestions);
+    calendario_destroy(com->calendarioAnswers);
     free(com);
 }
 
@@ -102,7 +105,7 @@ void community_add_question(TAD_community com, QUESTION question){
 
     g_hash_table_insert(com->questions, (gpointer) id, question);
 
-    calendario_add_post(com->calendario, post_create(QUESTION_T, question));
+    calendario_add_post(com->calendarioQuestions, post_create(QUESTION_T, question));
 
     updateUserPosts(com->users, question_get_owner_id(question));
 }
@@ -117,7 +120,7 @@ void community_add_answer(TAD_community com, ANSWER answer){
 
     g_hash_table_insert(com->answers, (gpointer) id, answer);
 
-    calendario_add_post(com->calendario, post_create(ANSWER_T, answer));
+    calendario_add_post(com->calendarioAnswers, post_create(ANSWER_T, answer));
 
     updateQuestionsAnswers(com,answer);
     updateUserPosts(com->users, answer_get_owner_id(answer));
@@ -150,10 +153,13 @@ SO_USER community_get_user(TAD_community com, long id){
     return g_hash_table_lookup(com->users,(gconstpointer) &id);
 }
 
-void community_get_post_ids(TAD_community com, Date from, Date to, void* user_data, GFunc calFunc){
-    calendario_get_ids(com->calendario, from, to, user_data, calFunc);
+void community_get_question_ids(TAD_community com, Date from, Date to, void* user_data, GFunc calFunc){
+    calendario_get_ids(com->calendarioQuestions, from, to, user_data, calFunc);
 }
 
+void community_get_answer_ids(TAD_community com, Date from, Date to, void* user_data, GFunc calFunc){
+    calendario_get_ids(com->calendarioAnswers, from, to, user_data, calFunc);
+}
 
 /* --------------- PRINTING ------------------- */
 
@@ -231,5 +237,6 @@ void printFavouritesCount(TAD_community com){
 }
 
 void community_print_calendario(TAD_community com){
-    printCalendario(com->calendario);
+    printCalendario(com->calendarioQuestions);
+    printCalendario(com->calendarioAnswers);
 }
