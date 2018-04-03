@@ -8,10 +8,16 @@
 /** Macro para compara dois inteiros positivos */
 #define INT_CMP(a,b) ((a > b) - (a < b))
 
+typedef GHashTable* QUESTIONS;
+typedef GHashTable* ANSWERS;
+typedef GHashTable* SO_USERS;
+typedef GHashTable* TAGS;
+
 struct TCD_community{
     QUESTIONS questions;
     ANSWERS answers;
     SO_USERS users;
+    TAGS tags;
     CALENDARIO calendarioQuestions;
     CALENDARIO calendarioAnswers;
 };
@@ -90,13 +96,15 @@ TAD_community init(){
 TAD_community community_create(){
     TAD_community com = (TAD_community) malloc(sizeof(struct TCD_community));
     com->questions  = g_hash_table_new_full(
-            g_int64_hash, g_int64_equal,g_free,question_destroy_generic);
+            g_int64_hash, g_int64_equal, g_free, question_destroy_generic);
 
     com->answers    = g_hash_table_new_full(
-            g_int64_hash, g_int64_equal,g_free,answer_destroy_generic);
+            g_int64_hash, g_int64_equal, g_free, answer_destroy_generic);
 
     com->users      = g_hash_table_new_full(
-            g_int64_hash, g_int64_equal,g_free,so_user_destroy_generic);
+            g_int64_hash, g_int64_equal, g_free, so_user_destroy_generic);
+    com->tags = g_hash_table_new_full(
+            g_str_hash, g_str_equal, g_free, g_free);
     com->calendarioQuestions = calendario_create(10, questionTimeCompare, NULL);
     com->calendarioAnswers   = calendario_create(10, answerTimeCompare, NULL);
     return com;
@@ -110,6 +118,7 @@ void community_destroy(TAD_community com){
     g_hash_table_destroy(com->questions);
     g_hash_table_destroy(com->answers);
     g_hash_table_destroy(com->users);
+    g_hash_table_destroy(com->tags);
     calendario_destroy(com->calendarioQuestions);
     calendario_destroy(com->calendarioAnswers);
     free(com);
@@ -158,6 +167,12 @@ void community_add_user(TAD_community com, SO_USER user){
     g_hash_table_insert(com->users, (gpointer) id, user);
 }
 
+void community_add_tag(TAD_community com, long id, xmlChar* tag){
+    gint64* id_aloc = newId(id);
+
+    g_hash_table_insert(com->tags, (gpointer) tag, id_aloc);
+}
+
 QUESTION community_get_question(TAD_community com, long id){
     return g_hash_table_lookup(com->questions, (gconstpointer) &id);
 }
@@ -168,6 +183,12 @@ ANSWER community_get_answer(TAD_community com, long id){
 
 SO_USER community_get_user(TAD_community com, long id){
     return g_hash_table_lookup(com->users,(gconstpointer) &id);
+}
+
+long community_get_tag(TAD_community com, xmlChar* tag){
+    long* id = g_hash_table_lookup(com->tags, (gconstpointer) tag);
+    if(id) return *id;
+    else return -2;
 }
 
 void community_get_question_ids(TAD_community com, Date from, Date to, void* user_data, GFunc calFunc){

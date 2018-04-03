@@ -8,8 +8,9 @@
 #include <libxml/parser.h>
 #include <libxml/parserInternals.h>
 
-#define POSTS "/Posts.xml"
-#define USERS "/Users.xml"
+#define POSTS_FILE "/Posts.xml"
+#define USERS_FILE "/Users.xml"
+#define TAGS_FILE "/Tags.xml"
 
 enum Post_attr{
     POST_ID,
@@ -34,9 +35,17 @@ enum User_attr{
     USER_NONE
 };
 
+enum Tag_attr{
+    TAG_ID,
+    TAG_NAME,
+    TAG_NONE
+};
+
 static inline enum Post_attr postStrcmp(const xmlChar *attribute);
 
 static inline enum User_attr userStrcmp(const xmlChar *attribute);
+
+static inline enum Tag_attr tagStrcmp(const xmlChar *attribute);
 
 static inline DATETIME parseDate(const xmlChar *dateStr);
 
@@ -167,6 +176,28 @@ void start_user_element(void *user_data, const xmlChar *name, const xmlChar **at
     if(bio) xmlFree(bio);
 }
 
+void start_tag_element(void* user_data, const xmlChar* name, const xmlChar** attrs){
+    if(name[0] == 't') return;
+    TAD_community com = (TAD_community) user_data;
+    long id = -2;
+    xmlChar* tag = NULL;
+    int numAttr = 2;
+    for(;numAttr > 0 && attrs!=NULL && attrs[0] != NULL; attrs += 2){
+        int atrType = tagStrcmp(attrs[0]);
+        switch(atrType){
+            case TAG_ID:
+                id = strtol((char *) attrs[1], NULL, 10);
+                numAttr--;
+                break;
+            case TAG_NAME:
+                tag = xmlStrdup(attrs[1]);
+                numAttr--;
+                break;
+        }
+    }
+    community_add_tag(com, id, tag);
+}
+
 /**
  * Funcão que é chamada caso o xml estaja mal formatado
  * @param user_data Apontador generico usado para passar a instancia da estrutura
@@ -195,24 +226,35 @@ TAD_community load(TAD_community com, char *dump_path){
     saxH.error = error_handler;
 
     // parse users
-    sprintf(xmlPath,"%s%s",dump_path,USERS);
+    sprintf(xmlPath,"%s%s",dump_path,USERS_FILE);
 
     saxH.startElement = start_user_element;
 
     if((n=xmlSAXUserParseFile(&saxH,com,xmlPath))){
-        fprintf(stderr,"Couldn't parse xml for file %s. Error: %d",USERS,n);
+        fprintf(stderr,"Couldn't parse xml for file %s. Error: %d",USERS_FILE,n);
         return com;
     }
 
     // parse posts
-    sprintf(xmlPath,"%s%s",dump_path,POSTS);
+    sprintf(xmlPath,"%s%s",dump_path,POSTS_FILE);
 
     saxH.startElement = start_post_element;
 
     if((n=xmlSAXUserParseFile(&saxH,com,xmlPath))){
-        fprintf(stderr,"Couldn't parse xml for file %s. Error: %d",POSTS,n);
+        fprintf(stderr,"Couldn't parse xml for file %s. Error: %d",POSTS_FILE,n);
         return com;
     }
+
+    // parse tags
+    sprintf(xmlPath,"%s%s",dump_path,TAGS_FILE);
+
+    saxH.startElement = start_tag_element;
+
+    if((n=xmlSAXUserParseFile(&saxH,com,xmlPath))){
+        fprintf(stderr,"Couldn't parse xml for file %s. Error: %d",TAGS_FILE,n);
+        return com;
+    }
+
     xmlCleanupParser();
     return com;
 }
@@ -258,6 +300,14 @@ static inline enum User_attr userStrcmp(const xmlChar *attribute){
     }
 }
 
+static inline enum Tag_attr tagStrcmp(const xmlChar *attribute){
+    switch(attribute[0]){
+        case 'I': return TAG_ID;
+        case 'T': return TAG_NAME;
+
+        default: return TAG_NONE;
+    }
+}
 static inline DATETIME parseDate(const xmlChar *dateStr){
     int year, month, day, hour, minute, seconds, milisseconds;
     sscanf((char *) dateStr,"%d-%d-%dT%d:%d:%d.%d",&year,&month,&day,&hour,&minute,&seconds,&milisseconds);

@@ -7,10 +7,6 @@
 #include "answer.h"
 #include "question.h"
 
-typedef GHashTable *QUESTIONS;
-typedef GHashTable *ANSWERS;
-typedef GHashTable *SO_USERS;
-
 typedef struct TCD_community *TAD_community;
 
 TAD_community init();
@@ -27,11 +23,15 @@ void community_add_user(TAD_community com, SO_USER user);
 
 void community_add_favorite(TAD_community com, long id);
 
+void community_add_tag(TAD_community com, long id, xmlChar* tag);
+
 SO_USER community_get_user(TAD_community com, long id);
 
 QUESTION community_get_question(TAD_community com, long id);
 
 ANSWER community_get_answer(TAD_community com, long id);
+
+long community_get_tag(TAD_community com, xmlChar* tag);
 
 void community_get_question_ids(TAD_community com, Date from, Date to, void *user_data, GFunc calFunc);
 
