@@ -206,40 +206,40 @@ void calendario_destroy(CALENDARIO cal){
     free(cal);
 }
 
-static void printHora(HORA hora){
+static void printHora(HORA hora, CPrintFunction printFuncion){
     if(!hora) return;
     for(GSList *cur = hora->posts; cur; cur = g_slist_next(cur)){
-        printf("\t\t\t\tPost: %ld\n",post_get_id((void*) cur->data));
+        (*printFuncion)(cur->data);
     }
 }
 
-static void printDia(DIA dia){
+static void printDia(DIA dia, CPrintFunction printFuncion){
     if(!dia) return;
     for(int i=0; i<24; i++){
         printf("\t\t\tHora: %d\n",i);
-        printHora(dia->horas[i]);
+        printHora(dia->horas[i], printFuncion);
     }
 }
 
-static void printMes(MES mes){
+static void printMes(MES mes, CPrintFunction printFuncion){
     if(!mes) return;
     for(int i=0; i<mes->nDias; i++){
         printf("\t\tDia: %d\n",i);
-        printDia(mes->dias[i]);
+        printDia(mes->dias[i], printFuncion);
     }
 }
 
-static void printAno(ANO ano){
+static void printAno(ANO ano, CPrintFunction printFuncion){
     if(!ano) return;
     for(int i=0; i<12;i++){
         printf("\tMes: %d\n",i);
-        printMes(ano->meses[i]);
+        printMes(ano->meses[i], printFuncion);
     }
 }
 
-void printCalendario(CALENDARIO cal){
+void printCalendario(CALENDARIO cal, CPrintFunction printFuncion){
     for(int i=0; i< cal->nAnos; i++){
         printf("Ano: %d\n",i);
-        printAno(cal->anos[i]);
+        printAno(cal->anos[i], printFuncion);
     }
 }

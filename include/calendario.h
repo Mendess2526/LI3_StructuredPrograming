@@ -14,6 +14,8 @@ typedef GDestroyNotify CFreeFunc;
 
 typedef GCompareFunc CCompareFunc;
 
+typedef void (*CPrintFunction)(void*);
+
 CALENDARIO calendario_create(int nAnos, CCompareFunc compareFunc, CFreeFunc freeFunc);
 
 void calendario_add_post(CALENDARIO cal, void* post, DATETIME d);
@@ -22,6 +24,6 @@ void calendario_get_ids(CALENDARIO cal, Date from, Date to, void *user_data, CFu
 
 void calendario_destroy(CALENDARIO cal);
 
-void printCalendario(CALENDARIO cal);
+void printCalendario(CALENDARIO cal, CPrintFunction printFunction);
 
 #endif

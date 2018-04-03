@@ -253,7 +253,13 @@ void printFavouritesCount(TAD_community com){
     g_hash_table_foreach(com->answers  , pFavCountA, "Id:%ld, FCount:%d\n");
 }
 
+void cPrintQuestion(void* question){
+    printf("\t\t\t\tPost: %ld\n", question_get_id((QUESTION) question));
+}
+void cPrintAnswer(void* answer){
+    printf("\t\t\t\tPost: %ld\n",answer_get_id((ANSWER) answer));
+}
 void community_print_calendario(TAD_community com){
-    printCalendario(com->calendarioQuestions);
-    printCalendario(com->calendarioAnswers);
+    printCalendario(com->calendarioQuestions, cPrintQuestion);
+    printCalendario(com->calendarioAnswers, cPrintAnswer);
 }
