@@ -1,7 +1,6 @@
 #include "soUser.h"
+#include "dateTime.h"
 #include <stdlib.h>
-
-#define INT_CMP(a,b) ((a > b) - (a < b))
 
 typedef GSList * POSTS;
 
@@ -17,16 +16,7 @@ struct _so_user{
 gint postTimeCompare(gconstpointer a, gconstpointer b){
     DATETIME dataA = post_get_date((POST) b);
     DATETIME dataB = post_get_date((POST) a);
-    int c;
-    c = INT_CMP(dateTime_get_horas(dataA),         dateTime_get_horas(dataB));
-    if(c) return c;
-    c = INT_CMP(dateTime_get_minutos(dataA),       dateTime_get_minutos(dataB));
-    if(c) return c;
-    c = INT_CMP(dateTime_get_segundos(dataA),      dateTime_get_segundos(dataB));
-    if(c) return c;
-    c = INT_CMP(dateTime_get_milissegundos(dataA), dateTime_get_milissegundos(dataB));
-    if(c) return c;
-    return 0;
+    return dateTime_compare(dataA, dataB);
 }
 
 SO_USER so_user_create(long id, int reputation, xmlChar *name, xmlChar *bio){

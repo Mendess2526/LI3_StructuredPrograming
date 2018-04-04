@@ -2,11 +2,11 @@
 #include "question.h"
 #include "answer.h"
 #include "calendario.h"
+#include "dateTime.h"
 
 #include <stdlib.h>
 
-/** Macro para compara dois inteiros positivos */
-#define INT_CMP(a,b) ((a > b) - (a < b))
+
 
 typedef GHashTable* QUESTIONS;
 typedef GHashTable* ANSWERS;
@@ -22,41 +22,23 @@ struct TCD_community{
     CALENDARIO calendarioAnswers;
 };
 
-void printAnswer(gpointer key, gpointer value, gpointer user_data);
-void printQuestion(gpointer key, gpointer value, gpointer user_data);
-void printUser(gpointer key, gpointer value, gpointer user_data);
-
 gint questionTimeCompare(gconstpointer a, gconstpointer b){
     DATETIME dataA = question_get_date((QUESTION) b);
     DATETIME dataB = question_get_date((QUESTION) a);
-    int c;
-    c = INT_CMP(dateTime_get_horas(dataA),         dateTime_get_horas(dataB));
-    if(c) return c;
-    c = INT_CMP(dateTime_get_minutos(dataA),       dateTime_get_minutos(dataB));
-    if(c) return c;
-    c = INT_CMP(dateTime_get_segundos(dataA),      dateTime_get_segundos(dataB));
-    if(c) return c;
-    c = INT_CMP(dateTime_get_milissegundos(dataA), dateTime_get_milissegundos(dataB));
-    if(c) return c;
-    return 0;
+    return dateTime_compare(dataA,dataB);
 }
 
 gint answerTimeCompare(gconstpointer a, gconstpointer b){
     DATETIME dataA = answer_get_date((ANSWER) b);
     DATETIME dataB = answer_get_date((ANSWER) a);
-    int c;
-    c = INT_CMP(dateTime_get_horas(dataA),         dateTime_get_horas(dataB));
-    if(c) return c;
-    c = INT_CMP(dateTime_get_minutos(dataA),       dateTime_get_minutos(dataB));
-    if(c) return c;
-    c = INT_CMP(dateTime_get_segundos(dataA),      dateTime_get_segundos(dataB));
-    if(c) return c;
-    c = INT_CMP(dateTime_get_milissegundos(dataA), dateTime_get_milissegundos(dataB));
-    if(c) return c;
-    return 0;
+    return dateTime_compare(dataA, dataB);
 }
 
-
+/**
+ * Aloca um id.
+ * @param val O valor a alocar.
+ * @returns Um id alocado.
+ */
 static inline gint64 *newId(long val){
     gint64 *id = g_new(gint64, 1);
     *id = val;
@@ -65,8 +47,8 @@ static inline gint64 *newId(long val){
 
 /**
  * Atualiza os posts de um user.
- * @param users Os users a atualizar
- * @param post O post do user
+ * @param users Os users a atualizar.
+ * @param post O post do user.
  */
 static inline void updateUserPosts(SO_USERS users, long ownerId, POST post){
     SO_USER user = g_hash_table_lookup(users, &ownerId);
@@ -74,9 +56,9 @@ static inline void updateUserPosts(SO_USERS users, long ownerId, POST post){
 }
 
 /**
- * Atualiza as resposta das perguntas
- * @param com Uma instancia da estrutura
- * @param answer a resposta a adicionar
+ * Atualiza as resposta das perguntas.
+ * @param com Uma instancia da estrutura.
+ * @param answer A resposta a adicionar.
  */
 static inline void updateQuestionsAnswers(TAD_community com, ANSWER answer){
     long parentId = answer_get_parent_id(answer);
@@ -89,10 +71,6 @@ TAD_community init(){
     return community_create();
 }
 
-/**
- * Cria uma instancia da estrutura
- * @returns Uma instancia da estrutura
- */
 TAD_community community_create(){
     TAD_community com = (TAD_community) malloc(sizeof(struct TCD_community));
     com->questions  = g_hash_table_new_full(
@@ -110,10 +88,6 @@ TAD_community community_create(){
     return com;
 }
 
-/**
- * Liberta a memoria ocupada por uma instancia da estrutura
- * @param com Uma instância da estrutura.
- */
 void community_destroy(TAD_community com){
     g_hash_table_destroy(com->questions);
     g_hash_table_destroy(com->answers);
@@ -124,26 +98,16 @@ void community_destroy(TAD_community com){
     free(com);
 }
 
-/**
- * Adiciona uma questão à estrutura.
- * @param com Uma instância da estrutura.
- * @param question A questão a adicionar.
- */
 void community_add_question(TAD_community com, QUESTION question){
     gint64 *id = newId(question_get_id(question));
 
     g_hash_table_insert(com->questions, (gpointer) id, question);
 
     calendario_add_post(com->calendarioQuestions, question, question_get_date(question));
-    //TODO update this
-    //updateUserPosts(com->users, question_get_owner_id(question), post_create(QUESTION_T, question));
+
+    updateUserPosts(com->users, question_get_owner_id(question), post_create(QUESTION_T, question));
 }
 
-/**
- * Adiciona uma resposta a estrutura
- * @param com Uma instância da estrutura.
- * @param answer A resposta a adicionar
- */
 void community_add_answer(TAD_community com, ANSWER answer){
     gint64 *id = newId(answer_get_id(answer));
 
@@ -152,15 +116,9 @@ void community_add_answer(TAD_community com, ANSWER answer){
     calendario_add_post(com->calendarioAnswers, answer, answer_get_date(answer));
 
     updateQuestionsAnswers(com,answer);
-    //TODO update this
-    //updateUserPosts(com->users, answer_get_owner_id(answer), post_create(ANSWER_T, answer));
+    updateUserPosts(com->users, answer_get_owner_id(answer), post_create(ANSWER_T, answer));
 }
 
-/**
- * Adiciona um user ao tipo abstrato de dados.
- * @param com Uma instância da estrutura.
- * @param user O user a adicionar
- */
 void community_add_user(TAD_community com, SO_USER user){
     gint64 *id = newId(so_user_get_id(user));
 
@@ -185,22 +143,25 @@ SO_USER community_get_user(TAD_community com, long id){
     return g_hash_table_lookup(com->users,(gconstpointer) &id);
 }
 
-long community_get_tag(TAD_community com, xmlChar* tag){
+long community_get_tag_id(TAD_community com, xmlChar* tag){
     long* id = g_hash_table_lookup(com->tags, (gconstpointer) tag);
     if(id) return *id;
     else return -2;
 }
 
-void community_get_questions(TAD_community com, Date from, Date to, void* user_data, GFunc calFunc){
-    calendario_get_ids(com->calendarioQuestions, from, to, user_data, calFunc);
+void community_iterate_questions(TAD_community com, Date from, Date to, void* data, GFunc calFunc){
+    calendario_iterate(com->calendarioQuestions, from, to, data, calFunc);
 }
 
-void community_get_answers(TAD_community com, Date from, Date to, void* user_data, GFunc calFunc){
-    calendario_get_ids(com->calendarioAnswers, from, to, user_data, calFunc);
+void community_iterate_answers(TAD_community com, Date from, Date to, void* data, GFunc calFunc){
+    calendario_iterate(com->calendarioAnswers, from, to, data, calFunc);
 }
 
 /* --------------- PRINTING ------------------- */
 
+void printAnswer(gpointer key, gpointer value, gpointer user_data);
+void printQuestion(gpointer key, gpointer value, gpointer user_data);
+void printUser(gpointer key, gpointer value, gpointer user_data);
 
 void printUser(gpointer key, gpointer value, gpointer user_data){
     long id = so_user_get_id((SO_USER) value);
@@ -260,18 +221,6 @@ void printAnswer(gpointer key, gpointer value, gpointer user_data){
 void printAnswers(TAD_community com){
     g_hash_table_foreach(com->answers, printAnswer,
             "Key{%08ld} Answer  {id:%3ld, Date:%s, Score:%4d, ParentId:%3ld, OwnerId:%3ld, OwnerName:%.5s}\n");
-}
-
-void pFavCountA(gpointer key, gpointer value, gpointer user_data){
-    ANSWER answer = (ANSWER) value;
-    if(answer == NULL){ printf("NULL VALUE: Key:%ld\n",*((gint64 *) key)); return;}
-    long id = answer_get_id(answer);
-    int favC = answer_get_favorite_count(answer);
-    printf((char *) user_data, id, favC);
-}
-void printFavouritesCount(TAD_community com){
-    printf("ANSWERS FAVOURITE COUNT\n");
-    g_hash_table_foreach(com->answers  , pFavCountA, "Id:%ld, FCount:%d\n");
 }
 
 void cPrintQuestion(void* question){
