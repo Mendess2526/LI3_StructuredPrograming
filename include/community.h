@@ -53,7 +53,7 @@ void community_add_user(TAD_community com, SO_USER user);
 void community_add_tag(TAD_community com, long id, xmlChar* tag);
 
 /**
- * Procura a questão com o id fornecido.
+ * Encontra a questão com o id fornecido.
  * @param com Uma instância da estrutura.
  * @param id O id da questão.
  * @returns A questão.
@@ -61,7 +61,7 @@ void community_add_tag(TAD_community com, long id, xmlChar* tag);
 QUESTION community_get_question(TAD_community com, long id);
 
 /**
- * Procura a resposta com o id fornecido.
+ * Encontra a resposta com o id fornecido.
  * @param com Uma instância da estrutura.
  * @param id O id da resposta.
  * @returns A resposta.
@@ -69,7 +69,7 @@ QUESTION community_get_question(TAD_community com, long id);
 ANSWER community_get_answer(TAD_community com, long id);
 
 /**
- * Procura o user com o id fornecido.
+ * Encontra o user com o id fornecido.
  * @param com Uma instância da estrutura.
  * @param id O id do user.
  * @returns O user.
@@ -77,7 +77,7 @@ ANSWER community_get_answer(TAD_community com, long id);
 SO_USER community_get_user(TAD_community com, long id);
 
 /**
- * Procura o id da tag fornecida.
+ * Encontra o id da tag fornecida.
  * @param com Uma instância da estrutura.
  * @param tag O nome da tag.
  * @returns O id.

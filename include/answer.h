@@ -28,14 +28,10 @@ int answer_get_comment_count(ANSWER answer);
 
 xmlChar *answer_get_owner_name(ANSWER answer);
 
-int answer_get_favorite_count(ANSWER answer);
-
 long answer_get_parent_id(ANSWER answer);
 
 void answer_destroy(ANSWER answer);
 
 void answer_destroy_generic(gpointer answer);
-
-void answer_add_favorite(ANSWER answer);
 
 #endif /*__ANSWER_H__*/

@@ -3,7 +3,6 @@
 
 struct _answer{
     int parent_id;
-    int favorite_count;
     int score;
     int comment_count;
     long id;
@@ -48,10 +47,6 @@ xmlChar *answer_get_owner_name(ANSWER answer){
     return xmlStrdup(answer->owner_name);
 }
 
-int answer_get_favorite_count(ANSWER answer){
-    return answer->favorite_count;
-}
-
 long answer_get_parent_id(ANSWER answer){
     return answer->parent_id;
 }
@@ -64,8 +59,4 @@ void answer_destroy(ANSWER answer){
 
 void answer_destroy_generic(gpointer answer){
     answer_destroy((ANSWER) answer);
-}
-
-void answer_add_favorite(ANSWER answer){
-    answer->favorite_count+=1;
 }
