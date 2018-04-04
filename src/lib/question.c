@@ -71,7 +71,7 @@ void question_destroy(QUESTION question){
     xmlFree(question->title);
     xmlFree(question->tags);
     xmlFree(question->ownerName);
-    g_slist_free_full(question->answers, answer_destroy_generic);
+    g_slist_free(question->answers);
     free(question);
 }
 
