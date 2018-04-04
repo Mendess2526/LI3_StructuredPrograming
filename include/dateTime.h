@@ -27,4 +27,6 @@ int dateTime_get_milissegundos(DATETIME d);
 
 void dateTime_destroy(DATETIME d);
 
+int dateTime_compare(DATETIME dataA, DATETIME dataB);
+
 #endif /*__DATE_TIME_H__*/

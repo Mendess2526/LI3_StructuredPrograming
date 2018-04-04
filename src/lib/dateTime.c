@@ -1,6 +1,9 @@
 #include "dateTime.h"
 #include <stdlib.h>
 
+/** Macro para compara dois inteiros positivos */
+#define INT_CMP(a,b) ((a > b) - (a < b))
+
 struct _dateTime{
     int ano;
     int mes;
@@ -53,4 +56,17 @@ int dateTime_get_milissegundos(DATETIME d){
 
 void dateTime_destroy(DATETIME d){
     free(d);
+}
+
+int dateTime_compare(DATETIME dataA, DATETIME dataB){
+    int c;
+    c = INT_CMP(dateTime_get_horas(dataA),         dateTime_get_horas(dataB));
+    if(c) return c;
+    c = INT_CMP(dateTime_get_minutos(dataA),       dateTime_get_minutos(dataB));
+    if(c) return c;
+    c = INT_CMP(dateTime_get_segundos(dataA),      dateTime_get_segundos(dataB));
+    if(c) return c;
+    c = INT_CMP(dateTime_get_milissegundos(dataA), dateTime_get_milissegundos(dataB));
+    if(c) return c;
+    return 0;
 }
