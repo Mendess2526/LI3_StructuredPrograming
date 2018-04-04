@@ -18,8 +18,6 @@ QUESTION question_create(long id,
                         int answerCount,
                         xmlChar *ownerName);
 
-QUESTION question_create_empty(long id);
-
 long question_get_id(QUESTION question);
 
 DATETIME question_get_date(QUESTION question);
@@ -41,7 +39,5 @@ void question_destroy(QUESTION question);
 void question_destroy_generic(gpointer question);
 
 void question_add_answer(QUESTION question, ANSWER answer);
-//should free newP
-QUESTION question_merge(QUESTION oldQ, QUESTION newQ);
 
 #endif /*__QUESTION_H__*/

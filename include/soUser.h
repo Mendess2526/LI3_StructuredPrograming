@@ -13,8 +13,6 @@ SO_USER so_user_create(long id,
                         xmlChar *name,
                         xmlChar *bio);
 
-SO_USER so_user_create_empty(long id);
-
 long so_user_get_id(SO_USER user);
 
 int so_user_get_reputation(SO_USER user);
@@ -28,7 +26,5 @@ void so_user_add_post(SO_USER user, POST post);
 void so_user_destroy(SO_USER user);
 
 void so_user_destroy_generic(gpointer user);
-
-SO_USER so_user_merge(SO_USER oldU, SO_USER newU);
 
 #endif /*__SO_USER_H__*/
