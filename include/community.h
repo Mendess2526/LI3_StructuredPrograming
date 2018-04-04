@@ -33,9 +33,9 @@ ANSWER community_get_answer(TAD_community com, long id);
 
 long community_get_tag(TAD_community com, xmlChar* tag);
 
-void community_get_question_ids(TAD_community com, Date from, Date to, void *user_data, GFunc calFunc);
+void community_get_questions(TAD_community com, Date from, Date to, void *user_data, GFunc calFunc);
 
-void community_get_answer_ids(TAD_community com, Date from, Date to, void *user_data, GFunc calFunc);
+void community_get_answers(TAD_community com, Date from, Date to, void *user_data, GFunc calFunc);
 
 /* ------------- PRINTING --------------------- */
 
