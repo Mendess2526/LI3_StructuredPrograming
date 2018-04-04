@@ -1,6 +1,8 @@
 #include "question.h"
 #include <stdlib.h>
 
+typedef GSList * ANSWERS;
+
 struct _question{
     int score;
     int answer_count;
@@ -10,6 +12,7 @@ struct _question{
     xmlChar *ownerName;
     xmlChar *title;
     xmlChar *tags;
+    ANSWERS answers;
 };
 
 QUESTION question_create(long id, DATETIME date, int score, long ownerId,
@@ -23,19 +26,7 @@ QUESTION question_create(long id, DATETIME date, int score, long ownerId,
     q->tags = xmlStrdup(tags);
     q->answer_count = answerCount;
     q->ownerName = xmlStrdup(ownerName);
-    return q;
-}
-
-QUESTION question_create_empty(long id){
-    QUESTION q = malloc(sizeof(struct _question));
-    q->id=id;
-    q->date = NULL;
-    q->score = -1;
-    q->owner_id = -2;
-    q->title = NULL;
-    q->tags = NULL;
-    q->answer_count = -1;
-    q->ownerName = NULL;
+    q->answers = NULL;
     return q;
 }
 
@@ -71,19 +62,16 @@ int question_get_answer_count(QUESTION question){
     return question->answer_count;
 }
 
+ANSWERS question_get_answers(QUESTION question){
+    return question->answers;
+}
+
 void question_destroy(QUESTION question){
-    if(!question->date && question->date > (DATETIME) 0x500)
-        printf("Fuck this date\n");
     dateTime_destroy (question->date);
-    if(!question->title && question->title > (xmlChar *) 0x500)
-        printf("Fuck this title\n");
     xmlFree(question->title);
-    if(!question->tags && question->tags > (xmlChar *) 0x500)
-        printf("Fuck this tags\n");
     xmlFree(question->tags);
-    if(!question->ownerName && question->ownerName > (xmlChar *) 0x500)
-        printf("Fuck this ownerName\n");
     xmlFree(question->ownerName);
+    g_slist_free_full(question->answers, answer_destroy_generic);
     free(question);
 }
 
@@ -92,31 +80,5 @@ void question_destroy_generic(gpointer question){
 }
 
 void question_add_answer(QUESTION question, ANSWER answer){
-    
-}
-
-QUESTION question_merge(QUESTION oldQ, QUESTION newQ){
-    if(oldQ->score == -1){
-        oldQ->score = newQ->score;
-    }
-    if(oldQ->answer_count == -1){
-        oldQ->answer_count = newQ->answer_count;
-    }
-    if(oldQ->owner_id == -2){
-        oldQ->owner_id = newQ->owner_id;
-    }
-    if(oldQ->date == NULL){
-        oldQ->date = newQ->date;
-    }
-    if(oldQ->title == NULL){
-        oldQ->title = newQ->title;
-    }
-    if(oldQ->tags == NULL){
-        oldQ->tags = newQ->tags;
-    }
-    if(oldQ->ownerName == NULL){
-        oldQ->ownerName = newQ->ownerName;
-    }
-    question_destroy(newQ);
-    return oldQ;
+    question->answers = g_slist_prepend(question->answers, answer);
 }

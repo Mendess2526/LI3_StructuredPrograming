@@ -5,6 +5,7 @@
 
 #define ANO2INDEX(ano) (ano-2008)
 
+
 typedef GSList * POSTS;
 
 typedef struct _hora{
@@ -33,7 +34,6 @@ struct _calendario{
 };
 
 static int nrDias (int m);
-gint timeCompare(gconstpointer a, gconstpointer b);
 
 static HORA hora_create();
 static DIA dia_create();
@@ -129,7 +129,6 @@ void calendario_add_post(CALENDARIO cal, void* post, DATETIME d){
 
 static inline void hora_get_post_ids(HORA hora, void *user_data, GFunc calFunc){
     if(!hora) return;
-    printf("Count: %d\n", g_slist_length(hora->posts));
     g_slist_foreach(hora->posts, calFunc, user_data);
 }
 
