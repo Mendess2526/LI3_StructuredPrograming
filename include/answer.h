@@ -2,6 +2,7 @@
 #define __ANSWER_H__
 
 #include "dateTime.h"
+#include "question.h"
 #include <glib.h>
 
 #include <libxml/parserInternals.h>
@@ -31,6 +32,10 @@ xmlChar *answer_get_owner_name(ANSWER answer);
 int answer_get_favorite_count(ANSWER answer);
 
 long answer_get_parent_id(ANSWER answer);
+
+QUESTION answer_get_parent_ptr(ANSWER answer);
+
+void answer_set_parent_ptr(ANSWER answer, QUESTION question);
 
 void answer_destroy(ANSWER answer);
 

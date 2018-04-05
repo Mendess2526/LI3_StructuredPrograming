@@ -9,6 +9,7 @@ struct _answer{
     long id;
     long owner_id;
     DATETIME date;
+    QUESTION parent_ptr;
     xmlChar *owner_name;
 };
 
@@ -20,6 +21,7 @@ ANSWER answer_create(long id, DATETIME date, int score, long ownerId, long paren
     answer->comment_count = comment_count;
     answer->owner_id = ownerId;
     answer->parent_id = parentId;
+    answer->parent_ptr = NULL;
     answer->owner_name = xmlStrdup(ownerName);
     return answer;
 }
@@ -54,6 +56,14 @@ int answer_get_favorite_count(ANSWER answer){
 
 long answer_get_parent_id(ANSWER answer){
     return answer->parent_id;
+}
+
+QUESTION answer_get_parent_ptr(ANSWER answer){
+    return answer->parent_ptr;
+}
+
+void answer_set_parent_ptr(ANSWER answer, QUESTION question){
+    answer->parent_ptr = question;
 }
 
 void answer_destroy(ANSWER answer){

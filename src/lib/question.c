@@ -51,7 +51,6 @@ xmlChar *question_get_title(QUESTION question){
 }
 
 xmlChar **question_get_tags(QUESTION question){
-    return NULL;
 }
 
 xmlChar *question_get_owner_name(QUESTION question){
@@ -80,5 +79,6 @@ void question_destroy_generic(gpointer question){
 }
 
 void question_add_answer(QUESTION question, ANSWER answer){
+    answer_set_parent_ptr(answer, question);
     question->answers = g_slist_prepend(question->answers, answer);
 }
