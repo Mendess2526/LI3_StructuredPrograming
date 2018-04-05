@@ -3,6 +3,7 @@
 
 #include "post.h"
 #include "date.h"
+#include "types.h"
 
 #include <glib.h>
 
