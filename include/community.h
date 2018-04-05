@@ -18,7 +18,7 @@ TAD_community init();
 TAD_community community_create();
 
 /**
- * Liberta a memória ocupada por uma instância da estrutura.
+ * Liberta a memória ocupada pela instância da estrutura.
  * @param com Uma instância da estrutura.
  */
 void community_destroy(TAD_community com);
