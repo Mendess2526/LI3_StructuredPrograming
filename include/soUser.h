@@ -3,28 +3,68 @@
 
 #include "post.h"
 #include <glib.h>
+#include "types.h"
 
 #include <libxml/parserInternals.h>
 
-typedef struct _so_user *SO_USER;
-
+ /**
+ * Cria um user.
+ * @param id O id do user.
+ * @param reputation A reputação do user.
+ * @param name O nome do user.
+ * @param bio .
+ * @returns Um user.
+ */
 SO_USER so_user_create(long id,
                         int reputation,
                         xmlChar *name,
                         xmlChar *bio);
 
+ /**
+ * Retorna o id do user.
+ * @param user Um user.
+ * @returns O id do user.
+ */
 long so_user_get_id(SO_USER user);
 
+ /**
+ * Retorna a reputação do user.
+ * @param user Um user.
+ * @returns A reputação do user.
+ */
 int so_user_get_reputation(SO_USER user);
 
+ /**
+ * Retorna o nome do user.
+ * @param user Um user.
+ * @returns O nome do user.
+ */
 xmlChar *so_user_get_name(SO_USER user);
 
+ /**
+ * Retorna o id do user.
+ * @param question Um user.
+ * @returns O id do user.
+ */
 xmlChar *so_user_get_bio(SO_USER user);
 
+ /**
+ * Adiciona um post na lista de posts do user.
+ * @param question Um user.
+ * @param post O post a adicionar.
+ */
 void so_user_add_post(SO_USER user, POST post);
 
+ /**
+ * Liberta a memória ocupada pelo user.
+ * @param user Um user.
+ */
 void so_user_destroy(SO_USER user);
 
+ /**
+ *
+ * @param user.
+ */
 void so_user_destroy_generic(gpointer user);
 
 #endif /*__SO_USER_H__*/
