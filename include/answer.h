@@ -4,10 +4,9 @@
 #include "dateTime.h"
 #include "question.h"
 #include <glib.h>
+#include "types.h"
 
 #include <libxml/parserInternals.h>
-
-typedef struct _answer *ANSWER;
 
  /**
  *Cria uma resposta. 

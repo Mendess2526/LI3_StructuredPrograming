@@ -2,8 +2,8 @@
 #include "pair.h"
 #include "list.h"
 #include "user.h"
+#include "types.h"
 
-typedef struct TCD_community * TAD_community;
 
 TAD_community init();
 
