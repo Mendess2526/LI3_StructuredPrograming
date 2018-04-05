@@ -12,7 +12,7 @@
  * @param id O id do user.
  * @param reputation A reputação do user.
  * @param name O nome do user.
- * @param bio .
+ * @param bio A biografia do user.
  * @returns Um user.
  */
 SO_USER so_user_create(long id,
@@ -42,15 +42,15 @@ int so_user_get_reputation(SO_USER user);
 xmlChar *so_user_get_name(SO_USER user);
 
  /**
- * Retorna o id do user.
- * @param question Um user.
- * @returns O id do user.
+ * Retorna a biografia do user.
+ * @param user Um user.
+ * @returns A biografia do user.
  */
 xmlChar *so_user_get_bio(SO_USER user);
 
  /**
  * Adiciona um post na lista de posts do user.
- * @param question Um user.
+ * @param user Um user.
  * @param post O post a adicionar.
  */
 void so_user_add_post(SO_USER user, POST post);
