@@ -241,7 +241,6 @@ void start_tag_element(void* user_data, const xmlChar* name, const xmlChar** att
  * @param msg Mensagem de erro
  */
 void error_handler(void *user_data, const char *msg, ...) {
-    user_data=0;
     va_list args;
     va_start(args, msg);
     g_logv("XML", G_LOG_LEVEL_CRITICAL, msg, args);
