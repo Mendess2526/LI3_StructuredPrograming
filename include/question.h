@@ -70,7 +70,7 @@ xmlChar *question_get_title(QUESTION question);
  * @param question Uma questão.
  * @returns As tags da questão.
  */
-xmlChar **question_get_tags(QUESTION question);
+char** question_get_tags(QUESTION question);
 
 /**
  * Retorna o nome do dono da questão.
@@ -87,7 +87,9 @@ xmlChar *question_get_owner_name(QUESTION question);
 int question_get_answer_count(QUESTION question);
 
 /**
- * Adiciona uma resposta na lista de respostas da questão.
+ * \brief Adiciona uma resposta na lista de respostas da questão.
+ * Inicializa também o apontador para esta questão na resposta
+ * passada
  * @param question Uma questão.
  * @param answer Uma resposta.
  */

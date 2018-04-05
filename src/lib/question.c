@@ -1,5 +1,6 @@
 #include "question.h"
 #include <stdlib.h>
+#include <string.h>
 
 typedef GSList *ANSWERS;
 
@@ -50,7 +51,18 @@ xmlChar *question_get_title(QUESTION question){
     return xmlStrdup(question->title);
 }
 
-xmlChar **question_get_tags(QUESTION question){
+char** question_get_tags(QUESTION question){
+    if(!question->tags || question->tags == '\0') return NULL;
+    xmlChar* tagsUnparsed = xmlStrdup(question->tags);
+    char** result = malloc(sizeof(char *)*6);
+    memset(result, 0, sizeof(char*)*6);
+    char* token = strtok((char *) tagsUnparsed+1, "<");
+    int i = 0;
+    while (token != NULL) {
+        result[i++] = strdup(token);
+        token = strtok(NULL, "><");
+    }
+    return result;
 }
 
 xmlChar *question_get_owner_name(QUESTION question){
@@ -62,6 +74,7 @@ int question_get_answer_count(QUESTION question){
 }
 
 void question_add_answer(QUESTION question, ANSWER answer){
+    answer_set_parent_ptr(answer, question);
     question->answers = g_slist_prepend(question->answers, answer);
 }
 
@@ -76,9 +89,4 @@ void question_destroy(QUESTION question){
 
 void question_destroy_generic(gpointer question){
     question_destroy((QUESTION) question);
-}
-
-void question_add_answer(QUESTION question, ANSWER answer){
-    answer_set_parent_ptr(answer, question);
-    question->answers = g_slist_prepend(question->answers, answer);
 }
