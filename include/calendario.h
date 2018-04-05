@@ -6,24 +6,42 @@
 
 #include <glib.h>
 
-typedef struct _calendario *CALENDARIO;
-
-typedef GFunc CFunc;
-
-typedef GDestroyNotify CFreeFunc;
-
-typedef GCompareFunc CCompareFunc;
-
-typedef void (*CPrintFunction)(void*);
-
+ /**
+ * Cria um calendário.
+ * @param nANos Número de anos que o calendário tem.
+ * @param compareFunc ??
+ * @param freeFunc ??
+ */
 CALENDARIO calendario_create(int nAnos, CCompareFunc compareFunc, CFreeFunc freeFunc);
 
+ /**
+ * Adiciona um post no calendário.
+ * @param cal Um calendário.
+ * @param post O post a adicionar.
+ * @param d A data do post.
+ */
 void calendario_add_post(CALENDARIO cal, void* post, DATETIME d);
 
-void calendario_iterate(CALENDARIO cal, Date from, Date to, void *data, CFunc calFunc);
+ /**
+ * Itera o calendário.
+ * @param cal Um calendário.
+ * @param from A data do inicio.
+ * @param to A data do fim.
+ * @param data ??
+ * @param calFunc ??
+ */
+void calendario_iterate(CALENDARIO cal, Date from, Date to, void* data, CFunc calFunc);
 
+ /**
+ * Liberta a memória ocupada pelo calendário.
+ * @param cal
+ */
 void calendario_destroy(CALENDARIO cal);
 
+ /**
+ *
+ * @param post
+ */
 void printCalendario(CALENDARIO cal, CPrintFunction printFunction);
 
 #endif
