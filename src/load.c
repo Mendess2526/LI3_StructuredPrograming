@@ -4,7 +4,6 @@
 #include "dateTime.h"
 
 #include <string.h>
-
 #include <libxml/parser.h>
 #include <libxml/parserInternals.h>
 
@@ -12,41 +11,73 @@
 #define USERS_FILE "/Users.xml"
 #define TAGS_FILE "/Tags.xml"
 
+/**
+ * \enum Post_attr
+ * \brief Define os atributos de um post
+ */
 enum Post_attr{
-    POST_ID,
-    OWNER_USER_ID,
-    SCORE,
-    COMMENT_COUNT,
-    CREATION_DATE,
-    OWNER_DISPLAY_NAME,
-    TITLE,
-    TAGS,
-    ANSWER_COUNT,
-    PARENT_ID,
-    POST_TYPE,
-    POST_NONE
+    POST_ID,            /**< Id */
+    OWNER_USER_ID,      /**< Owner Id */
+    SCORE,              /**< Score */
+    COMMENT_COUNT,      /**< Contagem de commentarios */
+    CREATION_DATE,      /**< Data */
+    OWNER_DISPLAY_NAME, /**< Owner Display Name */
+    TITLE,              /**< Titulo do post (exclusivo de questões) */
+    TAGS,               /**< Tags do post (exclusivo de questões) */
+    ANSWER_COUNT,       /**< Numero de respostas (exclusivo de questões) */
+    PARENT_ID,          /**< Id do questao a que o post responde (exclusivo de respostas) */
+    POST_TYPE,          /**< Tipo do post */
+    POST_NONE           /**< Nenhuma das anteriores */
 };
 
+/**
+ * \enum User_attr
+ * \brief Define os atributos de um user
+ */
 enum User_attr{
-    USER_ID,
-    REPUTATION,
-    DISPLAY_NAME,
-    ABOUT_ME,
-    USER_NONE
+    USER_ID,            /**< Id */
+    REPUTATION,         /**< Reputação */
+    DISPLAY_NAME,       /**< User Name */
+    ABOUT_ME,           /**< Biografia */
+    USER_NONE           /**< Nenhuma das anteriores */
 };
 
+/**
+ * \enum Tag_atr
+ * \brief Define os atributos de uma tag
+ */
 enum Tag_attr{
-    TAG_ID,
-    TAG_NAME,
-    TAG_NONE
+    TAG_ID,     /**< Id */
+    TAG_NAME,   /**< Nome */
+    TAG_NONE    /**< Nenhuma das anteriores */
 };
 
+/**
+ * Retorna o atributo de post associado à string dada
+ * @param attribute Atributo a testar
+ * @return O enum do atributo correspondente
+ */
 static inline enum Post_attr postStrcmp(const xmlChar *attribute);
 
+/**
+ * Retorna o atributo de user associado à string dada
+ * @param attribute Atributo a testar
+ * @return O enum do atributo correspondente
+ */
 static inline enum User_attr userStrcmp(const xmlChar *attribute);
 
+/**
+ * Retorna o atributo de tag associado à string dada
+ * @param attribute Atributo a testar
+ * @return O enum do atributo correspondente
+ */
 static inline enum Tag_attr tagStrcmp(const xmlChar *attribute);
 
+/**
+ * Converte uma string num DATETIME
+ * @param dateStr string a converter
+ * @returns A data convertida
+ */
 static inline DATETIME parseDate(const xmlChar *dateStr);
 
 /**
@@ -176,6 +207,12 @@ void start_user_element(void *user_data, const xmlChar *name, const xmlChar **at
     if(bio) xmlFree(bio);
 }
 
+/**
+ * Função passada ao saxHandler para fazer parse do ficheiro de tags
+ * @param user_data Apontador generico usado para passar a instancia da estrutura
+ * @param name Nome do elemento de xml encontrado
+ * @param attrs Array de strings onde se encontram os atributos e respetivos valores
+ */
 void start_tag_element(void* user_data, const xmlChar* name, const xmlChar** attrs){
     if(name[0] == 't') return;
     TAD_community com = (TAD_community) user_data;
@@ -259,11 +296,6 @@ TAD_community load(TAD_community com, char *dump_path){
     return com;
 }
 
-/**
- * Retorna o atributo associado a string dada
- * @param attribute Atributo a testar
- * @return O enum do atributo correspondente
- */
 static inline enum Post_attr postStrcmp(const xmlChar *attribute){
     switch(attribute[0]){
         case 'I': return POST_ID;
@@ -308,6 +340,7 @@ static inline enum Tag_attr tagStrcmp(const xmlChar *attribute){
         default: return TAG_NONE;
     }
 }
+
 static inline DATETIME parseDate(const xmlChar *dateStr){
     int year, month, day, hour, minute, seconds, milisseconds;
     sscanf((char *) dateStr,"%d-%d-%dT%d:%d:%d.%d",&year,&month,&day,&hour,&minute,&seconds,&milisseconds);

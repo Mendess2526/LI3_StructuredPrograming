@@ -6,8 +6,6 @@
 
 #include <stdlib.h>
 
-
-
 typedef GHashTable* QUESTIONS;
 typedef GHashTable* ANSWERS;
 typedef GHashTable* SO_USERS;
