@@ -1,7 +1,7 @@
 #include "question.h"
 #include <stdlib.h>
 
-typedef GSList * ANSWERS;
+typedef GSList *ANSWERS;
 
 struct _question{
     int score;
@@ -62,8 +62,8 @@ int question_get_answer_count(QUESTION question){
     return question->answer_count;
 }
 
-ANSWERS question_get_answers(QUESTION question){
-    return question->answers;
+void question_add_answer(QUESTION question, ANSWER answer){
+    question->answers = g_slist_prepend(question->answers, answer);
 }
 
 void question_destroy(QUESTION question){
@@ -77,8 +77,4 @@ void question_destroy(QUESTION question){
 
 void question_destroy_generic(gpointer question){
     question_destroy((QUESTION) question);
-}
-
-void question_add_answer(QUESTION question, ANSWER answer){
-    question->answers = g_slist_prepend(question->answers, answer);
 }
