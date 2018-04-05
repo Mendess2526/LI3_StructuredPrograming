@@ -91,7 +91,7 @@ static ANO ano_create(){
 CALENDARIO calendario_create(int nAnos, CCompareFunc compareFunc, CFreeFunc freeFunc){
     CALENDARIO c = (CALENDARIO) malloc(sizeof(struct _calendario));
     c->nAnos = nAnos;
-    c->anos = (ANO *) calloc(nAnos, sizeof(struct _ano *));
+    c->anos = (ANO*) calloc(nAnos, sizeof(struct _ano*));
     c->compareFunc = compareFunc;
     c->freeFunc = freeFunc;
     return c;

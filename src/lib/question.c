@@ -56,12 +56,13 @@ char** question_get_tags(QUESTION question){
     xmlChar* tagsUnparsed = xmlStrdup(question->tags);
     char** result = malloc(sizeof(char *)*6);
     memset(result, 0, sizeof(char*)*6);
-    char* token = strtok((char *) tagsUnparsed+1, "<");
+    char* token = strtok((char *) tagsUnparsed+1, "><");
     int i = 0;
     while (token != NULL) {
         result[i++] = strdup(token);
         token = strtok(NULL, "><");
     }
+    free(tagsUnparsed);
     return result;
 }
 
