@@ -1,12 +1,13 @@
 #include "post.h"
 #include <stdlib.h>
+#include <limits.h>
 
 struct _post{
     enum POST_TYPE type;
-    void * c;
+    void* c;
 };
 
-POST post_create(enum POST_TYPE type, void *c){
+POST post_create(enum POST_TYPE type, void* c){
     POST p = (POST) malloc(sizeof(struct _post));
     p->type = type;
     p->c = c;
@@ -60,7 +61,7 @@ DATETIME post_get_date(POST post){
 }
 
 int post_get_score(POST post){
-    int score = -1;
+    int score = INT_MIN;
     if(post_is_question(post)){
         QUESTION question = post_get_question(post);
         score = question_get_score(question);
