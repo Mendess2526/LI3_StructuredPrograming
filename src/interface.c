@@ -1,6 +1,7 @@
 #include "interface.h"
 #include "soUser.h"
 #include "community.h"
+#include "q9_helper.h"
 
 // query 1
 STR_pair info_from_post(TAD_community com, long id){
@@ -59,7 +60,18 @@ LONG_list contains_word(TAD_community com, char* word, int N){
 
 // query 9
 LONG_list both_participated(TAD_community com, long id1, long id2, int N){
-    return NULL;
+    LONG_list list = create_list(N);
+
+    SO_USER user1 = community_get_user(com, id1);
+    POSTS posts = so_user_get_posts(user1);
+    int i = 0;
+    for(POST post = posts->data; posts && i<N; posts = posts->next){
+        long qId = searchThread(post, id2);
+        if(qId != -2){
+            set_list(list, i++, qId);
+        }
+    }
+    return list;
 }
 
 // query 10
