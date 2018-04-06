@@ -6,16 +6,16 @@
 
 #include <stdlib.h>
 
-typedef GHashTable* QUESTIONS;
-typedef GHashTable* ANSWERS;
-typedef GHashTable* SO_USERS;
-typedef GHashTable* TAGS;
+typedef GHashTable* QUESTIONS_HTABLE;
+typedef GHashTable* ANSWERS_HTABLE;
+typedef GHashTable* SO_USERS_HTABLE;
+typedef GHashTable* TAGS_HTABLE;
 
 struct TCD_community{
-    QUESTIONS questions;
-    ANSWERS answers;
-    SO_USERS users;
-    TAGS tags;
+    QUESTIONS_HTABLE questions;
+    ANSWERS_HTABLE answers;
+    SO_USERS_HTABLE users;
+    TAGS_HTABLE tags;
     CALENDARIO calendarioQuestions;
     CALENDARIO calendarioAnswers;
 };
@@ -48,7 +48,7 @@ static inline gint64 *newId(long val){
  * @param users Os users a atualizar.
  * @param post O post do user.
  */
-static inline void updateUserPosts(SO_USERS users, long ownerId, POST post){
+static inline void updateUserPosts(SO_USERS_HTABLE users, long ownerId, POST post){
     SO_USER user = g_hash_table_lookup(users, &ownerId);
     if(user) so_user_add_post(user,post);
 }
