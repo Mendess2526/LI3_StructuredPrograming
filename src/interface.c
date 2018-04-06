@@ -1,6 +1,7 @@
 #include "interface.h"
 #include "soUser.h"
 #include "community.h"
+#include "q7_helper.h"
 #include "q9_helper.h"
 
 // query 1
@@ -50,7 +51,7 @@ LONG_list most_voted_answers(TAD_community com, int N, Date begin, Date end){
 
 // query 7
 LONG_list most_answered_questions(TAD_community com, int N, Date begin, Date end){
-    return NULL;
+    return most_answered_questions_helper(com, N, begin, end);
 }
 
 // query 8
