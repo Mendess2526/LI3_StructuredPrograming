@@ -2,8 +2,6 @@
 #include "dateTime.h"
 #include <stdlib.h>
 
-typedef GSList * POSTS;
-
 struct _so_user{
     int reputation;
     int nrPosts;

@@ -7,6 +7,8 @@
 
 #include <libxml/parserInternals.h>
 
+typedef GSList * POSTS;
+
  /**
  * Cria um user.
  * @param id O id do user.
@@ -54,6 +56,10 @@ xmlChar *so_user_get_bio(SO_USER user);
  * @param post O post a adicionar.
  */
 void so_user_add_post(SO_USER user, POST post);
+
+int so_user_get_post_count(SO_USER user);
+
+POSTS so_user_get_posts(SO_USER user);
 
  /**
  * Liberta a memória ocupada pelo user.
