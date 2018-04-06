@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef GSList *ANSWERS;
-
 struct _question{
     int score;
     int answer_count;
@@ -72,6 +70,10 @@ xmlChar *question_get_owner_name(QUESTION question){
 
 int question_get_answer_count(QUESTION question){
     return question->answer_count;
+}
+
+ANSWERS question_get_answers(QUESTION question){
+    return question->answers;
 }
 
 void question_add_answer(QUESTION question, ANSWER answer){

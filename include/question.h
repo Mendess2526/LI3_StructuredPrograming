@@ -8,6 +8,8 @@
 
 #include <libxml/parserInternals.h>
 
+typedef GSList *ANSWERS;
+
  /**
  * Cria uma questão.
  * @param id O id da questão.
@@ -84,6 +86,8 @@ xmlChar *question_get_owner_name(QUESTION question);
  * @returns O número de respostas que a questão tem.
  */
 int question_get_answer_count(QUESTION question);
+
+ANSWERS question_get_answers(QUESTION question);
 
 /**
  * \brief Adiciona uma resposta na lista de respostas da questão.
