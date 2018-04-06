@@ -159,7 +159,7 @@ void calendario_iterate(CALENDARIO cal, Date from, Date to, void* data, GFunc ca
     int fromY = ANO2INDEX(get_year(from));
     int toY = ANO2INDEX(get_year(to));
     int sameYear = fromY == toY;
-    while(fromY <= toY)
+    while(fromY < cal->nAnos && fromY <= toY)
         ano_get_post_ids(cal->anos[fromY++], from, to, sameYear, data, calFunc);
 }
 
