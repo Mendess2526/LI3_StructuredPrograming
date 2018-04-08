@@ -6,9 +6,8 @@ static long searchFromQuestion(QUESTION question, long id){
         return 1;
 
     ANSWERS answers = question_get_answers(question);
-    if(answers == NULL) return 0;
-    for(ANSWER answer = answers->data; answers; answers = answers->next){
-        if(answer_get_owner_id(answer) == id) return 1;
+    for(; answers; answers = answers->next){
+        if(answer_get_owner_id((ANSWER) answers->data) == id) return 1;
     }
     return 0;
 }

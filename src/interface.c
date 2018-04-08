@@ -62,12 +62,16 @@ LONG_list contains_word(TAD_community com, char* word, int N){
 // query 9
 LONG_list both_participated(TAD_community com, long id1, long id2, int N){
     LONG_list list = create_list(N);
-
+    for(int i=0; i<N; i++) set_list(list, i, 0);
     SO_USER user1 = community_get_user(com, id1);
+    if(!user1) return list;
+    SO_USER user2 = community_get_user(com, id2);
+    if(!user2) return list;
+
     POSTS posts = so_user_get_posts(user1);
     int i = 0;
-    for(POST post = posts->data; posts && i<N; posts = posts->next){
-        long qId = searchThread(post, id2);
+    for(; posts && i<N; posts = posts->next){
+        long qId = searchThread((POST) posts->data, id2);
         if(qId != -2){
             set_list(list, i++, qId);
         }
