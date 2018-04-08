@@ -231,3 +231,16 @@ void community_print_calendario(TAD_community com){
     printCalendario(com->calendarioQuestions, cPrintQuestion);
     printCalendario(com->calendarioAnswers, cPrintAnswer);
 }
+
+void community_print_thread(TAD_community com, long id){
+    QUESTION q = g_hash_table_lookup(com->questions, &id);
+    if(!q)
+        printf("Not a question\n");
+    else{
+        printf("Id: %8ld, OwnerId: %8ld\n", question_get_id(q), question_get_owner_id(q));
+        for(ANSWERS as = question_get_answers(q); as; as = as->next)
+            printf("Id: %8ld, OwnerId: %8ld\n", answer_get_id((ANSWER) as->data),
+                                                answer_get_owner_id((ANSWER) as->data));
+    }
+}
+

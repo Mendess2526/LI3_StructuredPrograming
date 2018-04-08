@@ -116,4 +116,5 @@ void printFavouritesCount(TAD_community com);
 
 void community_print_calendario(TAD_community com);
 
+void community_print_thread(TAD_community com, long id);
 #endif /*__COMMUNITY_H__*/
