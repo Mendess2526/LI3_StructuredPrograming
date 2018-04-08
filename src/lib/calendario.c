@@ -3,7 +3,7 @@
 #include "post.h"
 #include <string.h>
 
-#define ANO2INDEX(ano) (ano-2008)
+#define ANO2INDEX(ano) (ano-2008 < 0 ? 0 : ano-2008)
 
 
 typedef GSList * POSTS;
@@ -156,6 +156,7 @@ static inline void ano_get_post_ids(ANO ano, Date from, Date to, int sameYear, v
 }
 
 void calendario_iterate(CALENDARIO cal, Date from, Date to, void* data, GFunc calFunc){
+    if(!from || !to) return;
     int fromY = ANO2INDEX(get_year(from));
     int toY = ANO2INDEX(get_year(to));
     int sameYear = fromY == toY;
