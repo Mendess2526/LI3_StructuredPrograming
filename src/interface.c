@@ -2,6 +2,7 @@
 #include "soUser.h"
 #include "community.h"
 #include "q7_helper.h"
+#include "q8_helper.h"
 #include "q9_helper.h"
 
 // query 1
@@ -56,7 +57,7 @@ LONG_list most_answered_questions(TAD_community com, int N, Date begin, Date end
 
 // query 8
 LONG_list contains_word(TAD_community com, char* word, int N){
-    return NULL;
+    return contains_word_helper(com, word, N);
 }
 
 // query 9

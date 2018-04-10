@@ -67,7 +67,7 @@ int main(int argc, const char **argv){
     printAndDestroyLongList(most_answered_questions(com, 5, beginingOfTime, theHeatDeath), 5);
 
     printf("%sQUERY  8:%s Contains word\n",BLUE, RESET);
-    printAndDestroyLongList(contains_word(com, "word", 5), 5);
+    printAndDestroyLongList(contains_word(com, "message", 5), 5);
 
     printf("%sQUERY  9:%s Both participated\n",BLUE, RESET);
     printAndDestroyLongList(both_participated(com, 10, 4, 5), 5);
