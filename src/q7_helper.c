@@ -15,7 +15,7 @@ int compareAnswerCount(gconstpointer a, gconstpointer b){
     return aC - bC;
 }
 
-void collect(gpointer elem, gpointer user_data){
+static void collect(gpointer elem, gpointer user_data){
     COLLECTOR col = (COLLECTOR) user_data;
     if(col->list == NULL || compareAnswerCount(col->list->data, elem) < 0)
         col->list = g_slist_prepend(col->list, elem);
@@ -49,7 +49,13 @@ LONG_list most_answered_questions_helper(TAD_community com,
     col->list = NULL;
     col->maxSize = maxSize;
 
-    community_iterate_questions(com, begin, end, col, collect);
+    DATETIME from = dateTime_create(get_year(begin), get_month(begin), get_year(begin), 0, 0, 0, 0);
+    DATETIME to = dateTime_create(get_year(end), get_month(end), get_year(end), 23, 59, 59, 999);
+
+    community_iterate_questions(com, from, to, col, collect);
+
+    dateTime_destroy(from);
+    dateTime_destroy(to);
 
     LONG_list r = gslist2llist(col->list, maxSize);
 
