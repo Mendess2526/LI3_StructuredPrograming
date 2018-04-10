@@ -45,10 +45,12 @@ static void dia_add_post(DIA dia, DATETIME d, void* post, CCompareFunc compareFu
 static void mes_add_post(MES mes, DATETIME d, void* post, CCompareFunc compareFunc);
 static void ano_add_post(ANO ano, DATETIME d, void* post, CCompareFunc compareFunc);
 
-static inline void hora_get_post_ids(HORA hora, void *data, GFunc calFunc);
-static inline void dia_get_post_ids(DIA dia, void *data, GFunc calFunc);
-static inline void mes_get_post_ids(MES mes, Date from, Date to, int sameMonth, void* data, GFunc calFunc);
-static inline void ano_get_post_ids(ANO ano, Date from, Date to, int sameYear, void* data, GFunc calFunc);
+static inline void hora_iterate_forward(HORA hora, void *data, GFunc calFunc);
+static inline void dia_iterate_forward(DIA dia, void *data, GFunc calFunc);
+static inline void mes_iterate_forward(MES mes, DATETIME from, DATETIME to, int sameMonth, void* data, GFunc calFunc);
+static inline void ano_iterate_forward(ANO ano, DATETIME from, DATETIME to, int sameYear, void* data, GFunc calFunc);
+
+static void calendario_iterate_backwards(CALENDARIO cal, DATETIME from, DATETIME to, void* data, GFunc calFunc);
 
 static void hora_destroy(HORA h, CFreeFunc freeFunc);
 static void dia_destroy(DIA d, CFreeFunc freeFunc);
@@ -127,41 +129,51 @@ void calendario_add_post(CALENDARIO cal, void* post, DATETIME d){
     ano_add_post(cal->anos[ano], d, post, cal->compareFunc);
 }
 
-static inline void hora_get_post_ids(HORA hora, void* data, GFunc calFunc){
+static inline void hora_iterate_forward(HORA hora, void* data, GFunc calFunc){
     if(!hora) return;
     g_slist_foreach(hora->posts, calFunc, data);
 }
 
-static inline void dia_get_post_ids(DIA dia, void* data, GFunc calFunc){
+static inline void dia_iterate_forward(DIA dia, void* data, GFunc calFunc){
     if(!dia) return;
     for(int i=0; i<24; i++)
-        hora_get_post_ids(dia->horas[i], data, calFunc);
+        hora_iterate_forward(dia->horas[i], data, calFunc);
 }
 
-static inline void mes_get_post_ids(MES mes, Date from, Date to, int sameMonth, void* data, GFunc calFunc){
+static inline void mes_iterate_forward(MES mes, DATETIME from, DATETIME to, int sameMonth, void* data, GFunc calFunc){
     if(!mes) return;
     int fromD = get_day(from);
     int toD = sameMonth ? get_day(to) : mes->nDias;
     while(fromD < toD)
-        dia_get_post_ids(mes->dias[fromD++], data, calFunc);
+        dia_iterate_forward(mes->dias[fromD++], data, calFunc);
 }
 
-static inline void ano_get_post_ids(ANO ano, Date from, Date to, int sameYear, void* data, GFunc calFunc){
+static inline void ano_iterate_forward(ANO ano, DATETIME from, DATETIME to, int sameYear, void* data, GFunc calFunc){
     if(!ano) return;
     int fromM = get_month(from);
     int toM = sameYear ? get_month(to) : 11;
     int sameMonth = sameYear && fromM == toM;
     while(fromM <= toM)
-        mes_get_post_ids(ano->meses[fromM++], from, to, sameMonth, data, calFunc);
+        mes_iterate_forward(ano->meses[fromM++], from, to, sameMonth, data, calFunc);
 }
 
-void calendario_iterate(CALENDARIO cal, Date from, Date to, void* data, GFunc calFunc){
+static void calendario_iterate_forward(CALENDARIO cal, DATETIME from, DATETIME to, void* data, GFunc calFunc){
     if(!from || !to) return;
     int fromY = ANO2INDEX(get_year(from));
     int toY = ANO2INDEX(get_year(to));
     int sameYear = fromY == toY;
     while(fromY < cal->nAnos && fromY <= toY)
-        ano_get_post_ids(cal->anos[fromY++], from, to, sameYear, data, calFunc);
+        ano_iterate_forward(cal->anos[fromY++], from, to, sameYear, data, calFunc);
+}
+
+static void calendario_iterate_backwards(CALENDARIO cal, DATETIME from, DATETIME to, void* data, GFunc calFunc){
+
+}
+
+void calendario_iterate(CALENDARIO cal, DATETIME from, DATETIME to, void* data, GFunc calFunc){
+    if(dateTime_compare(from,to) < 0)
+        calendario_iterate_forward(cal,from, to, data, calFunc);
+    else calendario_iterate_backwards(cal, from, to, data, calFunc);
 }
 
 static void hora_destroy(HORA h, CFreeFunc freeFunc){

@@ -31,7 +31,7 @@ void calendario_add_post(CALENDARIO cal, void* post, DATETIME d);
  * @param data ??
  * @param calFunc ??
  */
-void calendario_iterate(CALENDARIO cal, Date from, Date to, void* data, CFunc calFunc);
+void calendario_iterate(CALENDARIO cal, DATETIME from, DATETIME to, void* data, CFunc calFunc);
 
  /**
  * Liberta a memória ocupada pelo calendário.
