@@ -3,59 +3,60 @@
 #include "post.h"
 #include <string.h>
 
-#define ANO2INDEX(ano) (ano-2008 < 0 ? 0 : ano-2008)
+#define ANO2INDEX(year) (year-2008 > cal->nAnos-1 ? cal->nAnos-1 : (year-2008 < 0 ? 0 : year-2008))
 
 
-typedef GSList * POSTS;
+typedef GList * POSTS;
 
-typedef struct _hora{
+typedef struct _hour{
     int count;
     POSTS posts;
-} *HORA;
+    GList* last;
+} *HOUR;
 
-typedef struct _dia{
-    HORA *horas;
-} *DIA;
+typedef struct _day{
+    HOUR *hours;
+} *DAY;
 
-typedef struct _mes{
-    int nDias;
-    DIA *dias;
-} *MES;
+typedef struct _month{
+    int nDays;
+    DAY *days;
+} *MONTH;
 
-typedef struct _ano{
-    MES *meses;
-} *ANO;
+typedef struct _year{
+    MONTH *months;
+} *YEAR;
 
 struct _calendario{
     int nAnos;
-    ANO *anos;
+    YEAR *years;
     CCompareFunc compareFunc;
     CFreeFunc freeFunc;
 };
 
 static int nrDias (int m);
 
-static HORA hora_create();
-static DIA dia_create();
-static MES mes_create(int nDias);
-static ANO ano_create();
+static HOUR hour_create();
+static DAY day_create();
+static MONTH month_create(int nDays);
+static YEAR year_create();
 
-static inline void hora_add_post(HORA h, void* p, CCompareFunc compareFunc);
-static void dia_add_post(DIA dia, DATETIME d, void* post, CCompareFunc compareFunc);
-static void mes_add_post(MES mes, DATETIME d, void* post, CCompareFunc compareFunc);
-static void ano_add_post(ANO ano, DATETIME d, void* post, CCompareFunc compareFunc);
+static inline void hour_add_post(HOUR h, void* p, CCompareFunc compareFunc);
+static void day_add_post(DAY day, DATETIME d, void* post, CCompareFunc compareFunc);
+static void month_add_post(MONTH month, DATETIME d, void* post, CCompareFunc compareFunc);
+static void year_add_post(YEAR year, DATETIME d, void* post, CCompareFunc compareFunc);
 
-static inline void hora_iterate_forward(HORA hora, void *data, GFunc calFunc);
-static inline void dia_iterate_forward(DIA dia, void *data, GFunc calFunc);
-static inline void mes_iterate_forward(MES mes, DATETIME from, DATETIME to, int sameMonth, void* data, GFunc calFunc);
-static inline void ano_iterate_forward(ANO ano, DATETIME from, DATETIME to, int sameYear, void* data, GFunc calFunc);
+static inline void hour_iterate_forward(HOUR hour, void *data, GFunc calFunc);
+static inline void day_iterate_forward(DAY day, void *data, GFunc calFunc);
+static inline void month_iterate_forward(MONTH month, DATETIME from, DATETIME to, int sameMonth, void* data, GFunc calFunc);
+static inline void year_iterate_forward(YEAR year, DATETIME from, DATETIME to, int sameYear, void* data, GFunc calFunc);
 
 static void calendario_iterate_backwards(CALENDARIO cal, DATETIME from, DATETIME to, void* data, GFunc calFunc);
 
-static void hora_destroy(HORA h, CFreeFunc freeFunc);
-static void dia_destroy(DIA d, CFreeFunc freeFunc);
-static void mes_destroy(MES m, CFreeFunc freeFunc);
-static void ano_destroy(ANO a, CFreeFunc freeFunc);
+static void hour_destroy(HOUR h, CFreeFunc freeFunc);
+static void day_destroy(DAY d, CFreeFunc freeFunc);
+static void month_destroy(MONTH m, CFreeFunc freeFunc);
+static void year_destroy(YEAR a, CFreeFunc freeFunc);
 
 static int nrDias (int m){
     if(m == 3 || m == 5 || m == 8 || m == 10) return 30;
@@ -64,110 +65,148 @@ static int nrDias (int m){
 }
 
 
-static HORA hora_create(){
-    HORA h = (HORA) malloc(sizeof(struct _hora));
+static HOUR hour_create(){
+    HOUR h = (HOUR) malloc(sizeof(struct _hour));
     h->count = 0;
     h->posts = NULL;
+    h->last = NULL;
     return h;
 }
 
-static DIA dia_create(){
-    DIA d = (DIA) malloc(sizeof(struct _dia));
-    d->horas = (HORA *) calloc(24, sizeof(struct _hora *));
+static DAY day_create(){
+    DAY d = (DAY) malloc(sizeof(struct _day));
+    d->hours = (HOUR*) calloc(24, sizeof(struct _hour *));
     return d;
 }
 
-static MES mes_create(int nDias){
-    MES m = (MES) malloc(sizeof(struct _mes));
-    m->nDias = nDias;
-    m->dias = (DIA *) calloc(nDias, sizeof(struct _dia *));
+static MONTH month_create(int nDays){
+    MONTH m = (MONTH) malloc(sizeof(struct _month));
+    m->nDays = nDays;
+    m->days = (DAY*) calloc(nDays, sizeof(struct _day *));
     return m;
 }
 
-static ANO ano_create(){
-    ANO a = (ANO) malloc(sizeof(struct _ano));
-    a->meses = (MES *) calloc(12, sizeof(struct _mes *));
+static YEAR year_create(){
+    YEAR a = (YEAR) malloc(sizeof(struct _year));
+    a->months = (MONTH*) calloc(12, sizeof(struct _month *));
     return a;
 }
 
 CALENDARIO calendario_create(int nAnos, CCompareFunc compareFunc, CFreeFunc freeFunc){
     CALENDARIO c = (CALENDARIO) malloc(sizeof(struct _calendario));
     c->nAnos = nAnos;
-    c->anos = (ANO*) calloc(nAnos, sizeof(struct _ano*));
+    c->years = (YEAR*) calloc(nAnos, sizeof(struct _year*));
     c->compareFunc = compareFunc;
     c->freeFunc = freeFunc;
     return c;
 }
 
-static inline void hora_add_post(HORA h, void* post, CCompareFunc compareFunc){
+static inline void hour_add_post(HOUR h, void* post, CCompareFunc compareFunc){
     h->count += 1;
-    h->posts = g_slist_insert_sorted(h->posts, post, compareFunc);
+    h->posts = g_list_insert_sorted(h->posts, post, compareFunc);
+    if(h->last==NULL) h->last = h->posts;
+    while(h->last->next!=NULL) h->last = h->last->next; 
 }
 
-static void dia_add_post(DIA dia, DATETIME d, void* post, CCompareFunc compareFunc){
-    int hora = dateTime_get_horas(d);
-    if(dia->horas[hora] == NULL) dia->horas[hora] = hora_create();
-    hora_add_post(dia->horas[hora], post, compareFunc);
+static void day_add_post(DAY day, DATETIME d, void* post, CCompareFunc compareFunc){
+    int hour = dateTime_get_hours(d);
+    if(day->hours[hour] == NULL) day->hours[hour] = hour_create();
+    hour_add_post(day->hours[hour], post, compareFunc);
 }
 
-static void mes_add_post(MES mes, DATETIME d, void* post, CCompareFunc compareFunc){
-    int dia = dateTime_get_dia(d);
-    if(mes->dias[dia] == NULL) mes->dias[dia] = dia_create();
-    dia_add_post(mes->dias[dia], d, post, compareFunc);
+static void month_add_post(MONTH month, DATETIME d, void* post, CCompareFunc compareFunc){
+    int day = dateTime_get_day(d);
+    if(month->days[day] == NULL) month->days[day] = day_create();
+    day_add_post(month->days[day], d, post, compareFunc);
 }
 
-static void ano_add_post(ANO ano, DATETIME d, void* post, CCompareFunc compareFunc){
-    int mes = dateTime_get_mes(d);
-    if(ano->meses[mes] == NULL)
-        ano->meses[mes] = mes_create(nrDias(mes));
-    mes_add_post(ano->meses[mes], d, post, compareFunc);
+static void year_add_post(YEAR year, DATETIME d, void* post, CCompareFunc compareFunc){
+    int month = dateTime_get_month(d);
+    if(year->months[month] == NULL)
+        year->months[month] = month_create(nrDias(month));
+    month_add_post(year->months[month], d, post, compareFunc);
 }
 
 void calendario_add_post(CALENDARIO cal, void* post, DATETIME d){
-    int ano = ANO2INDEX(dateTime_get_ano(d));
-    if(cal->anos[ano] == NULL) cal->anos[ano] = ano_create();
-    ano_add_post(cal->anos[ano], d, post, cal->compareFunc);
+    int year = ANO2INDEX(dateTime_get_year(d));
+    if(cal->years[year] == NULL) cal->years[year] = year_create();
+    year_add_post(cal->years[year], d, post, cal->compareFunc);
 }
 
-static inline void hora_iterate_forward(HORA hora, void* data, GFunc calFunc){
-    if(!hora) return;
-    g_slist_foreach(hora->posts, calFunc, data);
+static inline void hour_iterate_forward(HOUR hour, void* data, GFunc calFunc){
+    if(!hour) return;
+    for(GList* cur = hour->last; cur != NULL; cur = cur->prev){
+        (*calFunc)(cur->data, data);
+    }
 }
 
-static inline void dia_iterate_forward(DIA dia, void* data, GFunc calFunc){
-    if(!dia) return;
+static inline void day_iterate_forward(DAY day, void* data, GFunc calFunc){
+    if(!day) return;
     for(int i=0; i<24; i++)
-        hora_iterate_forward(dia->horas[i], data, calFunc);
+        hour_iterate_forward(day->hours[i], data, calFunc);
 }
 
-static inline void mes_iterate_forward(MES mes, DATETIME from, DATETIME to, int sameMonth, void* data, GFunc calFunc){
-    if(!mes) return;
-    int fromD = get_day(from);
-    int toD = sameMonth ? get_day(to) : mes->nDias;
-    while(fromD < toD)
-        dia_iterate_forward(mes->dias[fromD++], data, calFunc);
+static inline void month_iterate_forward(MONTH month, DATETIME from, DATETIME to, int sameMonth, void* data, GFunc calFunc){
+    if(!month) return;
+    int fromD = dateTime_get_day(from);
+    int toD = sameMonth ? dateTime_get_day(to) : month->nDays;
+    while(fromD <= toD)
+        day_iterate_forward(month->days[fromD++], data, calFunc);
 }
 
-static inline void ano_iterate_forward(ANO ano, DATETIME from, DATETIME to, int sameYear, void* data, GFunc calFunc){
-    if(!ano) return;
-    int fromM = get_month(from);
-    int toM = sameYear ? get_month(to) : 11;
+static inline void year_iterate_forward(YEAR year, DATETIME from, DATETIME to, int sameYear, void* data, GFunc calFunc){
+    if(!year) return;
+    int fromM = dateTime_get_month(from);
+    int toM = sameYear ? dateTime_get_month(to) : 11;
     int sameMonth = sameYear && fromM == toM;
     while(fromM <= toM)
-        mes_iterate_forward(ano->meses[fromM++], from, to, sameMonth, data, calFunc);
+        month_iterate_forward(year->months[fromM++], from, to, sameMonth, data, calFunc);
 }
 
 static void calendario_iterate_forward(CALENDARIO cal, DATETIME from, DATETIME to, void* data, GFunc calFunc){
     if(!from || !to) return;
-    int fromY = ANO2INDEX(get_year(from));
-    int toY = ANO2INDEX(get_year(to));
+    int fromY = ANO2INDEX(dateTime_get_year(from));
+    int toY = ANO2INDEX(dateTime_get_year(to));
     int sameYear = fromY == toY;
     while(fromY < cal->nAnos && fromY <= toY)
-        ano_iterate_forward(cal->anos[fromY++], from, to, sameYear, data, calFunc);
+        year_iterate_forward(cal->years[fromY++], from, to, sameYear, data, calFunc);
+}
+
+static inline void hour_iterate_backwards(HOUR hour, void* data, GFunc calFunc){
+    if(!hour) return;
+    g_list_foreach(hour->posts, calFunc, data);
+}
+
+static inline void day_iterate_backwards(DAY day, void* data, GFunc calFunc){
+    if(!day) return;
+    for(int i=0; i<24; i++)
+        hour_iterate_forward(day->hours[i], data, calFunc);
+}
+
+static inline void month_iterate_backwards(MONTH month, DATETIME from, DATETIME to, int sameMonth, void* data, GFunc calFunc){
+    if(!month) return;
+    int fromD = dateTime_get_day(from);
+    int toD = sameMonth ? dateTime_get_day(to) : 0;
+    while(toD <= fromD)
+        day_iterate_forward(month->days[fromD--], data, calFunc);
+}
+
+static inline void year_iterate_backwards(YEAR year, DATETIME from, DATETIME to, int sameYear, void* data, GFunc calFunc){
+    if(!year) return;
+    int fromM = dateTime_get_month(from);
+    int toM = sameYear ? dateTime_get_month(to) : 0;
+    int sameMonth = sameYear && fromM == toM;
+    while(toM <= fromM)
+        month_iterate_forward(year->months[fromM--], from, to, sameMonth, data, calFunc);
 }
 
 static void calendario_iterate_backwards(CALENDARIO cal, DATETIME from, DATETIME to, void* data, GFunc calFunc){
-
+    if(!from || !to) return;
+    int fromY = ANO2INDEX(dateTime_get_year(from));
+    int toY = ANO2INDEX(dateTime_get_year(to));
+    int sameYear = fromY == toY;
+    while(toY <= fromY)
+        year_iterate_forward(cal->years[fromY--], from, to, sameYear, data, calFunc);
 }
 
 void calendario_iterate(CALENDARIO cal, DATETIME from, DATETIME to, void* data, GFunc calFunc){
@@ -176,82 +215,82 @@ void calendario_iterate(CALENDARIO cal, DATETIME from, DATETIME to, void* data, 
     else calendario_iterate_backwards(cal, from, to, data, calFunc);
 }
 
-static void hora_destroy(HORA h, CFreeFunc freeFunc){
+static void hour_destroy(HOUR h, CFreeFunc freeFunc){
     if(h==NULL) return;
-    if(freeFunc) g_slist_free_full(h->posts, freeFunc);
-    else g_slist_free(h->posts);
+    if(freeFunc) g_list_free_full(h->posts, freeFunc);
+    else g_list_free(h->posts);
     free(h);
 }
 
-static void dia_destroy(DIA d, CFreeFunc freeFunc){
+static void day_destroy(DAY d, CFreeFunc freeFunc){
     if(d==NULL) return;
     for(int i=0; i<24; i++){
-        hora_destroy(d->horas[i], freeFunc);
+        hour_destroy(d->hours[i], freeFunc);
     }
-    free(d->horas);
+    free(d->hours);
     free(d);
 }
 
-static void mes_destroy(MES m, CFreeFunc freeFunc){
+static void month_destroy(MONTH m, CFreeFunc freeFunc){
     if(m==NULL) return;
-    for(int i=0; i<(m->nDias); i++){
-        dia_destroy(m->dias[i], freeFunc);
+    for(int i=0; i<(m->nDays); i++){
+        day_destroy(m->days[i], freeFunc);
     }
-    free(m->dias);
+    free(m->days);
     free(m);
 }
 
-static void ano_destroy(ANO a, CFreeFunc freeFunc){
+static void year_destroy(YEAR a, CFreeFunc freeFunc){
     if(a==NULL) return;
     for(int i=0; i<12; i++){
-        mes_destroy(a->meses[i], freeFunc);
+        month_destroy(a->months[i], freeFunc);
     }
-    free(a->meses);
+    free(a->months);
     free(a);
 }
 
 void calendario_destroy(CALENDARIO cal){
     for(int i=0; i<(cal->nAnos); i++){
-        ano_destroy(cal->anos[i], cal->freeFunc);
+        year_destroy(cal->years[i], cal->freeFunc);
     }
-    free(cal->anos);
+    free(cal->years);
     free(cal);
 }
 
-static void printHora(HORA hora, CPrintFunction printFuncion){
-    if(!hora) return;
-    for(GSList *cur = hora->posts; cur; cur = g_slist_next(cur)){
+static void printHora(HOUR hour, CPrintFunction printFuncion){
+    if(!hour) return;
+    for(GList *cur = hour->posts; cur; cur = g_list_next(cur)){
         (*printFuncion)(cur->data);
     }
 }
 
-static void printDia(DIA dia, CPrintFunction printFuncion){
-    if(!dia) return;
+static void printDia(DAY day, CPrintFunction printFuncion){
+    if(!day) return;
     for(int i=0; i<24; i++){
         printf("\t\t\tHora: %d\n",i);
-        printHora(dia->horas[i], printFuncion);
+        printHora(day->hours[i], printFuncion);
     }
 }
 
-static void printMes(MES mes, CPrintFunction printFuncion){
-    if(!mes) return;
-    for(int i=0; i<mes->nDias; i++){
+static void printMes(MONTH month, CPrintFunction printFuncion){
+    if(!month) return;
+    for(int i=0; i<month->nDays; i++){
         printf("\t\tDia: %d\n",i);
-        printDia(mes->dias[i], printFuncion);
+        printDia(month->days[i], printFuncion);
     }
 }
 
-static void printAno(ANO ano, CPrintFunction printFuncion){
-    if(!ano) return;
+static void printAno(YEAR year, CPrintFunction printFuncion){
+    if(!year) return;
     for(int i=0; i<12;i++){
         printf("\tMes: %d\n",i);
-        printMes(ano->meses[i], printFuncion);
+        printMes(year->months[i], printFuncion);
     }
 }
 
 void printCalendario(CALENDARIO cal, CPrintFunction printFuncion){
     for(int i=0; i< cal->nAnos; i++){
         printf("Ano: %d\n",i);
-        printAno(cal->anos[i], printFuncion);
+        printAno(cal->years[i], printFuncion);
     }
 }
