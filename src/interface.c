@@ -43,6 +43,7 @@ LONG_list questions_with_tag(TAD_community com, char* tag, Date begin, Date end)
 // query 5
 USER get_user_info(TAD_community com, long id){
     SO_USER user = community_get_user(com, id);
+    if(user==NULL) return NULL;
     char* bio = (char*) so_user_get_bio(user);
     POSTS posts = so_user_get_posts(user);
     long list[10];
