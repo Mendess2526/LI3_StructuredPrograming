@@ -46,12 +46,12 @@ static void day_add_post(DAY day, DATETIME d, void* post, CCompareFunc compareFu
 static void month_add_post(MONTH month, DATETIME d, void* post, CCompareFunc compareFunc);
 static void year_add_post(YEAR year, DATETIME d, void* post, CCompareFunc compareFunc);
 
-static inline void hour_iterate_forward(HOUR hour, void *data, GFunc calFunc);
-static inline void day_iterate_forward(DAY day, void *data, GFunc calFunc);
-static inline void month_iterate_forward(MONTH month, DATETIME from, DATETIME to, int sameMonth, void* data, GFunc calFunc);
-static inline void year_iterate_forward(YEAR year, DATETIME from, DATETIME to, int sameYear, void* data, GFunc calFunc);
+static inline void hour_iterate_forward(HOUR hour, void *data, CFunc calFunc);
+static inline void day_iterate_forward(DAY day, void *data, CFunc calFunc);
+static inline void month_iterate_forward(MONTH month, DATETIME from, DATETIME to, int sameMonth, void* data, CFunc calFunc);
+static inline void year_iterate_forward(YEAR year, DATETIME from, DATETIME to, int sameYear, void* data, CFunc calFunc);
 
-static void calendario_iterate_backwards(CALENDARIO cal, DATETIME from, DATETIME to, void* data, GFunc calFunc);
+static void calendario_iterate_backwards(CALENDARIO cal, DATETIME from, DATETIME to, void* data, CFunc calFunc);
 
 static void hour_destroy(HOUR h, CFreeFunc freeFunc);
 static void day_destroy(DAY d, CFreeFunc freeFunc);
@@ -133,20 +133,20 @@ void calendario_add_post(CALENDARIO cal, void* post, DATETIME d){
     year_add_post(cal->years[year], d, post, cal->compareFunc);
 }
 
-static inline void hour_iterate_forward(HOUR hour, void* data, GFunc calFunc){
+static inline void hour_iterate_forward(HOUR hour, void* data, CFunc calFunc){
     if(!hour) return;
     for(GList* cur = hour->last; cur != NULL; cur = cur->prev){
         (*calFunc)(cur->data, data);
     }
 }
 
-static inline void day_iterate_forward(DAY day, void* data, GFunc calFunc){
+static inline void day_iterate_forward(DAY day, void* data, CFunc calFunc){
     if(!day) return;
     for(int i=0; i<24; i++)
         hour_iterate_forward(day->hours[i], data, calFunc);
 }
 
-static inline void month_iterate_forward(MONTH month, DATETIME from, DATETIME to, int sameMonth, void* data, GFunc calFunc){
+static inline void month_iterate_forward(MONTH month, DATETIME from, DATETIME to, int sameMonth, void* data, CFunc calFunc){
     if(!month) return;
     int fromD = dateTime_get_day(from);
     int toD = sameMonth ? dateTime_get_day(to) : month->nDays-1;
@@ -154,7 +154,7 @@ static inline void month_iterate_forward(MONTH month, DATETIME from, DATETIME to
         day_iterate_forward(month->days[fromD++], data, calFunc);
 }
 
-static inline void year_iterate_forward(YEAR year, DATETIME from, DATETIME to, int sameYear, void* data, GFunc calFunc){
+static inline void year_iterate_forward(YEAR year, DATETIME from, DATETIME to, int sameYear, void* data, CFunc calFunc){
     if(!year) return;
     int fromM = dateTime_get_month(from);
     int toM = sameYear ? dateTime_get_month(to) : 11;
@@ -163,7 +163,7 @@ static inline void year_iterate_forward(YEAR year, DATETIME from, DATETIME to, i
         month_iterate_forward(year->months[fromM++], from, to, sameMonth, data, calFunc);
 }
 
-static void calendario_iterate_forward(CALENDARIO cal, DATETIME from, DATETIME to, void* data, GFunc calFunc){
+static void calendario_iterate_forward(CALENDARIO cal, DATETIME from, DATETIME to, void* data, CFunc calFunc){
     if(!from || !to) return;
     int fromY = ANO2INDEX(dateTime_get_year(from));
     int toY = ANO2INDEX(dateTime_get_year(to));
@@ -172,18 +172,18 @@ static void calendario_iterate_forward(CALENDARIO cal, DATETIME from, DATETIME t
         year_iterate_forward(cal->years[fromY++], from, to, sameYear, data, calFunc);
 }
 
-static inline void hour_iterate_backwards(HOUR hour, void* data, GFunc calFunc){
+static inline void hour_iterate_backwards(HOUR hour, void* data, CFunc calFunc){
     if(!hour) return;
     g_list_foreach(hour->posts, calFunc, data);
 }
 
-static inline void day_iterate_backwards(DAY day, void* data, GFunc calFunc){
+static inline void day_iterate_backwards(DAY day, void* data, CFunc calFunc){
     if(!day) return;
     for(int i=0; i<24; i++)
         hour_iterate_forward(day->hours[i], data, calFunc);
 }
 
-static inline void month_iterate_backwards(MONTH month, DATETIME from, DATETIME to, int sameMonth, void* data, GFunc calFunc){
+static inline void month_iterate_backwards(MONTH month, DATETIME from, DATETIME to, int sameMonth, void* data, CFunc calFunc){
     if(!month) return;
     int fromD = dateTime_get_day(from);
     int toD = sameMonth ? dateTime_get_day(to) : 0;
@@ -191,7 +191,7 @@ static inline void month_iterate_backwards(MONTH month, DATETIME from, DATETIME 
         day_iterate_forward(month->days[fromD--], data, calFunc);
 }
 
-static inline void year_iterate_backwards(YEAR year, DATETIME from, DATETIME to, int sameYear, void* data, GFunc calFunc){
+static inline void year_iterate_backwards(YEAR year, DATETIME from, DATETIME to, int sameYear, void* data, CFunc calFunc){
     if(!year) return;
     int fromM = dateTime_get_month(from);
     int toM = sameYear ? dateTime_get_month(to) : 0;
@@ -200,7 +200,7 @@ static inline void year_iterate_backwards(YEAR year, DATETIME from, DATETIME to,
         month_iterate_forward(year->months[fromM--], from, to, sameMonth, data, calFunc);
 }
 
-static void calendario_iterate_backwards(CALENDARIO cal, DATETIME from, DATETIME to, void* data, GFunc calFunc){
+static void calendario_iterate_backwards(CALENDARIO cal, DATETIME from, DATETIME to, void* data, CFunc calFunc){
     if(!from || !to) return;
     int fromY = ANO2INDEX(dateTime_get_year(from));
     int toY = ANO2INDEX(dateTime_get_year(to));
@@ -209,7 +209,7 @@ static void calendario_iterate_backwards(CALENDARIO cal, DATETIME from, DATETIME
         year_iterate_forward(cal->years[fromY--], from, to, sameYear, data, calFunc);
 }
 
-void calendario_iterate(CALENDARIO cal, DATETIME from, DATETIME to, void* data, GFunc calFunc){
+void calendario_iterate(CALENDARIO cal, DATETIME from, DATETIME to, void* data, CFunc calFunc){
     if(dateTime_compare(from,to) < 0)
         calendario_iterate_forward(cal,from, to, data, calFunc);
     else calendario_iterate_backwards(cal, from, to, data, calFunc);

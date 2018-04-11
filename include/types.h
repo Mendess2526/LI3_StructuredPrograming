@@ -23,7 +23,7 @@ typedef struct _dateTime *DATETIME;
 
 typedef struct _calendario *CALENDARIO;
 
-typedef GFunc CFunc;
+typedef int (*CFunc)(void* elem, void* user_data);
 
 typedef GDestroyNotify CFreeFunc;
 

@@ -9,13 +9,16 @@ typedef struct collector{
     LONG_list list;
 }*COLLECTOR;
 
-static void collect(gpointer elem, gpointer user_data){
-    QUESTION q = (QUESTION) elem;
+static int collect(gpointer elem, gpointer user_data){
     COLLECTOR col = (COLLECTOR) user_data;
+    if(col->index >= col->maxSize) return 0;
+
+    QUESTION q = (QUESTION) elem;
     if(col->index < col->maxSize &&
             strstr((char*) question_get_title(q), col->word)){
         set_list(col->list, col->index++, question_get_id(q));
     }
+    return 1;
 }
 
 LONG_list contains_word_helper(TAD_community com, char* word, int N){

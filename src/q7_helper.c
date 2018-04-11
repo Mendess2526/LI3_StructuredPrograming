@@ -15,7 +15,7 @@ int compareAnswerCount(gconstpointer a, gconstpointer b){
     return aC - bC;
 }
 
-static void collect(gpointer elem, gpointer user_data){
+static int collect(gpointer elem, gpointer user_data){
     COLLECTOR col = (COLLECTOR) user_data;
     if(col->list == NULL || compareAnswerCount(col->list->data, elem) < 0)
         col->list = g_slist_prepend(col->list, elem);
@@ -28,6 +28,7 @@ static void collect(gpointer elem, gpointer user_data){
             }
         }
     }
+    return 1;
 }
 
 LONG_list gslist2llist(GSList* list, int maxSize){
