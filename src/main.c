@@ -58,7 +58,7 @@ int main(int argc, const char **argv){
     printAndDestroyLongList(questions_with_tag(com, "battery", beginingOfTime, theHeatDeath), 0);
 
     printf("%sQUERY  5:%s Get user info\n",BLUE, RESET);
-    printAndDestroyUser(get_user_info(com, 1));
+    printAndDestroyUser(get_user_info(com, 5));
 
     printf("%sQUERY  6:%s Most voted answer\n",BLUE, RESET);
     printAndDestroyLongList(most_voted_answers(com, 5, beginingOfTime, theHeatDeath), 5);
