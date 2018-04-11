@@ -26,8 +26,8 @@ LONG_list contains_word_helper(TAD_community com, char* word, int N){
     col->list = create_list(N);
     for(int i=0; i<N; i++) set_list(col->list, i, 0);
 
-    DATETIME from = dateTime_get_epoch();
-    DATETIME to = dateTime_get_year2038();
+    DATETIME from = dateTime_get_year2038();
+    DATETIME to = dateTime_get_epoch();
 
     community_iterate_questions(com, from, to, col, collect);
 

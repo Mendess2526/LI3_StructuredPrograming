@@ -149,7 +149,7 @@ static inline void day_iterate_forward(DAY day, void* data, GFunc calFunc){
 static inline void month_iterate_forward(MONTH month, DATETIME from, DATETIME to, int sameMonth, void* data, GFunc calFunc){
     if(!month) return;
     int fromD = dateTime_get_day(from);
-    int toD = sameMonth ? dateTime_get_day(to) : month->nDays;
+    int toD = sameMonth ? dateTime_get_day(to) : month->nDays-1;
     while(fromD <= toD)
         day_iterate_forward(month->days[fromD++], data, calFunc);
 }
