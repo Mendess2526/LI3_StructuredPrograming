@@ -91,7 +91,7 @@ long community_get_tag_id(TAD_community com, xmlChar* tag);
  * @param data Informação para passar à função.
  * @param calFunc A função aplicada a cada questão.
  */
-void community_iterate_questions(TAD_community com, Date from, Date to, void* data, GFunc calFunc);
+void community_iterate_questions(TAD_community com, DATETIME from, DATETIME to, void* data, CFunc calFunc);
 
  /**
  * Itera pelas respostas, por ordem cronológica, aplicando a função dada a cada resposta.
@@ -101,7 +101,7 @@ void community_iterate_questions(TAD_community com, Date from, Date to, void* da
  * @param data Informação para passar à função.
  * @param calFunc A função aplicada a cada resposta.
  */
-void community_iterate_answers(TAD_community com, Date from, Date to, void* data, GFunc calFunc);
+void community_iterate_answers(TAD_community com, DATETIME from, DATETIME to, void* data, CFunc calFunc);
 
 /* ------------- PRINTING --------------------- */
 

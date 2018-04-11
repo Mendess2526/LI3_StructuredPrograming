@@ -147,11 +147,11 @@ long community_get_tag_id(TAD_community com, xmlChar* tag){
     else return -2;
 }
 
-void community_iterate_questions(TAD_community com, Date from, Date to, void* data, GFunc calFunc){
+void community_iterate_questions(TAD_community com, DATETIME from, DATETIME to, void* data, CFunc calFunc){
     calendario_iterate(com->calendarioQuestions, from, to, data, calFunc);
 }
 
-void community_iterate_answers(TAD_community com, Date from, Date to, void* data, GFunc calFunc){
+void community_iterate_answers(TAD_community com, DATETIME from, DATETIME to, void* data, CFunc calFunc){
     calendario_iterate(com->calendarioAnswers, from, to, data, calFunc);
 }
 

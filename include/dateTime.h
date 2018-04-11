@@ -3,16 +3,22 @@
 
 #include "types.h"
 
+/** Macro para obter a data mais antiga representavel */
+#define dateTime_get_epoch() (dateTime_create(1901,11,1,20,45,52,0))
+
+/** Macro para obter a data mais futura representavel */
+#define dateTime_get_year2038() (dateTime_create(2038,0,18,3,14,7,0))
+
  /**
- *Cria uma data. 
- * @param ano O ano da data. 
+ * Cria uma data.
+ * @param ano O ano da data.
  * @param mes O mês da data.
  * @param dia O dia da data.
  * @param horas As horas da data.
  * @param minutos Os minutos da data.
  * @param segundos Os segundos da data.
  * @param milissegundos Os milissegundos da data.
- * @returns Uma data. 
+ * @returns Uma data.
  */
 DATETIME dateTime_create(int year,
                         int month,
