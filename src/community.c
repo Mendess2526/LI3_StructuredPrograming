@@ -81,8 +81,8 @@ TAD_community community_create(){
             g_int64_hash, g_int64_equal, g_free, so_user_destroy_generic);
     com->tags = g_hash_table_new_full(
             g_str_hash, g_str_equal, g_free, g_free);
-    com->calendarioQuestions = calendario_create(10, questionTimeCompare, NULL);
-    com->calendarioAnswers   = calendario_create(10, answerTimeCompare, NULL);
+    com->calendarioQuestions = calendario_create(11, questionTimeCompare, NULL);
+    com->calendarioAnswers   = calendario_create(11, answerTimeCompare, NULL);
     return com;
 }
 
