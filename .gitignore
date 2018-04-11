@@ -67,3 +67,10 @@ dkms.conf
 *test.c
 tests/*
 null
+
+#LaTeX
+*.log
+_minted-Report/
+*.aux
+*.toc
+Report.pdf
