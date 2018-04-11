@@ -110,7 +110,7 @@ static inline void hour_add_post(HOUR h, void* post, CCompareFunc compareFunc){
     h->count += 1;
     h->posts = g_list_insert_sorted(h->posts, post, compareFunc);
     if(h->last==NULL) h->last = h->posts;
-    while(h->last->next!=NULL) h->last = h->last->next; 
+    while(h->last->next!=NULL) h->last = h->last->next;
 }
 
 static void day_add_post(DAY day, DATETIME d, void* post, CCompareFunc compareFunc){
