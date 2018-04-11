@@ -14,62 +14,62 @@
  * @param milissegundos Os milissegundos da data.
  * @returns Uma data. 
  */
-DATETIME dateTime_create(int ano,
-                        int mes,
-                        int dia,
-                        int horas,
-                        int minutos,
-                        int segundos,
-                        int milissegundos);
+DATETIME dateTime_create(int year,
+                        int month,
+                        int day,
+                        int hours,
+                        int minutes,
+                        int seconds,
+                        int milisseconds);
 
  /**
  * Retorna o ano da data.
  * @param d Uma data.
  * @returns O ano da data.
  */
-int dateTime_get_ano(DATETIME d);
+int dateTime_get_year(DATETIME d);
 
  /**
  * Retorna o mês da data.
  * @param d Uma data.
  * @returns O mês da data.
  */
-int dateTime_get_mes(DATETIME d);
+int dateTime_get_month(DATETIME d);
 
  /**
  * Retorna o dia da data.
  * @param d Uma data.
  * @returns O dia da data.
  */
-int dateTime_get_dia(DATETIME d);
+int dateTime_get_day(DATETIME d);
 
  /**
  * Retorna as horas da data.
  * @param d Uma data.
  * @returns As horas da data.
  */
-int dateTime_get_horas(DATETIME d);
+int dateTime_get_hours(DATETIME d);
 
  /**
  * Retorna os minutos da data.
  * @param d Uma data.
  * @returns Os minutos da data.
  */
-int dateTime_get_minutos(DATETIME d);
+int dateTime_get_minutes(DATETIME d);
 
  /**
  * Retorna os segundos da data.
  * @param d Uma data.
  * @returns Os segundos da data.
  */
-int dateTime_get_segundos(DATETIME d);
+int dateTime_get_seconds(DATETIME d);
 
  /**
  * Retorna os milisegundos da data.
  * @param d Uma data.
  * @returns Os milisegundos da data.
  */
-int dateTime_get_milissegundos(DATETIME d);
+int dateTime_get_milisseconds(DATETIME d);
 
  /**
  * Liberta a memória ocupada pela data.

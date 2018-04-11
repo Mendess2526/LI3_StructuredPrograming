@@ -186,7 +186,7 @@ void printQuestion(gpointer key, gpointer value, gpointer user_data){
     char dateStr[11];
     if(date)
         sprintf(dateStr, "%02d:%02d:%4d",
-            dateTime_get_dia(date), dateTime_get_mes(date), dateTime_get_ano(date));
+            dateTime_get_day(date), dateTime_get_month(date), dateTime_get_year(date));
     else
         sprintf(dateStr,"(null)");
     printf((char *) user_data,
@@ -209,7 +209,7 @@ void printAnswer(gpointer key, gpointer value, gpointer user_data){
     long parentId = answer_get_parent_id(answer);
     if(date)
         sprintf(dateStr, "%02d:%02d:%04d",
-            dateTime_get_dia(date), dateTime_get_mes(date), dateTime_get_ano(date));
+            dateTime_get_day(date), dateTime_get_month(date), dateTime_get_year(date));
     else
         sprintf(dateStr,"(null)");
     printf((char *) user_data,

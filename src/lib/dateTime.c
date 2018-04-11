@@ -5,53 +5,53 @@
 #define INT_CMP(a,b) ((a > b) - (a < b))
 
 struct _dateTime{
-    int ano;
-    int mes;
-    int dia;
-    int horas;
+    int year;
+    int month;
+    int day;
+    int hours;
     int minutos;
-    int segundos;
-    int milissegundos;
+    int seconds;
+    int milisseconds;
 };
 
-DATETIME dateTime_create(int ano, int mes, int dia, int horas, int minutos, int segundos, int milissegundos){
+DATETIME dateTime_create(int year, int month, int day, int hours, int minutos, int seconds, int milisseconds){
     DATETIME d = (DATETIME) malloc (sizeof (struct _dateTime));
-    d->ano = ano;
-    d->mes = mes;
-    d->dia = dia;
-    d->horas = horas;
+    d->year = year;
+    d->month = month;
+    d->day = day;
+    d->hours = hours;
     d->minutos = minutos;
-    d->segundos = segundos;
-    d->milissegundos = milissegundos;
+    d->seconds = seconds;
+    d->milisseconds = milisseconds;
     return d;
 }
 
-int dateTime_get_ano(DATETIME d){
-    return d->ano;
+int dateTime_get_year(DATETIME d){
+    return d->year;
 }
 
-int dateTime_get_mes(DATETIME d){
-    return d->mes;
+int dateTime_get_month(DATETIME d){
+    return d->month;
 }
 
-int dateTime_get_dia(DATETIME d){
-    return d->dia;
+int dateTime_get_day(DATETIME d){
+    return d->day;
 }
 
-int dateTime_get_horas(DATETIME d){
-    return d->horas;
+int dateTime_get_hours(DATETIME d){
+    return d->hours;
 }
 
-int dateTime_get_minutos(DATETIME d){
+int dateTime_get_minutes(DATETIME d){
     return d->minutos;
 }
 
-int dateTime_get_segundos(DATETIME d){
-    return d->segundos;
+int dateTime_get_seconds(DATETIME d){
+    return d->seconds;
 }
 
-int dateTime_get_milissegundos(DATETIME d){
-    return d->milissegundos;
+int dateTime_get_milisseconds(DATETIME d){
+    return d->milisseconds;
 }
 
 void dateTime_destroy(DATETIME d){
@@ -60,13 +60,19 @@ void dateTime_destroy(DATETIME d){
 
 int dateTime_compare(DATETIME dataA, DATETIME dataB){
     int c;
-    c = INT_CMP(dateTime_get_horas(dataA),         dateTime_get_horas(dataB));
+    c = INT_CMP(dateTime_get_year(dataA), dateTime_get_year(dataB));
     if(c) return c;
-    c = INT_CMP(dateTime_get_minutos(dataA),       dateTime_get_minutos(dataB));
+    c = INT_CMP(dateTime_get_month(dataA), dateTime_get_month(dataB));
     if(c) return c;
-    c = INT_CMP(dateTime_get_segundos(dataA),      dateTime_get_segundos(dataB));
+    c = INT_CMP(dateTime_get_day(dataA), dateTime_get_day(dataB));
     if(c) return c;
-    c = INT_CMP(dateTime_get_milissegundos(dataA), dateTime_get_milissegundos(dataB));
+    c = INT_CMP(dateTime_get_hours(dataA), dateTime_get_hours(dataB));
+    if(c) return c;
+    c = INT_CMP(dateTime_get_minutes(dataA), dateTime_get_minutes(dataB));
+    if(c) return c;
+    c = INT_CMP(dateTime_get_seconds(dataA), dateTime_get_seconds(dataB));
+    if(c) return c;
+    c = INT_CMP(dateTime_get_milisseconds(dataA), dateTime_get_milisseconds(dataB));
     if(c) return c;
     return 0;
 }
