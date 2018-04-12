@@ -33,7 +33,7 @@ static void printAndDestroyUser(USER u);
 
 int main(int argc, const char **argv){
     char *folder;
-    if(argc > 2)
+    if(argc > 1)
         folder = makeDumpPath(argv[1]);
     else
         folder = makeDumpPath(NULL);
