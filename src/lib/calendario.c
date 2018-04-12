@@ -3,7 +3,7 @@
 #include "post.h"
 #include <string.h>
 
-#define ANO2INDEX(year) (year-2008 > cal->nAnos-1 ? cal->nAnos-1 : (year-2008 < 0 ? 0 : year-2008))
+#define ANO2INDEX(year) (year-2008 > cal->nYears-1 ? cal->nYears-1 : (year-2008 < 0 ? 0 : year-2008))
 
 
 typedef GList * POSTS;
@@ -28,7 +28,7 @@ typedef struct _year{
 } *YEAR;
 
 struct _calendario{
-    int nAnos;
+    int nYears;
     YEAR *years;
     CCompareFunc compareFunc;
     CFreeFunc freeFunc;
@@ -97,10 +97,10 @@ static YEAR year_create(){
     return a;
 }
 
-CALENDARIO calendario_create(int nAnos, CCompareFunc compareFunc, CFreeFunc freeFunc){
+CALENDARIO calendario_create(int nYears, CCompareFunc compareFunc, CFreeFunc freeFunc){
     CALENDARIO c = (CALENDARIO) malloc(sizeof(struct _calendario));
-    c->nAnos = nAnos;
-    c->years = (YEAR*) calloc(nAnos, sizeof(struct _year*));
+    c->nYears = nYears;
+    c->years = (YEAR*) calloc(nYears, sizeof(struct _year*));
     c->compareFunc = compareFunc;
     c->freeFunc = freeFunc;
     return c;
@@ -184,10 +184,10 @@ static void calendario_iterate_forward(CALENDARIO cal, DATETIME from, DATETIME t
     int fromY = ANO2INDEX(dateTime_get_year(from));
     int toY = ANO2INDEX(dateTime_get_year(to));
     int sameYear = fromY == toY;
-    while(fromY < cal->nAnos && fromY <= toY){
+    while(fromY < cal->nYears && fromY <= toY){
         if(year_iterate_forward(cal->years[fromY++], from, to, sameYear, data, calFunc) == 0)
             break;
-    }    
+    }
 }
 
 static inline int hour_iterate_backwards(HOUR hour, void* data, CFunc calFunc){
@@ -202,7 +202,7 @@ static inline int hour_iterate_backwards(HOUR hour, void* data, CFunc calFunc){
 static inline int day_iterate_backwards(DAY day, void* data, CFunc calFunc){
     if(!day) return 1;
     for(int i=0; i<24; i++){
-        if(hour_iterate_forward(day->hours[i], data, calFunc) == 0)
+        if(hour_iterate_backwards(day->hours[i], data, calFunc) == 0)
             return 0;
     }
     return 1;
@@ -213,7 +213,7 @@ static inline int month_iterate_backwards(MONTH month, DATETIME from, DATETIME t
     int fromD = dateTime_get_day(from);
     int toD = sameMonth ? dateTime_get_day(to) : 0;
     while(toD <= fromD){
-        if(day_iterate_forward(month->days[fromD--], data, calFunc) == 0)
+        if(day_iterate_backwards(month->days[fromD--], data, calFunc) == 0)
             return 0;
     }
     return 1;
@@ -225,7 +225,7 @@ static inline int year_iterate_backwards(YEAR year, DATETIME from, DATETIME to, 
     int toM = sameYear ? dateTime_get_month(to) : 0;
     int sameMonth = sameYear && fromM == toM;
     while(toM <= fromM){
-        if(month_iterate_forward(year->months[fromM--], from, to, sameMonth, data, calFunc) == 0)
+        if(month_iterate_backwards(year->months[fromM--], from, to, sameMonth, data, calFunc) == 0)
             return 0;
     }
     return 1;
@@ -237,7 +237,7 @@ static void calendario_iterate_backwards(CALENDARIO cal, DATETIME from, DATETIME
     int toY = ANO2INDEX(dateTime_get_year(to));
     int sameYear = fromY == toY;
     while(toY <= fromY){
-        if(year_iterate_forward(cal->years[fromY--], from, to, sameYear, data, calFunc) == 0)
+        if(year_iterate_backwards(cal->years[fromY--], from, to, sameYear, data, calFunc) == 0)
             break;
     }
 }
@@ -283,7 +283,7 @@ static void year_destroy(YEAR a, CFreeFunc freeFunc){
 }
 
 void calendario_destroy(CALENDARIO cal){
-    for(int i=0; i<(cal->nAnos); i++){
+    for(int i=0; i<(cal->nYears); i++){
         year_destroy(cal->years[i], cal->freeFunc);
     }
     free(cal->years);
@@ -322,7 +322,7 @@ static void printAno(YEAR year, CPrintFunction printFuncion){
 }
 
 void printCalendario(CALENDARIO cal, CPrintFunction printFuncion){
-    for(int i=0; i< cal->nAnos; i++){
+    for(int i=0; i< cal->nYears; i++){
         printf("Ano: %d\n",i);
         printAno(cal->years[i], printFuncion);
     }
