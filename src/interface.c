@@ -3,6 +3,8 @@
 #include "community.h"
 #include "question.h"
 #include "answer.h"
+#include "q4_helper.h"
+#include "q6_helper.h"
 #include "q7_helper.h"
 #include "q8_helper.h"
 #include "q9_helper.h"
@@ -39,7 +41,7 @@ LONG_pair total_posts(TAD_community com, Date begin, Date end){
 
 // query 4
 LONG_list questions_with_tag(TAD_community com, char* tag, Date begin, Date end){
-    return NULL;
+    return questions_with_tag_helper(com, tag, begin, end);
 }
 
 // query 5
@@ -58,13 +60,13 @@ USER get_user_info(TAD_community com, long id){
     }
     while(i<10)
         list[i++] = -1;
-    
+
     return create_user(bio, list);
 }
 
 // query 6
 LONG_list most_voted_answers(TAD_community com, int N, Date begin, Date end){
-    return NULL;
+    return most_voted_answers_helper(com, N, begin, end);
 }
 
 // query 7

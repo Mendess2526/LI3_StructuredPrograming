@@ -33,7 +33,7 @@ static void printAndDestroyUser(USER u);
 
 int main(int argc, const char **argv){
     char *folder;
-    if(argc > 2)
+    if(argc > 1)
         folder = makeDumpPath(argv[1]);
     else
         folder = makeDumpPath(NULL);
@@ -55,7 +55,7 @@ int main(int argc, const char **argv){
     printAndDestroyLongPair(total_posts(com, beginingOfTime, theHeatDeath));
 
     printf("%sQUERY  4:%s Questions with tag\n",BLUE, RESET);
-    printAndDestroyLongList(questions_with_tag(com, "battery", beginingOfTime, theHeatDeath), 0);
+    printAndDestroyLongList(questions_with_tag(com, "sms", beginingOfTime, theHeatDeath), 3);
 
     printf("%sQUERY  5:%s Get user info\n",BLUE, RESET);
     printAndDestroyUser(get_user_info(com, 5));
