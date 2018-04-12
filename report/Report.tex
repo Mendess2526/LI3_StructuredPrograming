@@ -35,7 +35,7 @@
         A79003 \,\,\,Pedro Mendes Félix da Costa
         \vspace{0.2cm}
 
-        AXXXXX \,\,\,Barbara Andreia Cardoso %TODO acabar nome
+        A80453 \,\,\,Barbara Andreia Cardoso Ferreira
         \vspace{0.2cm}
 
         AXXXXX \,\,\,Ana Catarina %TODO
@@ -58,25 +58,66 @@
 
 
 \chapter{Descrição do Problema}
+    Falar do Stackoverflow
+
+    Analizar queries
 
 
+    Juntando as informações chegamos a conclusão que..
     \section{Users}
-
+    Para represantar um user guardamos os seguintes atributos:
+    \begin{itemize}
+            \item Id
+            \item bio
+            \item
+            \item
+    \end{itemize}
 
     \section{Posts}
-
+    Inicialmente foi pensada a utilização de uma estrutura generica.
 
         \subsection{Questions}
 
-
         \subsection{Answers}
 
+    \section{Tags}
 
-\chapter{Solução do Problema}
 
+\chapter{Solução}
+
+    \section{}
+
+        \subsection{Questions}
+        Metemos uma lista de respostas para reponder a query 9
+        Guardamos as tags como uma unica string em que cada tag esta entre
+        $< >$
+
+
+        \subsection{Answers}
+        Metemos um apontador para a questao a que responde
+
+        \subsection{Users}
+        Metemos o numero de posts para responder a query 2
+
+        Metemos uma lista de posts do utilizador para responder a query 9
+        Foi preciso definir uma estura post que guarda uma questão ou resposta para
+        que pudessem ambas guardadas na mesma lista.
+
+        \subsection{Tags}
 
     \section{Estruturas de Dados}
 
+        \subsection{Hash Tables}
+
+        A hash table de tags usa a string da tag como chave, para obter o id.
+        Usado para responder à query 11.
+
+        \subsection{Calendario}
+        Foi pensada a utilização de arvores binarias ordenadas por data, mas isto
+        revelou-se que isto era ineficiente.
+
+        Foi preciso definir um DateTime
+        Explicar calendario.
 
 \chapter{Conclusões e Trabalho Futuro}
 
