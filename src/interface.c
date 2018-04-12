@@ -1,6 +1,8 @@
 #include "interface.h"
 #include "soUser.h"
 #include "community.h"
+#include "question.h"
+#include "answer.h"
 #include "q7_helper.h"
 #include "q8_helper.h"
 #include "q9_helper.h"
@@ -97,6 +99,13 @@ LONG_list both_participated(TAD_community com, long id1, long id2, int N){
 
 // query 10
 long better_answer(TAD_community com, long id){
+    QUESTION question = community_get_question(com,id);
+    ANSWERS answers = question_get_answers(question);
+    int score = answer_get_score(answer);
+    long idUser = answer_get_owner_id(answer);
+    int rep = so_user_get_reputation(user)
+    int nrCom = answer_get_comment_count(answer);
+    for(aswers;)
     return 0L;
 }
 
