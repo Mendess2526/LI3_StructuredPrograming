@@ -103,21 +103,22 @@ LONG_list both_participated(TAD_community com, long id1, long id2, int N){
 long better_answer(TAD_community com, long id){
     QUESTION question = community_get_question(com,id);
     ANSWERS answers = question_get_answers(question);
-    int melhorp = 0;
-    int idmelhor = 0;
+    int bestP = 0;
+    int idBest = 0;
     for(ANSWERS cur = answers;cur != NULL;cur = cur->next){
         int score = answer_get_score(cur->data);
+        long idAnswer = answer_get_id(cur->data);
         long idUser = answer_get_owner_id(cur->data);
         SO_USER user = community_get_user(com,idUser);
         int rep = so_user_get_reputation(user);
         int nrCom = answer_get_comment_count(cur->data);
-        int pontuacao = (score*0.65)+(rep*0.25)+(nrCom*0.1);
-        if(pontuacao>melhorp){
-            melhorp = pontuacao;
-            idmelhor = idUser;
+        int testScore = (score*0.65)+(rep*0.25)+(nrCom*0.1);
+        if(testScore>bestP){
+            bestP = testScore;
+            idBest = idAnswer;
         } 
     }
-    return idmelhor;
+    return idBest;
 }
 
 // query 11
