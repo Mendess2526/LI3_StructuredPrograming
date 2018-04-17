@@ -37,7 +37,7 @@ LONG_list most_voted_answers_helper(TAD_community com, int N, Date begin, Date e
     DATETIME from = dateTime_create(get_year(begin), get_month(begin), get_day(begin), 0, 0, 0, 0);
     DATETIME to = dateTime_create(get_year(end), get_month(end), get_day(end), 0, 0, 0, 0);
 
-    COLLECTOR col = malloc(sizeof(struct _collector*));
+    COLLECTOR col = malloc(sizeof(struct _collector));
     col->maxSize = N;
     col->answers = NULL;
 

@@ -102,6 +102,7 @@ LONG_list both_participated(TAD_community com, long id1, long id2, int N){
 // query 10
 long better_answer(TAD_community com, long id){
     QUESTION question = community_get_question(com,id);
+    if(question == NULL) return 0;
     ANSWERS answers = question_get_answers(question);
     int bestP = 0;
     int idBest = 0;
@@ -116,7 +117,7 @@ long better_answer(TAD_community com, long id){
         if(testScore>bestP){
             bestP = testScore;
             idBest = idAnswer;
-        } 
+        }
     }
     return idBest;
 }

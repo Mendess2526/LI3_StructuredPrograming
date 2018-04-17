@@ -49,9 +49,11 @@ int contains(char** strings, char* string){
 int collect(gpointer elem, gpointer user_data){
     QUESTION q = (QUESTION) elem;
     COLLECTOR col = (COLLECTOR) user_data;
-    if(contains(question_get_tags(q), col->tag))
+    char** tags = question_get_tags(q);
+    if(contains(tags, col->tag))
         darray_append(col->questionIds, question_get_id(q));
-
+    for(int i=0; tags[i]; i++) free(tags[i]);
+    free(tags);
     return 1;
 }
 
