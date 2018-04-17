@@ -1,4 +1,4 @@
-\documentclass[11pt,a4paper]{report}
+\documentclass[10pt,a4paper]{report}
 \usepackage[utf8]{inputenc}
 \usepackage[portuguese]{babel}
 \usepackage{titlesec}
@@ -36,9 +36,6 @@
         \vspace{0.2cm}
 
         A80453 \,\,\,Barbara Andreia Cardoso Ferreira
-        \vspace{0.2cm}
-
-        AXXXXX \,\,\,Ana Catarina %TODO
     \end{flushleft}
         \vspace{1cm}
     \begin{flushright}
@@ -52,40 +49,56 @@
 \chapter{Resumo}
 
 
-\tableofcontents %indice
+\tableofcontents %TODO mudar titulo default
 
 \chapter{Introdução}
 
 
 \chapter{Descrição do Problema}
-    Falar do Stackoverflow
+    Analisando as queries decidimos que seria necessario representar
+    as seguintes entidades com os respetivos atributos.
 
-    Analizar queries
-
-
-    Juntando as informações chegamos a conclusão que..
     \section{Users}
-    Para represantar um user guardamos os seguintes atributos:
+    Para represantar um \textbf{user} guardamos os seguintes atributos:
     \begin{itemize}
             \item Id
-            \item bio
-            \item
-            \item
+            \item Biografia
+            \item Nome
+            \item Reputação
+
     \end{itemize}
 
     \section{Posts}
-    Inicialmente foi pensada a utilização de uma estrutura generica.
-
+    Para represantar os posts dividimos os atributos por duas sub
+    estruturas.
         \subsection{Questions}
-
+        \begin{itemize}
+            
+        \end{itemize}
         \subsection{Answers}
-
+        \begin{itemize}
+            
+        \end{itemize}
     \section{Tags}
+    Para represantar as tags.
+    \begin{itemize}
+        \item Id
+        \item Biografia
+        \item Nome
+        \item Reputação
+\end{itemize}
 
 
-\chapter{Solução}
+\chapter{Tipo Concreto de Dados}
 
-    \section{}
+    \section{Hashtables}
+
+        \subsection{Users}
+        Metemos o numero de posts para responder a query 2
+
+        Metemos uma lista de posts do utilizador para responder a query 9
+        Foi preciso definir uma estura post que guarda uma questão ou resposta para
+        que pudessem ambas guardadas na mesma lista.
 
         \subsection{Questions}
         Metemos uma lista de respostas para reponder a query 9
@@ -96,12 +109,6 @@
         \subsection{Answers}
         Metemos um apontador para a questao a que responde
 
-        \subsection{Users}
-        Metemos o numero de posts para responder a query 2
-
-        Metemos uma lista de posts do utilizador para responder a query 9
-        Foi preciso definir uma estura post que guarda uma questão ou resposta para
-        que pudessem ambas guardadas na mesma lista.
 
         \subsection{Tags}
 
@@ -118,6 +125,8 @@
 
         Foi preciso definir um DateTime
         Explicar calendario.
+    
+\chapter{Resolução das queries}
 
 \chapter{Conclusões e Trabalho Futuro}
 
