@@ -5,6 +5,8 @@
 
 typedef struct TCD_community *TAD_community;
 
+typedef int (*ComCmpFunc)(void* a, void* b);
+
 
 typedef struct _post *POST;
 

@@ -8,6 +8,10 @@
 #include "question.h"
 #include "types.h"
 
+/**
+ * Alias para a função community_create
+ * @returns Uma instância da estrutura.
+ */
 TAD_community init();
 
  /**
@@ -74,6 +78,10 @@ ANSWER community_get_answer(TAD_community com, long id);
  * @returns O user.
  */
 SO_USER community_get_user(TAD_community com, long id);
+
+typedef GSList* USERS;
+
+USERS community_get_sorted_list(TAD_community com, ComCmpFunc cfunc, int N);
 
  /**
  * Encontra o id da tag fornecida.
