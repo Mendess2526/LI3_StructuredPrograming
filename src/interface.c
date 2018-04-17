@@ -1,6 +1,12 @@
 #include "interface.h"
 #include "soUser.h"
 #include "community.h"
+#include "question.h"
+#include "answer.h"
+#include "q2_helper.h"
+#include "q3_helper.h"
+#include "q4_helper.h"
+#include "q6_helper.h"
 #include "q7_helper.h"
 #include "q8_helper.h"
 #include "q9_helper.h"
@@ -27,17 +33,17 @@ STR_pair info_from_post(TAD_community com, long id){
 }
 // query 2
 LONG_list top_most_active(TAD_community com, int N){
-    return NULL;
+    return top_most_active_helper(com, N);
 }
 
 // query 3
 LONG_pair total_posts(TAD_community com, Date begin, Date end){
-    return NULL;
+    return total_posts_helper(com, begin, end);
 }
 
 // query 4
 LONG_list questions_with_tag(TAD_community com, char* tag, Date begin, Date end){
-    return NULL;
+    return questions_with_tag_helper(com, tag, begin, end);
 }
 
 // query 5
@@ -56,13 +62,13 @@ USER get_user_info(TAD_community com, long id){
     }
     while(i<10)
         list[i++] = -1;
-    
+
     return create_user(bio, list);
 }
 
 // query 6
 LONG_list most_voted_answers(TAD_community com, int N, Date begin, Date end){
-    return NULL;
+    return most_voted_answers_helper(com, N, begin, end);
 }
 
 // query 7
@@ -97,7 +103,25 @@ LONG_list both_participated(TAD_community com, long id1, long id2, int N){
 
 // query 10
 long better_answer(TAD_community com, long id){
-    return 0L;
+    QUESTION question = community_get_question(com,id);
+    if(question == NULL) return 0;
+    ANSWERS answers = question_get_answers(question);
+    int bestP = 0;
+    int idBest = 0;
+    for(ANSWERS cur = answers;cur != NULL;cur = cur->next){
+        int score = answer_get_score(cur->data);
+        long idAnswer = answer_get_id(cur->data);
+        long idUser = answer_get_owner_id(cur->data);
+        SO_USER user = community_get_user(com,idUser);
+        int rep = so_user_get_reputation(user);
+        int nrCom = answer_get_comment_count(cur->data);
+        int testScore = (score*0.65)+(rep*0.25)+(nrCom*0.1);
+        if(testScore>bestP){
+            bestP = testScore;
+            idBest = idAnswer;
+        }
+    }
+    return idBest;
 }
 
 // query 11

@@ -1,0 +1,8 @@
+struct TCD_community{
+    QUESTIONS_HTABLE questions;
+    ANSWERS_HTABLE answers;
+    SO_USERS_HTABLE users;
+    TAGS_HTABLE tags;
+    CALENDARIO calendarioQuestions;
+    CALENDARIO calendarioAnswers;
+};

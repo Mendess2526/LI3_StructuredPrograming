@@ -46,7 +46,7 @@ int answer_get_comment_count(ANSWER answer){
 }
 
 xmlChar *answer_get_owner_name(ANSWER answer){
-    return xmlStrdup(answer->owner_name);
+    return answer->owner_name;
 }
 
 long answer_get_parent_id(ANSWER answer){

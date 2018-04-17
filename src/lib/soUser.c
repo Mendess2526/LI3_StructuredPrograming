@@ -38,11 +38,11 @@ int so_user_get_reputation(SO_USER user){
 }
 
 xmlChar *so_user_get_name(SO_USER user){
-    return xmlStrdup(user->name);
+    return user->name;
 }
 
 xmlChar *so_user_get_bio(SO_USER user){
-    return xmlStrdup(user->bio);
+    return user->bio;
 }
 
 int so_user_get_post_count(SO_USER user){

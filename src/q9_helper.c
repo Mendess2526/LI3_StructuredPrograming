@@ -19,6 +19,7 @@ long searchThread(POST post, long id){
     else
         q = post_get_question(post);
 
+    if(q == NULL) return -2;
     if(searchFromQuestion(q, id))
         return question_get_id(q);
     else

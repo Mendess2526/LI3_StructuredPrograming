@@ -4,6 +4,7 @@
 #include "interface.h"
 #include "pair.h"
 #include "community.h"
+#include "common.h"
 
 #define BLUE "\033[34m"
 #define YELLOW "\033[33m"
@@ -33,7 +34,7 @@ static void printAndDestroyUser(USER u);
 
 int main(int argc, const char **argv){
     char *folder;
-    if(argc > 2)
+    if(argc > 1)
         folder = makeDumpPath(argv[1]);
     else
         folder = makeDumpPath(NULL);
@@ -55,7 +56,7 @@ int main(int argc, const char **argv){
     printAndDestroyLongPair(total_posts(com, beginingOfTime, theHeatDeath));
 
     printf("%sQUERY  4:%s Questions with tag\n",BLUE, RESET);
-    printAndDestroyLongList(questions_with_tag(com, "battery", beginingOfTime, theHeatDeath), 0);
+    printAndDestroyLongList(questions_with_tag(com, "sms", beginingOfTime, theHeatDeath), 3);
 
     printf("%sQUERY  5:%s Get user info\n",BLUE, RESET);
     printAndDestroyUser(get_user_info(com, 5));
@@ -78,6 +79,8 @@ int main(int argc, const char **argv){
     printf("%sQUERY 11:%s Most used best rep\n",BLUE, RESET);
     printAndDestroyLongList(most_used_best_rep(com, 5, beginingOfTime, theHeatDeath), 5);
 
+    free_date(beginingOfTime);
+    free_date(theHeatDeath);
     clean(com);
 }
 
@@ -85,9 +88,9 @@ static char* makeDumpPath(const char* folder_name){
     char *home = getenv("HOME");
     char *dumps = "/dump_exemplo/";
     char *folder = NULL;
-    if(!folder_name) folder = strdup("askubuntu/");
-    else folder = strdup(folder_name);
-    size_t len = strlen(home) + strlen(dumps) + strlen(folder);
+    if(!folder_name) folder = mystrdup("askubuntu/");
+    else folder = mystrdup(folder_name);
+    size_t len = strlen(home) + strlen(dumps) + strlen(folder) + 1;
     char* path = (char*) malloc(sizeof(char)*len);
     sprintf(path,"%s%s%s", home, dumps, folder);
     free(folder);
@@ -122,8 +125,10 @@ static void printAndDestroyLongList(LONG_list lL, int size){
 static void printAndDestroyUser(USER u){
     if(!u) return;
     printf("bio: %s\n", get_bio(u));
+    long *posts = get_10_latest_posts(u);
     for(int i=0; i<10; i++){
-        printf("post[%d] -> %ld\n", i, get_10_latest_posts(u)[i]);
+        printf("post[%d] -> %ld\n", i, posts[i]);
     }
+    free(posts);
     free_user(u);
 }

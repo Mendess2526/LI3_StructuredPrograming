@@ -9,7 +9,7 @@
 #include <libxml/parserInternals.h>
 
  /**
- *Cria uma resposta. 
+ * Cria uma resposta. 
  * @param id O id da resposta. 
  * @param date A data da resposta.
  * @param score O score da resposta.
@@ -19,12 +19,12 @@
  * @returns Uma resposta. 
  */
 ANSWER answer_create(long id,
-                        DATETIME date,
-                        int score,
-                        long ownerId,
-                        long parentId,
-                        xmlChar *ownerName,
-                        int comment_count);
+                    DATETIME date,
+                    int score,
+                    long ownerId,
+                    long parentId,
+                    xmlChar *ownerName,
+                    int comment_count);
 
  /**
  * Retorna o id da resposta.
@@ -96,8 +96,8 @@ void answer_set_parent_ptr(ANSWER answer, QUESTION question);
 void answer_destroy(ANSWER answer);
 
  /**
- * 
- * @param answer
+ * Liberta a memória ocupada pela resposta.
+ * @param answer Uma resposta.
  */
 void answer_destroy_generic(gpointer answer);
 

@@ -57,8 +57,18 @@ xmlChar *so_user_get_bio(SO_USER user);
  */
 void so_user_add_post(SO_USER user, POST post);
 
+ /**
+ * Retorna o número de posts de um user.
+ * @param user Um user.
+ * @returns O número de posts.
+ */
 int so_user_get_post_count(SO_USER user);
 
+ /**
+ * Retorna a lista de posts de um user.
+ * @param user Um user.
+ * @returns A lista de posts.
+ */
 POSTS so_user_get_posts(SO_USER user);
 
  /**
@@ -68,8 +78,8 @@ POSTS so_user_get_posts(SO_USER user);
 void so_user_destroy(SO_USER user);
 
  /**
- *
- * @param user.
+ * Liberta a memória ocupada pelo user.
+ * @param user Um user.
  */
 void so_user_destroy_generic(gpointer user);
 
