@@ -3,6 +3,7 @@
 #include "community.h"
 #include "question.h"
 #include "answer.h"
+#include "q3_helper.h"
 #include "q4_helper.h"
 #include "q6_helper.h"
 #include "q7_helper.h"
@@ -36,7 +37,7 @@ LONG_list top_most_active(TAD_community com, int N){
 
 // query 3
 LONG_pair total_posts(TAD_community com, Date begin, Date end){
-    return NULL;
+    return total_posts_helper(com, begin, end);
 }
 
 // query 4

@@ -8,7 +8,6 @@
 
 #include <libxml/parserInternals.h>
 
-typedef GSList *ANSWERS;
 
  /**
  * Cria uma questão.
@@ -107,8 +106,8 @@ void question_add_answer(QUESTION question, ANSWER answer);
 void question_destroy(QUESTION question);
 
  /**
- *
- * @param question
+ * Liberta a memória ocupada pela questão.
+ * @param question Uma questão.
  */
 void question_destroy_generic(gpointer question);
 

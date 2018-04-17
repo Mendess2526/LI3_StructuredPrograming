@@ -10,8 +10,8 @@
  /**
  * Cria um calendário.
  * @param nANos Número de anos que o calendário tem.
- * @param compareFunc ??
- * @param freeFunc ??
+ * @param compareFunc Função que compara datas dos elementos inseridos.
+ * @param freeFunc Função que liberta a memória ocupada pelos elemosntos inseridos.
  */
 CALENDARIO calendario_create(int nAnos, CCompareFunc compareFunc, CFreeFunc freeFunc);
 
@@ -28,14 +28,14 @@ void calendario_add_post(CALENDARIO cal, void* post, DATETIME d);
  * @param cal Um calendário.
  * @param from A data do inicio.
  * @param to A data do fim.
- * @param data ??
- * @param calFunc ??
+ * @param data Informação passada a calFunc.
+ * @param calFunc Função chamada para cada elemento entre as datas.
  */
 void calendario_iterate(CALENDARIO cal, DATETIME from, DATETIME to, void* data, CFunc calFunc);
 
  /**
  * Liberta a memória ocupada pelo calendário.
- * @param cal
+ * @param cal Um calendário.
  */
 void calendario_destroy(CALENDARIO cal);
 
