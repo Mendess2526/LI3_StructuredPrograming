@@ -73,4 +73,5 @@ null
 _minted-Report/
 *.aux
 *.toc
+*.pyg
 Report.pdf

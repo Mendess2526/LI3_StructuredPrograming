@@ -82,7 +82,7 @@
             \item Lista das respostas
             \item Tags
         \end{itemize}
-        
+
         \subsection{Respostas}
         \begin{itemize}
             \item Id
@@ -112,7 +112,7 @@ struct TCD_community{
     \section{Hashtables}
         Todas as entidades são armazenadas numa hashtable pois para todas são
         necessarias pesquisas por id (ou nome no caso das tags).
-        \subsubsection{Tags}
+        \subsection{Tags}
         A hashtable das tags serve para criar uma associação "Nome Id" visto que
         as questões guardam uma lista com os nomes das tags e para responder à
         query 11 é necessario obter os ids das mesmas.
@@ -143,6 +143,31 @@ struct _dateTime{
     int seconds;
     int milisseconds;
 };
+    \end{minted}
+
+\chapter{Modularização Funcional}
+    Para aceder aos dados da estrutura principal foi definida uma api simples
+    que permite pesquisas de Utilizadores e posts por id,
+    \begin{minted}{C}
+QUESTION community_get_question(TAD_community com, long id);
+ANSWER community_get_answer(TAD_community com, long id);
+SO_USER community_get_user(TAD_community com, long id);
+    \end{minted}
+    pesquisas do id das tags dado o nome,
+    \begin{minted}{C}
+long community_get_tag_id(TAD_community com, xmlChar* tag);
+    \end{minted}
+    obter listas ordenadas dos utilizadores
+    \begin{minted}{C}
+USERS community_get_sorted_user_list(TAD_community com, ComCmpFunc cfunc, int N);
+    \end{minted}
+    e obter questões ou respostas dentro de intervalos de tempo,
+    ordenadas cronológicamente.
+    \begin{minted}{C}
+void community_iterate_questions(TAD_community com, DATETIME from, DATETIME to,
+                                    void* data, CFunc calFunc);
+void community_iterate_answers(TAD_community com, DATETIME from, DATETIME to,
+                                    void* data, CFunc calFunc);
     \end{minted}
 
 \chapter{Resolução das queries}
