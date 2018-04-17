@@ -3,6 +3,7 @@
 #include "community.h"
 #include "question.h"
 #include "answer.h"
+#include "q2_helper.h"
 #include "q3_helper.h"
 #include "q4_helper.h"
 #include "q6_helper.h"
@@ -32,7 +33,7 @@ STR_pair info_from_post(TAD_community com, long id){
 }
 // query 2
 LONG_list top_most_active(TAD_community com, int N){
-    return NULL;
+    return top_most_active_helper(com, N);
 }
 
 // query 3

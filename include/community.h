@@ -81,7 +81,7 @@ SO_USER community_get_user(TAD_community com, long id);
 
 typedef GSList* USERS;
 
-USERS community_get_sorted_list(TAD_community com, ComCmpFunc cfunc, int N);
+USERS community_get_sorted_user_list(TAD_community com, ComCmpFunc cfunc, int N);
 
  /**
  * Encontra o id da tag fornecida.
