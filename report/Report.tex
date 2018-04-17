@@ -3,6 +3,7 @@
 \usepackage[portuguese]{babel}
 \usepackage{titlesec}
 \usepackage{graphicx}
+\usepackage{indentfirst}
 \usepackage{float}
 \usepackage{array}
 \usepackage{multirow}
@@ -35,7 +36,7 @@
         A79003 \,\,\,Pedro Mendes Félix da Costa
         \vspace{0.2cm}
 
-        A80453 \,\,\,Barbara Andreia Cardoso Ferreira
+        A80453 \,\,\,Bárbara Andreia Cardoso Ferreira
     \end{flushleft}
         \vspace{1cm}
     \begin{flushright}
@@ -46,47 +47,53 @@
 
 \end{titlepage}
 
-\chapter{Resumo}
-
-
-\tableofcontents %TODO mudar titulo default
+\tableofcontents %TODO mudar titulo para indice default
 
 \chapter{Introdução}
-
+    Este trabalho tem como objetivo 
 
 \chapter{Descrição do Problema}
-    Analisando as queries decidimos que seria necessario representar
-    as seguintes entidades com os respetivos atributos.
+    Analisando as queries decidimos que seria necessário representar
+    as seguintes entidades:
 
-    \section{Users}
-    Para represantar um \textbf{user} guardamos os seguintes atributos:
+    \section{Utilizadores}
+    Para represantar os \textbf{users} guardamos os seguintes atributos:
     \begin{itemize}
             \item Id
             \item Biografia
             \item Nome
             \item Reputação
-
+            \item Número de posts
+            \item Lista dos posts
     \end{itemize}
 
     \section{Posts}
-    Para represantar os posts dividimos os atributos por duas sub
-    estruturas.
-        \subsection{Questions}
+    Para represantar os \textbf{posts} dividimos os atributos por duas
+     sub estruturas, cujos atributos são:
+        \subsection{Questões}
         \begin{itemize}
-            
+            \item Id
+            \item Score
+            \item Data
+            \item Título da questão
+            \item Id do autor da questão
+            \item Nome do autor da questão
+            \item Número de respostas
+            \item Lista das respostas
+            \item Tags
         \end{itemize}
-        \subsection{Answers}
+        
+        \subsection{Respostas}
         \begin{itemize}
-            
+            \item Id
+            \item Score
+            \item Data
+            \item Número de comentários
+            \item Id do autor da resposta
+            \item Id da questão a que responde
+            \item Nome do autor da resposta
+            \item Referência da questão a que responde
         \end{itemize}
-    \section{Tags}
-    Para represantar as tags.
-    \begin{itemize}
-        \item Id
-        \item Biografia
-        \item Nome
-        \item Reputação
-\end{itemize}
 
 
 \chapter{Tipo Concreto de Dados}
