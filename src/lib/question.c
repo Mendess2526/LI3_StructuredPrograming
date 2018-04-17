@@ -1,4 +1,6 @@
 #include "question.h"
+#include "common.h"
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -46,7 +48,7 @@ long question_get_owner_id(QUESTION question){
 }
 
 xmlChar *question_get_title(QUESTION question){
-    return xmlStrdup(question->title);
+    return question->title;
 }
 
 char** question_get_tags(QUESTION question){
@@ -57,7 +59,7 @@ char** question_get_tags(QUESTION question){
     char* token = strtok((char *) tagsUnparsed+1, "><");
     int i = 0;
     while (token != NULL) {
-        result[i++] = strdup(token);
+        result[i++] = mystrdup(token);
         token = strtok(NULL, "><");
     }
     free(tagsUnparsed);
@@ -65,7 +67,7 @@ char** question_get_tags(QUESTION question){
 }
 
 xmlChar *question_get_owner_name(QUESTION question){
-    return xmlStrdup(question->ownerName);
+    return question->ownerName;
 }
 
 int question_get_answer_count(QUESTION question){

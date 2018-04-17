@@ -141,6 +141,39 @@ SO_USER community_get_user(TAD_community com, long id){
     return g_hash_table_lookup(com->users,(gconstpointer) &id);
 }
 
+typedef struct _collector{
+    USERS list;
+    ComCmpFunc func;
+    int maxSize;
+}*COLLECTOR;
+
+static void collect(gpointer key, gpointer value, gpointer user_data){
+    key = 0; // Avoid unused parameter warning
+    COLLECTOR col = (COLLECTOR) user_data;
+    if(col->list == NULL || col->func(col->list->data, value) < 0){
+        col->list = g_slist_prepend(col->list, value);
+    }else{
+        int i = 0;
+        for(GSList* cur = col->list; cur && i < col->maxSize; cur = cur->next, ++i){
+            if(!cur->next || col->func(cur->next->data, value) < 0){
+                    cur->next = g_slist_prepend(cur->next, value);
+                    i = col->maxSize;
+            }
+        }
+    }
+}
+
+USERS community_get_sorted_user_list(TAD_community com, ComCmpFunc func, int N){
+    COLLECTOR col = malloc(sizeof(struct _collector));
+    col->func = func;
+    col->list = NULL;
+    col->maxSize = N;
+    g_hash_table_foreach(com->users, collect, col);
+    USERS r = col->list;
+    free(col);
+    return r;
+}
+
 long community_get_tag_id(TAD_community com, xmlChar* tag){
     long* id = g_hash_table_lookup(com->tags, (gconstpointer) tag);
     if(id) return *id;
