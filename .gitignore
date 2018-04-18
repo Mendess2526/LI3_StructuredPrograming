@@ -74,3 +74,9 @@ _minted-Report/
 *.aux
 *.toc
 Report.pdf
+
+#clion
+.idea/
+CMakeLists.txt
+cmake-build-debug/
+

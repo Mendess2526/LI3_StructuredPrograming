@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 /** Macro para compara dois inteiros positivos */
-#define INT_CMP(a,b) ((a > b) - (a < b))
+#define INT_CMP(a,b) (((a) > (b)) - ((a) < (b)))
 
 struct _dateTime{
     int year;

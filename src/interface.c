@@ -56,8 +56,7 @@ USER get_user_info(TAD_community com, long id){
     int i;
     for(i=0; i<10 && posts!=NULL; i++){
         POST post = (POST) posts->data;
-        long id = post_get_id(post);
-        list[i] = id;
+        list[i] = post_get_id(post);
         posts = posts->next;
     }
     while(i<10)
@@ -106,8 +105,8 @@ long better_answer(TAD_community com, long id){
     QUESTION question = community_get_question(com,id);
     if(question == NULL) return 0;
     ANSWERS answers = question_get_answers(question);
-    int bestP = 0;
-    int idBest = 0;
+    double bestP = 0;
+    long idBest = 0;
     for(ANSWERS cur = answers;cur != NULL;cur = cur->next){
         int score = answer_get_score(cur->data);
         long idAnswer = answer_get_id(cur->data);
@@ -115,7 +114,7 @@ long better_answer(TAD_community com, long id){
         SO_USER user = community_get_user(com,idUser);
         int rep = so_user_get_reputation(user);
         int nrCom = answer_get_comment_count(cur->data);
-        int testScore = (score*0.65)+(rep*0.25)+(nrCom*0.1);
+        double testScore = (score*0.65)+(rep*0.25)+(nrCom*0.1);
         if(testScore>bestP){
             bestP = testScore;
             idBest = idAnswer;

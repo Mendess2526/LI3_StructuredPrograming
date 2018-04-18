@@ -3,7 +3,7 @@
 #include "post.h"
 #include <string.h>
 
-#define ANO2INDEX(year) (year-2008 > cal->nYears-1 ? cal->nYears-1 : (year-2008 < 0 ? 0 : year-2008))
+#define ANO2INDEX(year) ((year)-2008 > cal->nYears-1 ? cal->nYears-1 : ((year)-2008 < 0 ? 0 : (year)-2008))
 
 
 typedef GList * POSTS;
@@ -41,7 +41,7 @@ static DAY day_create();
 static MONTH month_create(int nDays);
 static YEAR year_create();
 
-static inline void hour_add_post(HOUR h, void* p, CCompareFunc compareFunc);
+static inline void hour_add_post(HOUR h, void*post, CCompareFunc compareFunc);
 static void day_add_post(DAY day, DATETIME d, void* post, CCompareFunc compareFunc);
 static void month_add_post(MONTH month, DATETIME d, void* post, CCompareFunc compareFunc);
 static void year_add_post(YEAR year, DATETIME d, void* post, CCompareFunc compareFunc);
@@ -173,7 +173,7 @@ static inline int month_iterate_forward(MONTH month, DATETIME from, DATETIME to,
             fromD = 0;
             toD = dateTime_get_day(to);
             break;
-        case 0: // Nenhum
+        default: // Nenhum
             fromD = 0;
             toD = month->nDays-1;
             break;
@@ -206,7 +206,7 @@ static inline int year_iterate_forward(YEAR year, DATETIME from, DATETIME to, in
             fromM = 0;
             toM = dateTime_get_month(to);
             break;
-        case 0: // Nenhum
+        default: // Nenhum
             fromM = 0;
             toM = 11;
             break;
@@ -277,7 +277,7 @@ static inline int month_iterate_backwards(MONTH month, DATETIME from, DATETIME t
             fromD = month->nDays-1;
             toD = dateTime_get_day(to);
             break;
-        case 0: // Nenhum
+        default: // Nenhum
             fromD = month->nDays-1;
             toD = 0;
             break;
@@ -310,7 +310,7 @@ static inline int year_iterate_backwards(YEAR year, DATETIME from, DATETIME to, 
             fromM = 11;
             toM = dateTime_get_month(to);
             break;
-        case 0: // Nenhum
+        default: // Nenhum
             fromM = 11;
             toM = 0;
             break;
