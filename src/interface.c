@@ -10,6 +10,7 @@
 #include "q7_helper.h"
 #include "q8_helper.h"
 #include "q9_helper.h"
+#include "q11_helper.h"
 
 // query 1
 STR_pair info_from_post(TAD_community com, long id){
@@ -125,7 +126,7 @@ long better_answer(TAD_community com, long id){
 
 // query 11
 LONG_list most_used_best_rep(TAD_community com, int N, Date begin, Date end){
-    return NULL;
+    return most_used_best_rep_helper(com, N, begin, end);
 }
 
 TAD_community clean(TAD_community com){
