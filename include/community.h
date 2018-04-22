@@ -1,6 +1,10 @@
 #ifndef __COMMUNITY_H__
 #define __COMMUNITY_H__
-
+/**
+ * @file
+ * Ficheiro que define a API para interagir com as estururas
+ * definidas que armazenam toda a informação retirada dos ficheiros xml
+ */
 #include <glib.h>
 #include "date.h"
 #include "soUser.h"

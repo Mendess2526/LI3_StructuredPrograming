@@ -9,14 +9,14 @@
 #include <libxml/parserInternals.h>
 
  /**
- * Cria uma resposta. 
- * @param id O id da resposta. 
+ * Cria uma resposta.
+ * @param id O id da resposta.
  * @param date A data da resposta.
  * @param score O score da resposta.
  * @param ownerId O id do dono da resposta.
  * @param parentId O id da questão à qual foi dada a resposta.
  * @param ownerName O nome do dono da resposta.
- * @returns Uma resposta. 
+ * @returns Uma resposta.
  */
 ANSWER answer_create(long id,
                     DATETIME date,

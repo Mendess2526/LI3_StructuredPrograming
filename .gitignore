@@ -80,3 +80,6 @@ Report.pdf
 CMakeLists.txt
 cmake-build-debug/
 
+#doxygen
+doc/html
+doc/latex

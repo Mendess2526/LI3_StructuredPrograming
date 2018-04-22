@@ -1,7 +1,7 @@
 #ifndef __Q7_HELPER_H__
 #define __Q7_HELPER_H__
 
-#include "community.h"
+#include "types.h"
 #include "date.h"
 #include "list.h"
 

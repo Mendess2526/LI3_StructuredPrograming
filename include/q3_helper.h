@@ -3,7 +3,7 @@
 
 #include "pair.h"
 #include "date.h"
-#include "community.h"
+#include "types.h"
 
 LONG_pair total_posts_helper(TAD_community com, Date begin, Date end);
 
