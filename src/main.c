@@ -62,8 +62,8 @@ int main(int argc, const char **argv){
     printf("%sQUERY  4:%s Questions with tag %sParams [sms, 1/1/2008, 30/11/9999]%s\n",BLUE, RESET, GREEN, RESET);
     printAndDestroyLongList(questions_with_tag(com, "sms", beginingOfTime, theHeatDeath), 3);
 
-    printf("%sQUERY  5:%s Get user info %sParams [2]%s\n",BLUE, RESET, GREEN, RESET);
-    printAndDestroyUser(get_user_info(com, 2));
+    printf("%sQUERY  5:%s Get user info %sParams [7]%s\n",BLUE, RESET, GREEN, RESET);
+    printAndDestroyUser(get_user_info(com, 7));
 
     printf("%sQUERY  6:%s Most voted answer %sParams [5, 1/1/2008, 30/11/9999]%s\n",BLUE, RESET, GREEN, RESET);
     printAndDestroyLongList(most_voted_answers(com, 5, beginingOfTime, theHeatDeath), 5);
