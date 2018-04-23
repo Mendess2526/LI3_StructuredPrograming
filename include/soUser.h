@@ -83,4 +83,13 @@ void so_user_destroy(SO_USER user);
  */
 void so_user_destroy_generic(gpointer user);
 
+/**
+ * Compara dois utilizadore conforme o número de posts
+ * @param a Utilizador a
+ * @param b Utilizador b
+ * @returns Um número positivo se \p a tiver menos posts, 0 se ambos tiverem
+ *          o mesmo número de posts, e -1 se \p a tiver mais posts.
+ */
+int so_user_post_count_cmp(void* a, void* b);
+
 #endif /*__SO_USER_H__*/

@@ -34,7 +34,17 @@ STR_pair info_from_post(TAD_community com, long id){
 }
 // query 2
 LONG_list top_most_active(TAD_community com, int N){
-    return top_most_active_helper(com, N);
+    USERS usr = community_get_sorted_user_list(com, so_user_post_count_cmp, N);
+    LONG_list list = create_list(N);
+    for(int i=0; i<N; i++) set_list(list, i, 0);
+    for(int i=0; usr && i<N; i++){
+        set_list(list, i, so_user_get_id((SO_USER) usr->data));
+        USERS tmp = usr;
+        usr = usr->next;
+        g_slist_free_1(tmp);
+    }
+    g_slist_free(usr);
+    return list;
 }
 
 // query 3

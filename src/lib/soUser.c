@@ -1,5 +1,6 @@
 #include "soUser.h"
 #include "dateTime.h"
+
 #include <stdlib.h>
 
 struct _so_user{
@@ -11,7 +12,7 @@ struct _so_user{
     POSTS posts;
 };
 
-gint postTimeCompare(gconstpointer a, gconstpointer b){
+static gint postTimeCompare(gconstpointer a, gconstpointer b){
     DATETIME dataA = post_get_date((POST) b);
     DATETIME dataB = post_get_date((POST) a);
     return dateTime_compare(dataA, dataB);
@@ -67,4 +68,9 @@ void so_user_destroy(SO_USER user){
 
 void so_user_destroy_generic(gpointer user){
     so_user_destroy((SO_USER) user);
+}
+
+int so_user_post_count_cmp(void* a, void* b){
+    return so_user_get_post_count((SO_USER) a)
+         - so_user_get_post_count((SO_USER) b);
 }
