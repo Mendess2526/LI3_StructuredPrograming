@@ -1,6 +1,7 @@
 #include "q11_helper.h"
 #include "dateTime.h"
 #include "str_rose_tree.h"
+#include "community.h"
 
 #include <libxml/parserInternals.h>
 

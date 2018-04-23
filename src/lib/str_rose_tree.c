@@ -1,9 +1,9 @@
+#include "str_rose_tree.h"
+#include "common.h"
+
 #include <stdlib.h>
 #include <glib.h>
 #include <string.h>
-#include <stdio.h>
-#include "str_rose_tree.h"
-#include "common.h"
 
 typedef struct string_rose_tree_node * STR_RT_NODE;
 

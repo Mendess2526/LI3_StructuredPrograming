@@ -1,4 +1,5 @@
 #include "q3_helper.h"
+#include "community.h"
 #include "dateTime.h"
 
 int calFun(void* elem, void* user_data){
@@ -18,6 +19,6 @@ LONG_pair total_posts_helper(TAD_community com, Date begin, Date end){
 
     dateTime_destroy(from);
     dateTime_destroy(to);
-    
+
     return create_long_pair(nrQuestions,nrAnswers);
 }

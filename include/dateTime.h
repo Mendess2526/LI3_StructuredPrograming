@@ -87,7 +87,8 @@ void dateTime_destroy(DATETIME d);
  * Compara duas datas.
  * @param dataA Uma data.
  * @param dataB Uma data
- * @returns Um número negativo se a primeira data for mais antiga, um número positivo se a primeira data for mais recente ou 0 se forem iguais.
+ * @returns Um número negativo se a primeira data for mais antiga, um número
+ *          positivo se a primeira data for mais recente ou 0 se forem iguais.
  */
 int dateTime_compare(DATETIME dataA, DATETIME dataB);
 

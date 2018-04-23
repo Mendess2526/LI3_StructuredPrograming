@@ -1,8 +1,10 @@
 #include "calendario.h"
 #include "dateTime.h"
 #include "post.h"
+
 #include <string.h>
 
+/** Macro que converte um ano, no indice do array */
 #define ANO2INDEX(year) ((year)-2008 > cal->nYears-1 ? cal->nYears-1 : ((year)-2008 < 0 ? 0 : (year)-2008))
 
 
@@ -34,36 +36,199 @@ struct _calendario{
     CFreeFunc freeFunc;
 };
 
-static int nrDias (int m);
-
+/**
+ * \brief Devolve o número de dias que um mês \p m (0-11) tem.
+ * 31 dias: [0, 2, 4, 6, 7, 9, 11]
+ * 30 dias: [3, 5, 8, 10]
+ * 29 dias: [1]
+ * @param m Mes
+ */
+static int nrDays (int m);
+/**
+ * Cria uma "hora", que é constituida por uma lista de posts
+ * @returns instância de \s HOUR
+ */
 static HOUR hour_create();
+/**
+ * Cria um dia, que é constituido por 24 \s HOUR
+ * @returns instância de \s DIA
+ */
 static DAY day_create();
+/**
+ * Cria um mẽs, que é constituido por \p nDays dias.
+ * @param nDays O número de dias do mês
+ * @retuns instância de \s MONTH
+ */
 static MONTH month_create(int nDays);
+/**
+ * Cria um ano, que é constituido por 12 \s MONTH.
+ * @returns instância de \s YEAR
+ */
 static YEAR year_create();
-
-static inline void hour_add_post(HOUR h, void*post, CCompareFunc compareFunc);
+/**
+ * Adiciona um post a uma hora.
+ * @param h hora onde adicionar
+ * @param post post a adicionar
+ * @param compareFunc função de comparação para ordenar os posts
+ *                    cronológicamente
+ */
+static inline void hour_add_post(HOUR h, void* post, CCompareFunc compareFunc);
+/**
+ * Adiciona um post a um dia.
+ * @param day dia onde adicionar
+ * @param d data do post
+ * @param post post a adicionar
+ * @param compareFunc função de comparação para ordenar os posts
+ *                    cronológicamente
+ */
 static void day_add_post(DAY day, DATETIME d, void* post, CCompareFunc compareFunc);
+/**
+ * Adiciona um post a um mês.
+ * @param month mês onde adicionar
+ * @param d data do post
+ * @param post post a adicionar
+ * @param compareFunc função de comparação para ordenar os posts
+ *                    cronológicamente
+ */
 static void month_add_post(MONTH month, DATETIME d, void* post, CCompareFunc compareFunc);
+/**
+ * Adiciona um post a um ano.
+ * @param year ano onde adicionar
+ * @param d data do post
+ * @param post post a adicionar
+ * @param compareFunc função de comparação para ordenar os posts
+ *                    cronológicamente
+ */
 static void year_add_post(YEAR year, DATETIME d, void* post, CCompareFunc compareFunc);
 
+/**
+ * Itera sobre os posts de uma hora por ordem cronologica.
+ * @param hour Hora onde iterar
+ * @param data informação do utilizador passada a \p calFunc
+ * @param calFunc Função que será aplicada a todos os elementos
+ * @returns 1 se a iteração deve continuar, 0 caso contrário.
+ */
 static inline int hour_iterate_forward(HOUR hour, void *data, CFunc calFunc);
+/**
+ * Itera sobre os posts de um dia por ordem cronologica.
+ * @param day Dia onde iterar
+ * @param data informação do utilizador passada a \p calFunc
+ * @param calFunc Função que será aplicada a todos os elementos
+ * @returns 1 se a iteração deve continuar, 0 caso contrário.
+ */
 static inline int day_iterate_forward(DAY day, void *data, CFunc calFunc);
+/**
+ * Itera sobre os posts de um mês por ordem cronologica.
+ * @param month Mês onde iterar
+ * @param from Data de onde a iteração começa
+ * @param to Data até onde a iteração continua
+ * @param isStartM 1 se este mês é o primeiro do intervalo de tempo
+ * @param isEndM 1 se este mês é o ultimo do intervalo de tempo
+ * @param data informação do utilizador passada a \p calFunc
+ * @param calFunc Função que será aplicada a todos os elementos
+ * @returns 1 se a iteração deve continuar, 0 caso contrário.
+ */
 static inline int month_iterate_forward(MONTH month, DATETIME from, DATETIME to, int isStartM, int isEndM, void* data, CFunc calFunc);
+/**
+ * Itera sobre os posts de um ano por ordem cronologica.
+ * @param year Ano onde iterar
+ * @param from Data de onde a iteração começa
+ * @param to Data até onde a iteração continua
+ * @param isStartY 1 se este ano é o primeiro do intervalo de tempo
+ * @param isEndY 1 se este ano é o ultimo do intervalo de tempo
+ * @param data informação do utilizador passada a \p calFunc
+ * @param calFunc Função que será aplicada a todos os elementos
+ * @returns 1 se a iteração deve continuar, 0 caso contrário.
+ */
 static inline int year_iterate_forward(YEAR year, DATETIME from, DATETIME to, int isStartY, int isEndY, void* data, CFunc calFunc);
+/**
+ * Itera sobre os posts de um calendario por ordem cronologica.
+ * @param hour Hora onde iterar
+ * @param from Data de onde a iteração começa
+ * @param to Data até onde a iteração continua
+ * @param data informação do utilizador passada a \p calFunc
+ * @param calFunc Função que será aplicada a todos os elementos
+ * @returns 1 se a iteração deve continuar, 0 caso contrário.
+ */
 static void calendario_iterate_forward(CALENDARIO cal, DATETIME from, DATETIME to, void* data, CFunc calFunc);
 
+/**
+ * Itera sobre os posts de uma hora por ordem cronologica inversa.
+ * @param hour Hora onde iterar
+ * @param data informação do utilizador passada a \p calFunc
+ * @param calFunc Função que será aplicada a todos os elementos
+ * @returns 1 se a iteração deve continuar, 0 caso contrário.
+ */
 static inline int hour_iterate_backwards(HOUR hour, void *data, CFunc calFunc);
+/**
+ * Itera sobre os posts de um dia por ordem cronologica inversa.
+ * @param day Dia onde iterar
+ * @param data informação do utilizador passada a \p calFunc
+ * @param calFunc Função que será aplicada a todos os elementos
+ * @returns 1 se a iteração deve continuar, 0 caso contrário.
+ */
 static inline int day_iterate_backwards(DAY day, void *data, CFunc calFunc);
+/**
+ * Itera sobre os posts de um mês por ordem cronologica inversa.
+ * @param month Mês onde iterar
+ * @param from Data de onde a iteração começa
+ * @param to Data até onde a iteração continua
+ * @param isStartM 1 se este mês é o primeiro do intervalo de tempo
+ * @param isEndM 1 se este mês é o ultimo do intervalo de tempo
+ * @param data informação do utilizador passada a \p calFunc
+ * @param calFunc Função que será aplicada a todos os elementos
+ * @returns 1 se a iteração deve continuar, 0 caso contrário.
+ */
 static inline int month_iterate_backwards(MONTH month, DATETIME from, DATETIME to, int isStartM, int isEndM, void* data, CFunc calFunc);
+/**
+ * Itera sobre os posts de um ano por ordem cronologica inversa.
+ * @param year Ano onde iterar
+ * @param from Data de onde a iteração começa
+ * @param to Data até onde a iteração continua
+ * @param isStartY 1 se este ano é o primeiro do intervalo de tempo
+ * @param isEndY 1 se este ano é o ultimo do intervalo de tempo
+ * @param data informação do utilizador passada a \p calFunc
+ * @param calFunc Função que será aplicada a todos os elementos
+ * @returns 1 se a iteração deve continuar, 0 caso contrário.
+ */
 static inline int year_iterate_backwards(YEAR year, DATETIME from, DATETIME to, int isStartY, int isEndY, void* data, CFunc calFunc);
+/**
+ * Itera sobre os posts de um calendario por ordem cronologica inversa.
+ * @param hour Hora onde iterar
+ * @param from Data de onde a iteração começa
+ * @param to Data até onde a iteração continua
+ * @param data informação do utilizador passada a \p calFunc
+ * @param calFunc Função que será aplicada a todos os elementos
+ * @returns 1 se a iteração deve continuar, 0 caso contrário.
+ */
 static void calendario_iterate_backwards(CALENDARIO cal, DATETIME from, DATETIME to, void* data, CFunc calFunc);
 
+/**
+ * Liberta a memória ocupada por uma hora
+ * @param h Instância a libertar
+ * @param freeFunc função que liberta os elementos da estrutura
+ */
 static void hour_destroy(HOUR h, CFreeFunc freeFunc);
+/**
+ * Liberta a memória ocupada por um dia
+ * @param d Instância a libertar
+ * @param freeFunc função que liberta os elementos da estrutura
+ */
 static void day_destroy(DAY d, CFreeFunc freeFunc);
+/**
+ * Liberta a memória ocupada por um mês
+ * @param m Instância a libertar
+ * @param freeFunc função que liberta os elementos da estrutura
+ */
 static void month_destroy(MONTH m, CFreeFunc freeFunc);
-static void year_destroy(YEAR a, CFreeFunc freeFunc);
+/**
+ * Liberta a memória ocupada por um ano
+ * @param y Instância a libertar
+ * @param freeFunc função que liberta os elementos da estrutura
+ */
+static void year_destroy(YEAR y, CFreeFunc freeFunc);
 
-static int nrDias (int m){
+static int nrDays (int m){
     if(m == 3 || m == 5 || m == 8 || m == 10) return 30;
     if(m == 1) return 29;
     return 31;
@@ -128,7 +293,7 @@ static void month_add_post(MONTH month, DATETIME d, void* post, CCompareFunc com
 static void year_add_post(YEAR year, DATETIME d, void* post, CCompareFunc compareFunc){
     int month = dateTime_get_month(d);
     if(year->months[month] == NULL)
-        year->months[month] = month_create(nrDias(month));
+        year->months[month] = month_create(nrDays(month));
     month_add_post(year->months[month], d, post, compareFunc);
 }
 
@@ -377,13 +542,13 @@ static void month_destroy(MONTH m, CFreeFunc freeFunc){
     free(m);
 }
 
-static void year_destroy(YEAR a, CFreeFunc freeFunc){
-    if(a==NULL) return;
+static void year_destroy(YEAR y, CFreeFunc freeFunc){
+    if(y==NULL) return;
     for(int i=0; i<12; i++){
-        month_destroy(a->months[i], freeFunc);
+        month_destroy(y->months[i], freeFunc);
     }
-    free(a->months);
-    free(a);
+    free(y->months);
+    free(y);
 }
 
 void calendario_destroy(CALENDARIO cal){

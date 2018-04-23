@@ -1,12 +1,10 @@
-#include <date.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+
 #include "interface.h"
 #include "pair.h"
-#include "community.h"
 #include "common.h"
-
-#include "str_rose_tree.h"
 
 #define BLUE "\033[34m"
 #define YELLOW "\033[33m"

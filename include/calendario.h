@@ -1,6 +1,10 @@
 #ifndef __CALENDARIO_H__
 #define __CALENDARIO_H__
-
+/**
+ * @file
+ * Modulo que define o calendário. Este é uma estrutura que permite guardar
+ * valores arbitrarios associados a uma data.
+ */
 #include "post.h"
 #include "date.h"
 #include "types.h"

@@ -2,6 +2,7 @@
 #include "question.h"
 #include "answer.h"
 #include "dateTime.h"
+#include "community.h"
 
 #include <string.h>
 #include <libxml/parser.h>
