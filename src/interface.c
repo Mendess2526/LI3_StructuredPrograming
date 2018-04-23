@@ -3,14 +3,12 @@
 #include "community.h"
 #include "question.h"
 #include "answer.h"
-#include "q2_helper.h"
-#include "q3_helper.h"
 #include "q4_helper.h"
-#include "q6_helper.h"
-#include "q7_helper.h"
 #include "q8_helper.h"
 #include "q9_helper.h"
 #include "q11_helper.h"
+
+static LONG_list gslist2llist(GSList* list, int maxSize);
 
 // query 1
 STR_pair info_from_post(TAD_community com, long id){
@@ -49,7 +47,9 @@ LONG_list top_most_active(TAD_community com, int N){
 
 // query 3
 LONG_pair total_posts(TAD_community com, Date begin, Date end){
-    return total_posts_helper(com, begin, end);
+    long nrQuestions = community_get_question_count(com);
+    long nrAnswers = community_get_answer_count(com);
+    return create_long_pair(nrQuestions,nrAnswers);
 }
 
 // query 4
@@ -78,12 +78,35 @@ USER get_user_info(TAD_community com, long id){
 
 // query 6
 LONG_list most_voted_answers(TAD_community com, int N, Date begin, Date end){
-    return most_voted_answers_helper(com, N, begin, end);
+    DATETIME from = dateTime_create(get_year(begin), get_month(begin), get_day(begin), 0, 0, 0, 0);
+    DATETIME to = dateTime_create(get_year(end), get_month(end), get_day(end), 0, 0, 0, 0);
+
+    ANSWERS as = community_get_sorted_answer_list(com, from, to, answer_score_cmp, N);
+
+    LONG_list l = gslist2llist(as, N);
+
+    dateTime_destroy(from);
+    dateTime_destroy(to);
+    g_slist_free(as);
+
+    return l;
 }
 
 // query 7
 LONG_list most_answered_questions(TAD_community com, int N, Date begin, Date end){
-    return most_answered_questions_helper(com, N, begin, end);
+    DATETIME from = dateTime_create(get_year(begin), get_month(begin), get_year(begin), 0, 0, 0, 0);
+    DATETIME to = dateTime_create(get_year(end), get_month(end), get_year(end), 23, 59, 59, 999);
+
+    QUESTIONS qs = community_get_sorted_question_list(com, from, to, question_answer_count_cmp, N);
+
+    dateTime_destroy(from);
+    dateTime_destroy(to);
+
+    LONG_list r = gslist2llist(qs, N);
+
+    g_slist_free(qs);
+
+    return r;
 }
 
 // query 8
@@ -143,3 +166,14 @@ TAD_community clean(TAD_community com){
     community_destroy(com);
     return NULL;
 }
+
+static inline LONG_list gslist2llist(GSList* list, int maxSize){
+    LONG_list l = create_list(maxSize);
+    for(int i=0; i<maxSize; i++) set_list(l, i, 0);
+    int i = 0;
+    for(; list && i<maxSize; list = list->next){
+        set_list(l, i++, question_get_id(list->data));
+    }
+    return l;
+}
+

@@ -38,22 +38,11 @@ void darray_destroy(DArray a){
     free(a);
 }
 
-int contains(char** strings, char* string){
-    while(*strings){
-        if(!strcmp(*strings,string)) return 1;
-        strings++;
-    }
-    return 0;
-}
-
 int collect(gpointer elem, gpointer user_data){
     QUESTION q = (QUESTION) elem;
     COLLECTOR col = (COLLECTOR) user_data;
-    char** tags = question_get_tags(q);
-    if(contains(tags, col->tag))
+    if(question_has_tag(q, col->tag))
         darray_append(col->questionIds, question_get_id(q));
-    for(int i=0; tags[i]; i++) free(tags[i]);
-    free(tags);
     return 1;
 }
 
