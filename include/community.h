@@ -101,6 +101,12 @@ typedef GSList* ANSWERS;
 
 ANSWERS community_get_sorted_answer_list(TAD_community com, DATETIME from, DATETIME to, ComCmpFunc func, int N);
 
+typedef int (*ComFilterFunc) (void* elem, void* filter_data);
+
+QUESTIONS community_get_filtered_questions(TAD_community com, DATETIME from,
+                                        DATETIME to, int N, ComFilterFunc func,
+                                        void* filter_data);
+
  /**
  * Encontra o id da tag fornecida.
  * @param com Uma instância da estrutura.

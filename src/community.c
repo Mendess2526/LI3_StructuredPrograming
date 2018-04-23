@@ -20,18 +20,6 @@ struct TCD_community{
     CALENDARIO calendarioAnswers;
 };
 
-gint questionTimeCompare(gconstpointer a, gconstpointer b){
-    DATETIME dataA = question_get_date((QUESTION) b);
-    DATETIME dataB = question_get_date((QUESTION) a);
-    return dateTime_compare(dataA,dataB);
-}
-
-gint answerTimeCompare(gconstpointer a, gconstpointer b){
-    DATETIME dataA = answer_get_date((ANSWER) b);
-    DATETIME dataB = answer_get_date((ANSWER) a);
-    return dateTime_compare(dataA, dataB);
-}
-
 /**
  * Aloca um id.
  * @param val O valor a alocar.
@@ -80,8 +68,8 @@ TAD_community community_create(){
             g_int64_hash, g_int64_equal, g_free, so_user_destroy_generic);
     com->tags = g_hash_table_new_full(
             g_str_hash, g_str_equal, g_free, g_free);
-    com->calendarioQuestions = calendario_create(11, questionTimeCompare, NULL);
-    com->calendarioAnswers   = calendario_create(11, answerTimeCompare, NULL);
+    com->calendarioQuestions = calendario_create(11, question_date_cmp, NULL);
+    com->calendarioAnswers   = calendario_create(11, answer_date_cmp, NULL);
     return com;
 }
 
@@ -189,7 +177,8 @@ USERS community_get_sorted_user_list(TAD_community com, ComCmpFunc func, int N){
     return r;
 }
 
-QUESTIONS community_get_sorted_question_list(TAD_community com, DATETIME from, DATETIME to, ComCmpFunc func, int N){
+QUESTIONS community_get_sorted_question_list(TAD_community com, DATETIME from,
+                                    DATETIME to, ComCmpFunc func, int N){
     COLLECTOR col = malloc(sizeof(struct _collector));
     col->func = func;
     col->list = NULL;
@@ -200,7 +189,8 @@ QUESTIONS community_get_sorted_question_list(TAD_community com, DATETIME from, D
     return r;
 }
 
-ANSWERS community_get_sorted_answer_list(TAD_community com, DATETIME from, DATETIME to, ComCmpFunc func, int N){
+ANSWERS community_get_sorted_answer_list(TAD_community com, DATETIME from,
+                                        DATETIME to, ComCmpFunc func, int N){
     COLLECTOR col = malloc(sizeof(struct _collector));
     col->func = func;
     col->list = NULL;
@@ -210,17 +200,64 @@ ANSWERS community_get_sorted_answer_list(TAD_community com, DATETIME from, DATET
     free(col);
     return r;
 }
+
+typedef struct _filter{
+    int maxSize;
+    int load;
+    void* filter_data;
+    ComFilterFunc func;
+    GSList* last;
+    GSList* list;
+}*FILTER;
+
+int filter(gpointer elem, gpointer user_data){
+    FILTER filt = (FILTER) user_data;
+    if(filt->load >= filt->maxSize) return 0;
+
+    if((*filt->func)(elem, filt->filter_data)){
+        if(filt->list == NULL){
+            filt->list = g_slist_append(filt->list, elem);
+            filt->last = filt->list;
+        }else{
+            filt->last = g_slist_append(filt->list, elem);
+            filt->last = g_slist_next(filt->last);
+        }
+        filt->load++;
+    }
+    return 1;
+}
+
+QUESTIONS community_get_filtered_questions(TAD_community com, DATETIME from,
+                                        DATETIME to, int N, ComFilterFunc func,
+                                        void* filter_data){
+    FILTER f = (FILTER) malloc(sizeof(struct _filter));
+    f->maxSize = N;
+    f->load = 0;
+    f->filter_data = filter_data;
+    f->func = func;
+    f->last = NULL;
+    f->list = NULL;
+
+    calendario_iterate(com->calendarioQuestions, from, to, f, filter);
+
+    QUESTIONS qs = f->list;
+    free(f);
+    return qs;
+}
+
 long community_get_tag_id(TAD_community com, xmlChar* tag){
     long* id = g_hash_table_lookup(com->tags, (gconstpointer) tag);
     if(id) return *id;
     else return -2;
 }
 
-void community_iterate_questions(TAD_community com, DATETIME from, DATETIME to, void* data, CFunc calFunc){
+void community_iterate_questions(TAD_community com, DATETIME from,
+                                DATETIME to, void* data, CFunc calFunc){
     calendario_iterate(com->calendarioQuestions, from, to, data, calFunc);
 }
 
-void community_iterate_answers(TAD_community com, DATETIME from, DATETIME to, void* data, CFunc calFunc){
+void community_iterate_answers(TAD_community com, DATETIME from, DATETIME to,
+                                void* data, CFunc calFunc){
     calendario_iterate(com->calendarioAnswers, from, to, data, calFunc);
 }
 

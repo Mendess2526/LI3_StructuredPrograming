@@ -4,9 +4,10 @@
 #include "question.h"
 #include "answer.h"
 #include "q4_helper.h"
-#include "q8_helper.h"
 #include "q9_helper.h"
 #include "q11_helper.h"
+
+#include <string.h>
 
 static LONG_list gslist2llist(GSList* list, int maxSize);
 
@@ -109,9 +110,25 @@ LONG_list most_answered_questions(TAD_community com, int N, Date begin, Date end
     return r;
 }
 
+static int generic_strstr(void* elem, void* filter_data){
+    char* word = (char*) filter_data;
+    char* title = (char*) question_get_title((QUESTION) elem);
+    return strstr(title, word) != NULL;
+}
+
 // query 8
 LONG_list contains_word(TAD_community com, char* word, int N){
-    return contains_word_helper(com, word, N);
+    DATETIME from = dateTime_get_year2038();
+    DATETIME to = dateTime_get_epoch();
+
+    QUESTIONS qs = community_get_filtered_questions(com, from, to, N, generic_strstr, word);
+
+    dateTime_destroy(from);
+    dateTime_destroy(to);
+
+    LONG_list list = gslist2llist(qs, N);
+    g_slist_free(qs);
+    return list;
 }
 
 // query 9
