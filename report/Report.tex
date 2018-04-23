@@ -115,16 +115,16 @@ struct TCD_community{
     \end{minted}
     \section{Hashtables}
         Todas as entidades são armazenadas numa hashtable pois para todas são
-        necessarias pesquisas por id (ou nome no caso das tags).
+        necessárias pesquisas por id (ou nome no caso das tags).
         \subsection{Tags}
         A hashtable das tags serve para criar uma associação "Nome Id" visto que
         as questões guardam uma lista com os nomes das tags e para responder à
         query 11 é necessario obter os ids das mesmas.
 
     \section{Calendário}
-        Foi pensada a utilização de arvores binarias ordenadas por data,
+        Foi pensada a utilização de árvores binárias ordenadas por data,
         mas isto foi considerado ineficiente por várias razões. Foi então,
-        concebido uma estructura a qual demos o nome de \textbf{Calendário}.
+        concebido uma estrutura a qual demos o nome de \textbf{Calendário}.
 
         Esta estrutura permite:
         \begin{itemize}
@@ -135,23 +135,24 @@ struct TCD_community{
                       ordem dos argumentos.
         \end{itemize}
         \subsection{DateTime}
-        Para a implementação deste foi necessario extender o \textbf{Date} para
-        incluir a hora, minuto, segundo e milissegundo do post.
+        Para a implementação deste foi necessário extender o \textbf{Date} para
+        incluir a hora, minuto, segundo e milissegundo do post. Foi então que
+        foi criado o \textbf{DateTime}
     \begin{minted}{C}
 struct _dateTime{
     int year;
     int month;
     int day;
     int hours;
-    int minutos;
+    int minutes;
     int seconds;
     int milisseconds;
 };
     \end{minted}
 
 \chapter{Modularização Funcional}
-    Para aceder aos dados da estrutura principal foi definida uma api simples
-    que permite pesquisas de Utilizadores e posts por id,
+    Para aceder aos dados da estrutura principal foi definida uma API
+    simples que permite pesquisas de Utilizadores e posts por id,
     \begin{minted}{C}
 QUESTION community_get_question(TAD_community com, long id);
 ANSWER community_get_answer(TAD_community com, long id);
