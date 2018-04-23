@@ -304,24 +304,24 @@ static inline enum Post_attr postStrcmp(const xmlChar *attribute){
         case 'O': switch(attribute[5]){
                       case 'U': return OWNER_USER_ID;
                       case 'D': return OWNER_DISPLAY_NAME;
-                      default:break;
+                      default: return POST_NONE;
                   };
         case 'S': return SCORE;
         case 'C': switch(attribute[6]){
                       case 't': return COMMENT_COUNT;
                       case 'o': return CREATION_DATE;
-                      default:break;
+                      default: return POST_NONE;
                   };
         case 'T': switch(attribute[1]){
                       case 'i': return TITLE;
                       case 'a': return TAGS;
-                      default:break;
+                      default: return POST_NONE;
                   };
         case 'A': if(attribute[1] == 'n') return ANSWER_COUNT;
         case 'P': switch(attribute[1]){
                       case 'a': return PARENT_ID;
                       case 'o': return POST_TYPE;
-                      default:break;
+                      default: return POST_NONE;
                   };
         default: return POST_NONE;
     }
@@ -333,7 +333,6 @@ static inline enum User_attr userStrcmp(const xmlChar *attribute){
         case 'R': return REPUTATION;
         case 'D': if(attribute[1]=='i') return DISPLAY_NAME;
         case 'A': if(attribute[1]=='b') return ABOUT_ME;
-
         default: return USER_NONE;
     }
 }
@@ -342,7 +341,6 @@ static inline enum Tag_attr tagStrcmp(const xmlChar *attribute){
     switch(attribute[0]){
         case 'I': return TAG_ID;
         case 'T': return TAG_NAME;
-
         default: return TAG_NONE;
     }
 }
