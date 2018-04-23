@@ -95,3 +95,12 @@ void question_destroy(QUESTION question){
 void question_destroy_generic(gpointer question){
     question_destroy((QUESTION) question);
 }
+
+int question_answer_count_cmp(const void* a, const void* b){
+    return question_get_answer_count((QUESTION) a)
+         - question_get_answer_count((QUESTION) b);
+}
+
+int question_has_tag(QUESTION question, char* tag){
+    return strstr((char*) question->tags, tag) != NULL;
+}

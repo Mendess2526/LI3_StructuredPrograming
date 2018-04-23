@@ -111,4 +111,15 @@ void question_destroy(QUESTION question);
  */
 void question_destroy_generic(gpointer question);
 
+/**
+ * Compara o número de repostas de duas questões
+ * @param a Questão a
+ * @param b Questão b
+ * @returns Um número positivo se \p a tiver menos respostas, 0 se ambos tiverem
+ *          o mesmo número de respostas, e -1 se \p a tiver mais respostas.
+ */
+int question_answer_count_cmp(const void* a, const void* b);
+
+int question_has_tag(QUESTION question, char* tag);
+
 #endif /*__QUESTION_H__*/
