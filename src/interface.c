@@ -3,11 +3,10 @@
 #include "community.h"
 #include "question.h"
 #include "answer.h"
-#include "q4_helper.h"
-#include "q9_helper.h"
-#include "q11_helper.h"
+#include "str_rose_tree.h"
 
 #include <string.h>
+#include <limits.h>
 
 static LONG_list gslist2llist(GSList* list, int maxSize);
 
@@ -53,9 +52,25 @@ LONG_pair total_posts(TAD_community com, Date begin, Date end){
     return create_long_pair(nrQuestions,nrAnswers);
 }
 
+static int generic_question_has_tag(void* elem, void* filter_data){
+    return question_has_tag((QUESTION) elem, (char*) filter_data);
+}
+
 // query 4
 LONG_list questions_with_tag(TAD_community com, char* tag, Date begin, Date end){
-    return questions_with_tag_helper(com, tag, begin, end);
+    DATETIME from = dateTime_create(get_year(end), get_month(end), get_day(end), 23, 59, 59, 999);
+    DATETIME to = dateTime_create(get_year(begin), get_month(begin), get_day(begin), 0, 0, 0, 0);
+
+    QUESTIONS qs = community_get_filtered_questions(com, from, to, INT_MAX, generic_question_has_tag, tag);
+
+    int length = g_slist_length(qs);
+    LONG_list l = gslist2llist(qs, length+1);
+    set_list(l, length, 0);
+
+    dateTime_destroy(from);
+    dateTime_destroy(to);
+    g_slist_free(qs);
+    return l;
 }
 
 // query 5
@@ -143,7 +158,7 @@ LONG_list both_participated(TAD_community com, long id1, long id2, int N){
     POSTS posts = so_user_get_posts(user1);
     int i = 0;
     for(; posts && i<N; posts = posts->next){
-        long qId = searchThread((POST) posts->data, id2);
+        long qId = post_search_thread_for_user((POST) posts->data, id2);
         if(qId != -2){
             set_list(list, i++, qId);
         }
@@ -174,9 +189,50 @@ long better_answer(TAD_community com, long id){
     return idBest;
 }
 
+static void gather_tags(SO_USER usr, STR_ROSE_TREE rt, DATETIME from, DATETIME to){
+    POSTS posts = so_user_get_posts(usr);
+    for(; posts; posts = posts->next){
+        DATETIME postDate = post_get_date(posts->data);
+        if(post_is_question(posts->data)
+           && dateTime_compare(postDate, from) >= 0
+           && dateTime_compare(postDate, to)   <= 0){
+
+            char** tags = question_get_tags((QUESTION) post_get_question(posts->data));
+            for(int i=0; tags[i]; i++){
+                str_rtree_add(rt, tags[i]);
+                free(tags[i]);
+            }
+            free(tags);
+        }
+    }
+}
+
 // query 11
 LONG_list most_used_best_rep(TAD_community com, int N, Date begin, Date end){
-    return most_used_best_rep_helper(com, N, begin, end);
+    USERS users = community_get_sorted_user_list(com, so_user_reputation_cmp, N);
+
+    DATETIME from = dateTime_create(get_year(begin), get_month(begin), get_day(begin), 0, 0, 0, 0);
+    DATETIME to = dateTime_create(get_year(end), get_month(end), get_day(end), 23, 59, 59, 999);
+
+    STR_ROSE_TREE rt = str_rtree_create();
+    for(USERS cur = users; cur; cur = cur->next){
+        gather_tags(cur->data, rt, from, to);
+    }
+    g_slist_free(users);
+    dateTime_destroy(from);
+    dateTime_destroy(to);
+
+    char** topTags = str_rtree_get_most_common_strings(rt, N);
+    str_rtree_destroy(rt);
+
+    LONG_list l = create_list(N);
+    for(int i = 0; i < N; i++){
+        set_list(l, i, community_get_tag_id(com,(xmlChar*) topTags[i]));
+        free(topTags[i]);
+    }
+    free(topTags);
+
+    return l;
 }
 
 TAD_community clean(TAD_community com){

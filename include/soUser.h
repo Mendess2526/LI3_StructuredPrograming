@@ -92,4 +92,6 @@ void so_user_destroy_generic(gpointer user);
  */
 int so_user_post_count_cmp(const void* a, const void* b);
 
+int so_user_reputation_cmp(const void* a, const void* b);
+
 #endif /*__SO_USER_H__*/

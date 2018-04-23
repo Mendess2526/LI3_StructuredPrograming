@@ -12,12 +12,6 @@ struct _so_user{
     POSTS posts;
 };
 
-static gint postTimeCompare(gconstpointer a, gconstpointer b){
-    DATETIME dataA = post_get_date((POST) b);
-    DATETIME dataB = post_get_date((POST) a);
-    return dateTime_compare(dataA, dataB);
-}
-
 SO_USER so_user_create(long id, int reputation, xmlChar *name, xmlChar *bio){
     SO_USER user = malloc (sizeof(struct _so_user));
     user->id = id;
@@ -55,7 +49,7 @@ POSTS so_user_get_posts(SO_USER user){
 }
 
 void so_user_add_post(SO_USER user, POST post){
-    user->posts = g_slist_insert_sorted(user->posts, post, postTimeCompare);
+    user->posts = g_slist_insert_sorted(user->posts, post, post_date_cmp);
     user->nrPosts++;
 }
 
@@ -71,6 +65,12 @@ void so_user_destroy_generic(gpointer user){
 }
 
 int so_user_post_count_cmp(const void* a, const void* b){
-    return so_user_get_post_count((SO_USER) a)
-         - so_user_get_post_count((SO_USER) b);
+    return ((SO_USER) a)->nrPosts
+         - ((SO_USER) b)->nrPosts;
 }
+
+int so_user_reputation_cmp(const void* a, const void*b){
+    return ((SO_USER) b)->reputation
+         - ((SO_USER) a)->reputation;
+}
+

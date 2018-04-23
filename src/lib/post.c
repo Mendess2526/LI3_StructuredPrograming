@@ -110,3 +110,35 @@ void post_destroy(POST post, int freeQorA){
 void post_destroy_generic(gpointer post){
     post_destroy((POST) post, 0);
 }
+
+static long searchFromQuestion(QUESTION question, long id){
+    if(question_get_owner_id(question) == id)
+        return 1;
+
+    ANSWERS answers = question_get_answers(question);
+    for(; answers; answers = answers->next){
+        if(answer_get_owner_id((ANSWER) answers->data) == id) return 1;
+    }
+    return 0;
+}
+
+long post_search_thread_for_user(POST post, long id){
+    QUESTION q = NULL;
+    if(post_is_answer(post))
+        q = answer_get_parent_ptr(post_get_answer(post));
+    else
+        q = post_get_question(post);
+
+    if(q == NULL) return -2;
+    if(searchFromQuestion(q, id))
+        return question_get_id(q);
+    else
+        return -2;
+}
+
+int post_date_cmp(gconstpointer a, gconstpointer b){
+    DATETIME dataA = post_get_date((POST) b);
+    DATETIME dataB = post_get_date((POST) a);
+    return dateTime_compare(dataA, dataB);
+}
+
