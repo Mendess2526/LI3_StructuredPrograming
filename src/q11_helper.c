@@ -11,7 +11,7 @@ typedef struct tag_count_pair{
 }TAG_COUNT_PAIR;
 
 
-int repcmp(void* a, void*b){
+int repcmp(const void* a, const void*b){
     return so_user_get_reputation((SO_USER) b)
          - so_user_get_reputation((SO_USER) a);
 }

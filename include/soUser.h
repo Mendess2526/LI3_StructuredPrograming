@@ -90,6 +90,6 @@ void so_user_destroy_generic(gpointer user);
  * @returns Um número positivo se \p a tiver menos posts, 0 se ambos tiverem
  *          o mesmo número de posts, e -1 se \p a tiver mais posts.
  */
-int so_user_post_count_cmp(void* a, void* b);
+int so_user_post_count_cmp(const void* a, const void* b);
 
 #endif /*__SO_USER_H__*/

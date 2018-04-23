@@ -70,7 +70,7 @@ void so_user_destroy_generic(gpointer user){
     so_user_destroy((SO_USER) user);
 }
 
-int so_user_post_count_cmp(void* a, void* b){
+int so_user_post_count_cmp(const void* a, const void* b){
     return so_user_get_post_count((SO_USER) a)
          - so_user_get_post_count((SO_USER) b);
 }
