@@ -70,3 +70,8 @@ void answer_destroy(ANSWER answer){
 void answer_destroy_generic(gpointer answer){
     answer_destroy((ANSWER) answer);
 }
+
+int answer_score_cmp(const void* a, const void* b){
+    return answer_get_score((ANSWER) a)
+         - answer_get_score((ANSWER) b);
+}
