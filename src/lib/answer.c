@@ -71,6 +71,12 @@ void answer_destroy_generic(gpointer answer){
     answer_destroy((ANSWER) answer);
 }
 
+int answer_date_cmp(const void* a, const void* b){
+    DATETIME dataA = answer_get_date((ANSWER) b);
+    DATETIME dataB = answer_get_date((ANSWER) a);
+    return dateTime_compare(dataA, dataB);
+}
+
 int answer_score_cmp(const void* a, const void* b){
     return answer_get_score((ANSWER) a)
          - answer_get_score((ANSWER) b);

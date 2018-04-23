@@ -101,6 +101,8 @@ void answer_destroy(ANSWER answer);
  */
 void answer_destroy_generic(gpointer answer);
 
+int answer_date_cmp(const void* a, const void* b);
+
 int answer_score_cmp(const void* a, const void* b);
 
 #endif /*__ANSWER_H__*/

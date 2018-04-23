@@ -101,6 +101,12 @@ int question_answer_count_cmp(const void* a, const void* b){
          - question_get_answer_count((QUESTION) b);
 }
 
+int question_date_cmp(const void* a, const void* b){
+    DATETIME dataA = question_get_date((QUESTION) b);
+    DATETIME dataB = question_get_date((QUESTION) a);
+    return dateTime_compare(dataA,dataB);
+}
+
 int question_has_tag(QUESTION question, char* tag){
     return strstr((char*) question->tags, tag) != NULL;
 }

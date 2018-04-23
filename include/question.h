@@ -120,6 +120,8 @@ void question_destroy_generic(gpointer question);
  */
 int question_answer_count_cmp(const void* a, const void* b);
 
+int question_date_cmp(const void* a, const void* b);
+
 int question_has_tag(QUESTION question, char* tag);
 
 #endif /*__QUESTION_H__*/
