@@ -64,7 +64,6 @@ static inline void updateQuestionsAnswers(TAD_community com, ANSWER answer){
     if(question) question_add_answer(question,answer);
 }
 
-//TODO me no like this
 TAD_community init(){
     return community_create();
 }
@@ -141,14 +140,25 @@ SO_USER community_get_user(TAD_community com, long id){
     return g_hash_table_lookup(com->users,(gconstpointer) &id);
 }
 
+long community_get_user_count(TAD_community com){
+    return g_hash_table_size(com->users);
+}
+
+long community_get_question_count(TAD_community com){
+    return g_hash_table_size(com->questions);
+}
+
+long community_get_answer_count(TAD_community com){
+    return g_hash_table_size(com->answers);
+}
+
 typedef struct _collector{
     USERS list;
     ComCmpFunc func;
     int maxSize;
 }*COLLECTOR;
 
-static void collect(gpointer key, gpointer value, gpointer user_data){
-    key = 0; // Avoid unused parameter warning
+static int collect(void* value, void* user_data){
     COLLECTOR col = (COLLECTOR) user_data;
     if(col->list == NULL || col->func(col->list->data, value) < 0){
         col->list = g_slist_prepend(col->list, value);
@@ -161,6 +171,11 @@ static void collect(gpointer key, gpointer value, gpointer user_data){
             }
         }
     }
+    return 1;
+}
+
+static void collect_key_value(gpointer key, gpointer value, gpointer user_data){
+    collect(value, user_data);
 }
 
 USERS community_get_sorted_user_list(TAD_community com, ComCmpFunc func, int N){
@@ -168,12 +183,33 @@ USERS community_get_sorted_user_list(TAD_community com, ComCmpFunc func, int N){
     col->func = func;
     col->list = NULL;
     col->maxSize = N;
-    g_hash_table_foreach(com->users, collect, col);
+    g_hash_table_foreach(com->users, collect_key_value, col);
     USERS r = col->list;
     free(col);
     return r;
 }
 
+QUESTIONS community_get_sorted_question_list(TAD_community com, DATETIME from, DATETIME to, ComCmpFunc func, int N){
+    COLLECTOR col = malloc(sizeof(struct _collector));
+    col->func = func;
+    col->list = NULL;
+    col->maxSize = N;
+    calendario_iterate(com->calendarioQuestions, from, to, col, collect);
+    QUESTIONS r = col->list;
+    free(col);
+    return r;
+}
+
+ANSWERS community_get_sorted_answer_list(TAD_community com, DATETIME from, DATETIME to, ComCmpFunc func, int N){
+    COLLECTOR col = malloc(sizeof(struct _collector));
+    col->func = func;
+    col->list = NULL;
+    col->maxSize = N;
+    calendario_iterate(com->calendarioQuestions, from, to, col, collect);
+    ANSWERS r = col->list;
+    free(col);
+    return r;
+}
 long community_get_tag_id(TAD_community com, xmlChar* tag){
     long* id = g_hash_table_lookup(com->tags, (gconstpointer) tag);
     if(id) return *id;

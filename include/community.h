@@ -60,6 +60,14 @@ void community_add_user(TAD_community com, SO_USER user);
 void community_add_tag(TAD_community com, long id, xmlChar* tag);
 
  /**
+ * Encontra o user com o id fornecido.
+ * @param com Uma instância da estrutura.
+ * @param id O id do user.
+ * @returns O user.
+ */
+SO_USER community_get_user(TAD_community com, long id);
+
+ /**
  * Encontra a questão com o id fornecido.
  * @param com Uma instância da estrutura.
  * @param id O id da questão.
@@ -75,17 +83,23 @@ QUESTION community_get_question(TAD_community com, long id);
  */
 ANSWER community_get_answer(TAD_community com, long id);
 
- /**
- * Encontra o user com o id fornecido.
- * @param com Uma instância da estrutura.
- * @param id O id do user.
- * @returns O user.
- */
-SO_USER community_get_user(TAD_community com, long id);
+long community_get_user_count(TAD_community com);
+
+long community_get_question_count(TAD_community com);
+
+long community_get_answer_count(TAD_community com);
 
 typedef GSList* USERS;
 
 USERS community_get_sorted_user_list(TAD_community com, ComCmpFunc cfunc, int N);
+
+typedef GSList* QUESTIONS;
+
+QUESTIONS community_get_sorted_question_list(TAD_community com, DATETIME from, DATETIME to, ComCmpFunc func, int N);
+
+typedef GSList* ANSWERS;
+
+ANSWERS community_get_sorted_answer_list(TAD_community com, DATETIME from, DATETIME to, ComCmpFunc func, int N);
 
  /**
  * Encontra o id da tag fornecida.
