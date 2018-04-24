@@ -160,7 +160,7 @@ LONG_list both_participated(TAD_community com, long id1, long id2, int N){
     GSequence* seq = g_sequence_new(NULL);
     for(int i = 0; posts && i<N; posts = posts->next){
         QUESTION q = post_search_thread_for_user((POST) posts->data, id2);
-        if(!q){
+        if(q){
             g_sequence_prepend(seq, q);
         }
     }
