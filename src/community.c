@@ -141,7 +141,7 @@ long community_get_answer_count(TAD_community com){
 }
 
 typedef struct _collector{
-    USERS list;
+    GSList* list;
     ComCmpFunc func;
     int maxSize;
 }*COLLECTOR;
@@ -195,7 +195,7 @@ ANSWERS community_get_sorted_answer_list(TAD_community com, DATETIME from,
     col->func = func;
     col->list = NULL;
     col->maxSize = N;
-    calendario_iterate(com->calendarioQuestions, from, to, col, collect);
+    calendario_iterate(com->calendarioAnswers, from, to, col, collect);
     ANSWERS r = col->list;
     free(col);
     return r;
@@ -220,7 +220,7 @@ int filter(gpointer elem, gpointer user_data){
             filt->last = filt->list;
         }else{
             filt->last = g_slist_append(filt->list, elem);
-            filt->last = g_slist_next(filt->last);
+            filt->last = filt->last->next;
         }
         filt->load++;
     }

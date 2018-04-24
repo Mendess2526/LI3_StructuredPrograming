@@ -49,23 +49,21 @@ LONG_list top_most_active(TAD_community com, int N){
 LONG_pair total_posts(TAD_community com, Date begin, Date end){
     long nrQuestions = community_get_question_count(com);
     long nrAnswers = community_get_answer_count(com);
-    return create_long_pair(nrQuestions,nrAnswers);
+    return create_long_pair(nrQuestions, nrAnswers);
 }
 
+// query 4
 static int generic_question_has_tag(void* elem, void* filter_data){
     return question_has_tag((QUESTION) elem, (char*) filter_data);
 }
 
-// query 4
 LONG_list questions_with_tag(TAD_community com, char* tag, Date begin, Date end){
     DATETIME from = dateTime_create(get_year(end), get_month(end), get_day(end), 23, 59, 59, 999);
     DATETIME to = dateTime_create(get_year(begin), get_month(begin), get_day(begin), 0, 0, 0, 0);
 
     QUESTIONS qs = community_get_filtered_questions(com, from, to, INT_MAX, generic_question_has_tag, tag);
 
-    int length = g_slist_length(qs);
-    LONG_list l = gslist2llist(qs, length+1);
-    set_list(l, length, 0);
+    LONG_list l = gslist2llist(qs, g_slist_length(qs));
 
     dateTime_destroy(from);
     dateTime_destroy(to);
@@ -115,11 +113,10 @@ LONG_list most_answered_questions(TAD_community com, int N, Date begin, Date end
 
     QUESTIONS qs = community_get_sorted_question_list(com, from, to, question_answer_count_cmp, N);
 
-    dateTime_destroy(from);
-    dateTime_destroy(to);
-
     LONG_list r = gslist2llist(qs, N);
 
+    dateTime_destroy(from);
+    dateTime_destroy(to);
     g_slist_free(qs);
 
     return r;
@@ -138,15 +135,16 @@ LONG_list contains_word(TAD_community com, char* word, int N){
 
     QUESTIONS qs = community_get_filtered_questions(com, from, to, N, generic_strstr, word);
 
+    LONG_list list = gslist2llist(qs, N);
+
     dateTime_destroy(from);
     dateTime_destroy(to);
-
-    LONG_list list = gslist2llist(qs, N);
     g_slist_free(qs);
     return list;
 }
 
 // query 9
+//TODO ordenar cronologicamente
 LONG_list both_participated(TAD_community com, long id1, long id2, int N){
     LONG_list list = create_list(N);
     for(int i=0; i<N; i++) set_list(list, i, 0);
@@ -156,8 +154,7 @@ LONG_list both_participated(TAD_community com, long id1, long id2, int N){
     if(!user2) return list;
 
     POSTS posts = so_user_get_posts(user1);
-    int i = 0;
-    for(; posts && i<N; posts = posts->next){
+    for(int i = 0; posts && i<N; posts = posts->next){
         long qId = post_search_thread_for_user((POST) posts->data, id2);
         if(qId != -2){
             set_list(list, i++, qId);
@@ -189,6 +186,7 @@ long better_answer(TAD_community com, long id){
     return idBest;
 }
 
+// query 11
 static void gather_tags(SO_USER usr, STR_ROSE_TREE rt, DATETIME from, DATETIME to){
     POSTS posts = so_user_get_posts(usr);
     for(; posts; posts = posts->next){
@@ -207,7 +205,6 @@ static void gather_tags(SO_USER usr, STR_ROSE_TREE rt, DATETIME from, DATETIME t
     }
 }
 
-// query 11
 LONG_list most_used_best_rep(TAD_community com, int N, Date begin, Date end){
     USERS users = community_get_sorted_user_list(com, so_user_reputation_cmp, N);
 
