@@ -65,12 +65,9 @@ void so_user_destroy_generic(gpointer user){
 }
 
 int so_user_post_count_cmp(const void* a, const void* b){
-    return ((SO_USER) a)->nrPosts
-         - ((SO_USER) b)->nrPosts;
+    return ((SO_USER) a)->nrPosts - ((SO_USER) b)->nrPosts;
 }
 
 int so_user_reputation_cmp(const void* a, const void*b){
-    return ((SO_USER) b)->reputation
-         - ((SO_USER) a)->reputation;
+    return ((SO_USER) a)->reputation - ((SO_USER) b)->reputation;
 }
-

@@ -1,11 +1,15 @@
 #ifndef __QUESTION_H__
 #define __QUESTION_H__
 
+/**
+ * @file
+ * Módulo que define uma questão.
+ */
 #include "dateTime.h"
 #include "answer.h"
-#include <glib.h>
 #include "types.h"
 
+#include <glib.h>
 #include <libxml/parserInternals.h>
 
 
@@ -14,11 +18,11 @@
  * @param id O id da questão.
  * @param date A data da questão.
  * @param score O score da questão.
- * @param ownerId O id do dono da questão.
+ * @param ownerId O id do autor da questão.
  * @param title O título da questão.
  * @param tags As tags da questão.
  * @param answerCount Conta o número de respostas que a questão tem.
- * @param ownerName O nome do dono da questão.
+ * @param ownerName O nome do autor da questão.
  * @returns Uma questão.
  */
 QUESTION question_create(long id,
@@ -52,9 +56,9 @@ DATETIME question_get_date(QUESTION question);
 int question_get_score(QUESTION question);
 
  /**
- * Retorna o id do dono da questão.
+ * Retorna o id do autor da questão.
  * @param question Uma questão.
- * @returns O id do dono da questão.
+ * @returns O id do autor da questão.
  */
 long question_get_owner_id(QUESTION question);
 
@@ -73,9 +77,9 @@ xmlChar *question_get_title(QUESTION question);
 char** question_get_tags(QUESTION question);
 
  /**
- * Retorna o nome do dono da questão.
+ * Retorna o nome do autor da questão.
  * @param question Uma questão.
- * @returns O nome do dono da questão.
+ * @returns O nome do autor da questão.
  */
 xmlChar *question_get_owner_name(QUESTION question);
 
@@ -86,6 +90,12 @@ xmlChar *question_get_owner_name(QUESTION question);
  */
 int question_get_answer_count(QUESTION question);
 
+
+ /**
+ * Retorna uma lista com as respostas da questão.
+ * @param question Uma questão.
+ * @returns A lista com as respostas da questão.
+ */
 ANSWERS question_get_answers(QUESTION question);
 
 /**
@@ -111,17 +121,32 @@ void question_destroy(QUESTION question);
  */
 void question_destroy_generic(gpointer question);
 
-/**
- * Compara o número de repostas de duas questões
- * @param a Questão a
- * @param b Questão b
- * @returns Um número positivo se \p a tiver menos respostas, 0 se ambos tiverem
- *          o mesmo número de respostas, e -1 se \p a tiver mais respostas.
+ /**
+ * Compara duas questões conforme o número de respostas que a questão tem.
+ * @param a Uma questão.
+ * @param b Uma questão.
+ * @returns Um número positivo se a questão a tem maior número de respostas, um
+ *          número negativo se a questão b tem maior número de respostas ou 0 se
+ *          as questões têm o mesmo número de respostas.
  */
 int question_answer_count_cmp(const void* a, const void* b);
 
+ /**
+ * Compara duas questões conforme a data.
+ * @param a Uma questão.
+ * @param b Uma questão.
+ * @returns Um número negativo se a primeira questão for mais antiga, um número
+ *          positivo se a primeira questão for mais recente ou 0 se as questões
+ *          tiverem a mesma data.
+ */
 int question_date_cmp(const void* a, const void* b);
 
+ /**
+ * Verifica se uma questão tem uma tag.
+ * @param question Uma questão.
+ * @param tag A tag.
+ * @returns 1 se a questão tem a tag, 0 caso contrário.
+ */
 int question_has_tag(QUESTION question, char* tag);
 
-#endif /*__QUESTION_H__*/
+#endif /* __QUESTION_H__ */

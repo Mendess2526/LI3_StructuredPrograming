@@ -1,11 +1,15 @@
 #ifndef __ANSWER_H__
 #define __ANSWER_H__
 
+/**
+ * @file
+ * Módulo que define uma resposta.
+ */
 #include "dateTime.h"
 #include "question.h"
-#include <glib.h>
 #include "types.h"
 
+#include <glib.h>
 #include <libxml/parserInternals.h>
 
  /**
@@ -13,9 +17,10 @@
  * @param id O id da resposta.
  * @param date A data da resposta.
  * @param score O score da resposta.
- * @param ownerId O id do dono da resposta.
+ * @param ownerId O id do autor da resposta.
  * @param parentId O id da questão à qual foi dada a resposta.
- * @param ownerName O nome do dono da resposta.
+ * @param ownerName O nome do autor da resposta.
+ * @param comment_count O número de comentários da resposta.
  * @returns Uma resposta.
  */
 ANSWER answer_create(long id,
@@ -48,9 +53,9 @@ DATETIME answer_get_date(ANSWER answer);
 int answer_get_score(ANSWER answer);
 
  /**
- * Retorna o id do dono da resposta.
+ * Retorna o id do autor da resposta.
  * @param answer Uma resposta.
- * @returns O dono da resposta.
+ * @returns O autor da resposta.
  */
 long answer_get_owner_id(ANSWER answer);
 
@@ -62,9 +67,9 @@ long answer_get_owner_id(ANSWER answer);
 int answer_get_comment_count(ANSWER answer);
 
  /**
- * Retorna o nome do dono da resposta.
+ * Retorna o nome do autor da resposta.
  * @param answer Uma resposta.
- * @returns A nome do dono da resposta.
+ * @returns A nome do autor da resposta.
  */
 xmlChar *answer_get_owner_name(ANSWER answer);
 
@@ -101,8 +106,24 @@ void answer_destroy(ANSWER answer);
  */
 void answer_destroy_generic(gpointer answer);
 
+ /**
+ * Compara duas respostas conforme a data.
+ * @param a Uma resposta.
+ * @param b Uma resposta.
+ * @returns Um número negativo se a primeira resposta for mais antiga, um número
+ *          positivo se a primeira resposta for mais recente ou 0 se as respostas
+ *          tiverem a mesma data.
+ */
 int answer_date_cmp(const void* a, const void* b);
 
+ /**
+ * Compara duas respostas conforme o score.
+ * @param a Uma resposta.
+ * @param b Uma resposta.
+ * @returns Um número positivo se a resposta a tem um score superior, um número
+ *          negativo se a resposta b tem um score superior ou 0 se têm score 
+ *          igual.
+ */
 int answer_score_cmp(const void* a, const void* b);
 
-#endif /*__ANSWER_H__*/
+#endif /* __ANSWER_H__ */

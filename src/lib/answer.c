@@ -78,6 +78,5 @@ int answer_date_cmp(const void* a, const void* b){
 }
 
 int answer_score_cmp(const void* a, const void* b){
-    return answer_get_score((ANSWER) a)
-         - answer_get_score((ANSWER) b);
+    return ((ANSWER) a)->score - ((ANSWER) b)->score;
 }

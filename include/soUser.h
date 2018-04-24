@@ -1,10 +1,14 @@
 #ifndef __SO_USER_H__
 #define __SO_USER_H__
 
+/**
+ * @file
+ * Módulo que define um user.
+ */
 #include "post.h"
-#include <glib.h>
 #include "types.h"
 
+#include <glib.h>
 #include <libxml/parserInternals.h>
 
 typedef GSList * POSTS;
@@ -84,14 +88,22 @@ void so_user_destroy(SO_USER user);
 void so_user_destroy_generic(gpointer user);
 
 /**
- * Compara dois utilizadore conforme o número de posts
- * @param a Utilizador a
- * @param b Utilizador b
- * @returns Um número positivo se \p a tiver menos posts, 0 se ambos tiverem
- *          o mesmo número de posts, e -1 se \p a tiver mais posts.
+ * Compara dois users conforme o número de posts.
+ * @param a Um user.
+ * @param b Um user.
+ * @returns Um número positivo se o user a tem mais posts, um número negativo se
+ *          o user b tem mais posts ou 0 se os users têm o mesmo número de posts.
  */
 int so_user_post_count_cmp(const void* a, const void* b);
 
+/**
+ * Compara dois users conforme a reputação dos users.
+ * @param a Um user.
+ * @param b Um user.
+ * @returns Um número positivo se o user a tem melhor reputação, um número 
+ *          negativo se o user b tem melhor reputação ou 0 se os users têm a 
+ *          mesma reputação.
+ */
 int so_user_reputation_cmp(const void* a, const void* b);
 
-#endif /*__SO_USER_H__*/
+#endif /* __SO_USER_H__ */

@@ -97,8 +97,7 @@ void question_destroy_generic(gpointer question){
 }
 
 int question_answer_count_cmp(const void* a, const void* b){
-    return question_get_answer_count((QUESTION) a)
-         - question_get_answer_count((QUESTION) b);
+    return ((QUESTION) a)->answer_count - ((QUESTION) b)->answer_set_parent_ptr;
 }
 
 int question_date_cmp(const void* a, const void* b){

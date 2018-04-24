@@ -1,16 +1,18 @@
 #ifndef __COMMUNITY_H__
 #define __COMMUNITY_H__
+
 /**
  * @file
  * Ficheiro que define a API para interagir com as estururas
- * definidas que armazenam toda a informação retirada dos ficheiros xml
+ * definidas que armazenam toda a informação retirada dos ficheiros xml.
  */
-#include <glib.h>
 #include "date.h"
 #include "soUser.h"
 #include "answer.h"
 #include "question.h"
 #include "types.h"
+
+#include <glib.h>
 
 /**
  * Alias para a função community_create
@@ -83,29 +85,82 @@ QUESTION community_get_question(TAD_community com, long id);
  */
 ANSWER community_get_answer(TAD_community com, long id);
 
+ /**
+ * Retorna o número total de users.
+ * @param com Uma instância da estrutura.
+ * @returns O número total de users.
+ */
 long community_get_user_count(TAD_community com);
 
+ /**
+ * Retorna o número total de questões.
+ * @param com Uma instância da estrutura.
+ * @returns O número total de questões.
+ */
 long community_get_question_count(TAD_community com);
 
+ /**
+ * Retorna o número total de respostas.
+ * @param com Uma instância da estrutura.
+ * @returns O número total de respostas.
+ */
 long community_get_answer_count(TAD_community com);
 
+ /**
+  *
+  * 
+ */
 typedef GSList* USERS;
 
+ /**
+ * Retorna uma lista ordenada de users.
+ * @param com Uma instância da estrutura.
+ * @param cfunc Função de comparação.
+ * @param N Tamanho da lista retornada.
+ * @returns Uma lista ordenada de users.
+ */
 USERS community_get_sorted_user_list(TAD_community com, ComCmpFunc cfunc, int N);
 
 typedef GSList* QUESTIONS;
 
+ /**
+ * Retorna uma lista ordenada de questões.
+ * @param com Uma instância da estrutura.
+ * @param from A data de início.
+ * @param to A data do fim.
+ * @param func Função de comparação.
+ * @param N Tamanho da lista retornada.
+ * @returns Uma lista ordenada de questões.
+ */
 QUESTIONS community_get_sorted_question_list(TAD_community com, DATETIME from, DATETIME to, ComCmpFunc func, int N);
 
 typedef GSList* ANSWERS;
 
+ /**
+ * Retorna uma lista ordenada de respostas.
+ * @param com Uma instância da estrutura.
+ * @param from A data de início.
+ * @param to A data do fim.
+ * @param func Função de comparação.
+ * @param N Tamanho da lista retornada.
+ * @returns Uma lista ordenada de respostas.
+ */
 ANSWERS community_get_sorted_answer_list(TAD_community com, DATETIME from, DATETIME to, ComCmpFunc func, int N);
 
 typedef int (*ComFilterFunc) (void* elem, void* filter_data);
 
-QUESTIONS community_get_filtered_questions(TAD_community com, DATETIME from,
-                                        DATETIME to, int N, ComFilterFunc func,
-                                        void* filter_data);
+
+ /**
+ * Retorna uma lista de questões filtrada conforme a função de filtragem.
+ * @param com Uma instância da estrutura.
+ * @param from A data de início.
+ * @param to A data do fim.
+ * @param N Tamanho da lista retornada.
+ * @param func Função de filtragem.
+ * @param filter_data Informação passada a func.
+ * @returns Uma lista de questões filtrada conforme a função de filtragem.
+ */
+QUESTIONS community_get_filtered_questions(TAD_community com, DATETIME from, DATETIME to, int N, ComFilterFunc func, void* filter_data);
 
  /**
  * Encontra o id da tag fornecida.
@@ -137,7 +192,6 @@ void community_iterate_answers(TAD_community com, DATETIME from, DATETIME to, vo
 
 /* ------------- PRINTING --------------------- */
 
-
 void printUsers(TAD_community com);
 
 void printQuestions(TAD_community com);
@@ -149,4 +203,5 @@ void printFavouritesCount(TAD_community com);
 void community_print_calendario(TAD_community com);
 
 void community_print_thread(TAD_community com, long id);
-#endif /*__COMMUNITY_H__*/
+
+#endif /* __COMMUNITY_H__ */
