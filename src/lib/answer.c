@@ -2,10 +2,10 @@
 #include <stdlib.h>
 
 struct _answer{
-    int parent_id;
     int score;
     int comment_count;
     long id;
+    long parent_id;
     long owner_id;
     DATETIME date;
     QUESTION parent_ptr;
