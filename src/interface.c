@@ -144,7 +144,10 @@ LONG_list contains_word(TAD_community com, char* word, int N){
 }
 
 // query 9
-//TODO ordenar cronologicamente
+int question_date_cmp_with_data(gconstpointer a, gconstpointer b, gpointer d){
+    return question_date_cmp(a,b);
+}
+
 LONG_list both_participated(TAD_community com, long id1, long id2, int N){
     LONG_list list = create_list(N);
     for(int i=0; i<N; i++) set_list(list, i, 0);
@@ -154,12 +157,20 @@ LONG_list both_participated(TAD_community com, long id1, long id2, int N){
     if(!user2) return list;
 
     POSTS posts = so_user_get_posts(user1);
+    GSequence* seq = g_sequence_new(NULL);
     for(int i = 0; posts && i<N; posts = posts->next){
-        long qId = post_search_thread_for_user((POST) posts->data, id2);
-        if(qId != -2){
-            set_list(list, i++, qId);
+        QUESTION q = post_search_thread_for_user((POST) posts->data, id2);
+        if(!q){
+            g_sequence_prepend(seq, q);
         }
     }
+    g_sequence_sort(seq, question_date_cmp_with_data, NULL);
+    GSequenceIter* it = g_sequence_get_begin_iter(seq);
+    for(int i = 0; i < N && !g_sequence_iter_is_end(it); i++){
+        set_list(list, i, question_get_id((QUESTION) g_sequence_get(it)));
+        it = g_sequence_iter_next(it);
+    }
+    g_sequence_free(seq);
     return list;
 }
 
@@ -238,12 +249,13 @@ TAD_community clean(TAD_community com){
 }
 
 static inline LONG_list gslist2llist(GSList* list, int maxSize){
-    LONG_list l = create_list(maxSize);
+    LONG_list l = create_list(maxSize+1);
     for(int i=0; i<maxSize; i++) set_list(l, i, 0);
     int i = 0;
     for(; list && i<maxSize; list = list->next){
         set_list(l, i++, question_get_id(list->data));
     }
+    set_list(l, i, 0);
     return l;
 }
 

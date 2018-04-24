@@ -122,18 +122,18 @@ static long searchFromQuestion(QUESTION question, long id){
     return 0;
 }
 
-long post_search_thread_for_user(POST post, long id){
+QUESTION post_search_thread_for_user(POST post, long id){
     QUESTION q = NULL;
     if(post_is_answer(post))
         q = answer_get_parent_ptr(post_get_answer(post));
     else
         q = post_get_question(post);
 
-    if(q == NULL) return -2;
+    if(q == NULL) return NULL;
     if(searchFromQuestion(q, id))
-        return question_get_id(q);
+        return q;
     else
-        return -2;
+        return NULL;
 }
 
 int post_date_cmp(gconstpointer a, gconstpointer b){
