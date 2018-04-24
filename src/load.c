@@ -107,47 +107,47 @@ void start_post_element(void *user_data, const xmlChar *name, const xmlChar **at
         int atrType = postStrcmp(attrs[0]);
         switch(atrType){
             case USER_ID:
-            /*long*/id = strtol((char *) attrs[1],NULL,10);
+                    id = strtol((char *) attrs[1],NULL,10);
                     numAttr--;
                     break;
             case OWNER_USER_ID:
-            /*long*/owner_id = strtol((char *) attrs[1],NULL,10);
+                    owner_id = strtol((char *) attrs[1],NULL,10);
                     numAttr--;
                     break;
             case SCORE:
-            /*int*/ score = (int) strtol((char *) attrs[1], NULL, 10);
+                    score = (int) strtol((char *) attrs[1], NULL, 10);
                     numAttr--;
                     break;
             case COMMENT_COUNT:
-            /*int*/ comment_count = (int) strtol((char *) attrs[1], NULL, 10);
+                    comment_count = (int) strtol((char *) attrs[1], NULL, 10);
                     numAttr--;
                     break;
             case CREATION_DATE:
-       /*DATETIME*/ date = parseDate(attrs[1]);
+                    date = parseDate(attrs[1]);
                     numAttr--;
                     break;
             case OWNER_DISPLAY_NAME:
-       /*xmlChar* */owner_name = xmlStrdup(attrs[1]);
+                    owner_name = xmlStrdup(attrs[1]);
                     numAttr--;
                     break;
             case TITLE:
-       /*xmlChar* */title = xmlStrdup(attrs[1]);
+                    title = xmlStrdup(attrs[1]);
                     numAttr--;
                     break;
             case TAGS:
-       /*xmlChar* */tags = xmlStrdup(attrs[1]);
+                    tags = xmlStrdup(attrs[1]);
                     numAttr--;
                     break;
             case ANSWER_COUNT:
-            /*int*/ answer_count = (int) strtol((char *) attrs[1], NULL, 10);
+                    answer_count = (int) strtol((char *) attrs[1], NULL, 10);
                     numAttr--;
                     break;
             case PARENT_ID:
-            /*long*/parentId = strtol((char *) attrs[1], NULL, 10);
+                    parentId = strtol((char *) attrs[1], NULL, 10);
                     numAttr-=3;
                     break;
             case POST_TYPE:
-            /*int*/ postType = (int) strtol((char *) attrs[1], NULL, 10);
+                    postType = (int) strtol((char *) attrs[1], NULL, 10);
             default: break;
         }
     }
