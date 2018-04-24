@@ -148,12 +148,12 @@ typedef struct _collector{
 
 static int collect(void* value, void* user_data){
     COLLECTOR col = (COLLECTOR) user_data;
-    if(col->list == NULL || col->func(col->list->data, value) < 0){
+    if(col->list == NULL || col->func(col->list->data, value) >= 0){
         col->list = g_slist_prepend(col->list, value);
     }else{
         int i = 0;
         for(GSList* cur = col->list; cur && i < col->maxSize; cur = cur->next, ++i){
-            if(!cur->next || col->func(cur->next->data, value) < 0){
+            if(!cur->next || col->func(cur->next->data, value) >= 0){
                     cur->next = g_slist_prepend(cur->next, value);
                     i = col->maxSize;
             }
