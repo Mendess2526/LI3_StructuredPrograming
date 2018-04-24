@@ -1,13 +1,15 @@
-#include <date.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+
 #include "interface.h"
 #include "pair.h"
-#include "community.h"
 #include "common.h"
 
 #define BLUE "\033[34m"
 #define YELLOW "\033[33m"
+#define GREEN "\033[32m"
+#define RED "\033[31m"
 #define RESET "\033[0m"
 
 /**
@@ -46,42 +48,43 @@ int main(int argc, const char **argv){
     Date beginingOfTime = createDate(1,1,1);
     Date theHeatDeath = createDate(30,11,9999);
 
-    printf("%sQUERY  1:%s Info from Post\n",BLUE, RESET);
-    printAndDestroyStrPair(info_from_post(com, 1));
+    printf("%sQUERY  1:%s Info from Post %sParams [2]%s\n",BLUE, RESET, GREEN, RESET);
+    printAndDestroyStrPair(info_from_post(com, 2));
 
-    printf("%sQUERY  2:%s Top most active\n",BLUE, RESET);
+    printf("%sQUERY  2:%s Top most active %sParams [5]%s\n",BLUE, RESET, GREEN, RESET);
     printAndDestroyLongList(top_most_active(com, 5), 5);
 
-    printf("%sQUERY  3:%s Total Posts\n",BLUE, RESET);
+    printf("%sQUERY  3:%s Total Posts %sParams [1/1/1, 30/11/9999]%s\n",BLUE, RESET, GREEN, RESET);
     printAndDestroyLongPair(total_posts(com, beginingOfTime, theHeatDeath));
 
-    printf("%sQUERY  4:%s Questions with tag\n",BLUE, RESET);
-    printAndDestroyLongList(questions_with_tag(com, "sms", beginingOfTime, theHeatDeath), 3);
+    printf("%sQUERY  4:%s Questions with tag %sParams [sms, 1/1/1, 30/11/9999]%s\n",BLUE, RESET, GREEN, RESET);
+    printAndDestroyLongList(questions_with_tag(com, "sms", beginingOfTime, theHeatDeath), -1);
 
-    printf("%sQUERY  5:%s Get user info\n",BLUE, RESET);
-    printAndDestroyUser(get_user_info(com, 5));
+    printf("%sQUERY  5:%s Get user info %sParams [7]%s\n",BLUE, RESET, GREEN, RESET);
+    printAndDestroyUser(get_user_info(com, 7));
 
-    printf("%sQUERY  6:%s Most voted answer\n",BLUE, RESET);
+    printf("%sQUERY  6:%s Most voted answer %sParams [5, 1/1/1, 30/11/9999]%s\n",BLUE, RESET, GREEN, RESET);
     printAndDestroyLongList(most_voted_answers(com, 5, beginingOfTime, theHeatDeath), 5);
 
-    printf("%sQUERY  7:%s Most answered questions\n",BLUE, RESET);
+    printf("%sQUERY  7:%s Most answered questions %sParams [5, 1/1/1, 30/11/9999]%s\n",BLUE, RESET, GREEN, RESET);
     printAndDestroyLongList(most_answered_questions(com, 5, beginingOfTime, theHeatDeath), 5);
 
-    printf("%sQUERY  8:%s Contains word\n",BLUE, RESET);
-    printAndDestroyLongList(contains_word(com, "message", 5), 5);
+    printf("%sQUERY  8:%s Contains word %sParams [message, 5]%s\n",BLUE, RESET, GREEN, RESET);
+    printAndDestroyLongList(contains_word(com, "root", 5), 5);
 
-    printf("%sQUERY  9:%s Both participated\n",BLUE, RESET);
+    printf("%sQUERY  9:%s Both participated %sParams [10, 4, 5]%s\n",BLUE, RESET, GREEN, RESET);
     printAndDestroyLongList(both_participated(com, 10, 4, 5), 5);
 
-    printf("%sQUERY 10:%s Better answer\n",BLUE, RESET);
-    printf("Better answer: %ld\n", better_answer(com, 1));
+    printf("%sQUERY 10:%s Better answer %sParams [3883]%s\n",BLUE, RESET, GREEN, RESET);
+    printf("Better answer: %ld\n", better_answer(com, 3883));
 
-    printf("%sQUERY 11:%s Most used best rep\n",BLUE, RESET);
+    printf("%sQUERY 11:%s Most used best rep %sParams [5, 1/1/1, 30/11/9999]%s\n",BLUE, RESET, GREEN, RESET);
     printAndDestroyLongList(most_used_best_rep(com, 5, beginingOfTime, theHeatDeath), 5);
 
     free_date(beginingOfTime);
     free_date(theHeatDeath);
     clean(com);
+    return 0;
 }
 
 static char* makeDumpPath(const char* folder_name){
@@ -99,8 +102,12 @@ static char* makeDumpPath(const char* folder_name){
 
 static void printAndDestroyStrPair(STR_pair sP){
     if(!sP) return;
-    printf("%sfst:%s %s\n", YELLOW, RESET, get_fst_str(sP));
-    printf("%ssnd:%s %s\n", YELLOW, RESET, get_snd_str(sP));
+    char* s = get_fst_str(sP);
+    printf("%sfst:%s %s\n", YELLOW, RESET, s);
+    free(s);
+    s = get_snd_str(sP);
+    printf("%ssnd:%s %s\n", YELLOW, RESET, s);
+    free(s);
     free_str_pair(sP);
 }
 
@@ -113,6 +120,7 @@ static void printAndDestroyLongPair(LONG_pair lP){
 
 static void printAndDestroyLongList(LONG_list lL, int size){
     if(!lL) return;
+    if(size < 0) for(size = 0;get_list(lL,size) != 0; size++);
     printf("%s[",YELLOW);
     for(int i = 0; i < size; i++){
         printf(" %8ld", get_list(lL, i));

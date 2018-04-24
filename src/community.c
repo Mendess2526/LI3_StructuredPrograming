@@ -6,31 +6,24 @@
 
 #include <stdlib.h>
 
+/** Hashtable de questões. */
 typedef GHashTable* QUESTIONS_HTABLE;
+/** Hashtable de respostas. */
 typedef GHashTable* ANSWERS_HTABLE;
+/** Hashtable de users. */
 typedef GHashTable* SO_USERS_HTABLE;
+/** Hashtable de tags. */
 typedef GHashTable* TAGS_HTABLE;
 
+/** Tipo concreto de dados para guardar questões, respostas, users e tags. */
 struct TCD_community{
-    QUESTIONS_HTABLE questions;
-    ANSWERS_HTABLE answers;
-    SO_USERS_HTABLE users;
-    TAGS_HTABLE tags;
-    CALENDARIO calendarioQuestions;
-    CALENDARIO calendarioAnswers;
+    QUESTIONS_HTABLE questions;     /**< Hashtable de questões. */
+    ANSWERS_HTABLE answers;         /**< Hashtable de respostas. */
+    SO_USERS_HTABLE users;          /**< Hashtable de users. */
+    TAGS_HTABLE tags;               /**< Hashtable de tags. */
+    CALENDARIO calendarioQuestions; /**< Calendário para guardar questões. */
+    CALENDARIO calendarioAnswers;   /**< Calendário para guardar respostas. */
 };
-
-gint questionTimeCompare(gconstpointer a, gconstpointer b){
-    DATETIME dataA = question_get_date((QUESTION) b);
-    DATETIME dataB = question_get_date((QUESTION) a);
-    return dateTime_compare(dataA,dataB);
-}
-
-gint answerTimeCompare(gconstpointer a, gconstpointer b){
-    DATETIME dataA = answer_get_date((ANSWER) b);
-    DATETIME dataB = answer_get_date((ANSWER) a);
-    return dateTime_compare(dataA, dataB);
-}
 
 /**
  * Aloca um id.
@@ -64,7 +57,6 @@ static inline void updateQuestionsAnswers(TAD_community com, ANSWER answer){
     if(question) question_add_answer(question,answer);
 }
 
-//TODO me no like this
 TAD_community init(){
     return community_create();
 }
@@ -81,8 +73,8 @@ TAD_community community_create(){
             g_int64_hash, g_int64_equal, g_free, so_user_destroy_generic);
     com->tags = g_hash_table_new_full(
             g_str_hash, g_str_equal, g_free, g_free);
-    com->calendarioQuestions = calendario_create(11, questionTimeCompare, NULL);
-    com->calendarioAnswers   = calendario_create(11, answerTimeCompare, NULL);
+    com->calendarioQuestions = calendario_create(11, question_date_cmp, NULL);
+    com->calendarioAnswers   = calendario_create(11, answer_date_cmp, NULL);
     return com;
 }
 
@@ -141,26 +133,55 @@ SO_USER community_get_user(TAD_community com, long id){
     return g_hash_table_lookup(com->users,(gconstpointer) &id);
 }
 
+long community_get_user_count(TAD_community com){
+    return g_hash_table_size(com->users);
+}
+
+long community_get_question_count(TAD_community com){
+    return g_hash_table_size(com->questions);
+}
+
+long community_get_answer_count(TAD_community com){
+    return g_hash_table_size(com->answers);
+}
+
+/** Estrutura usada para colecionar elementos da TCD durante iterações. */
 typedef struct _collector{
-    USERS list;
-    ComCmpFunc func;
-    int maxSize;
+    GSList* list;    /**< Lista de elementos. */
+    ComCmpFunc func; /**< Função para ordenar os elementos na lista. */
+    int maxSize;     /**< Tamanho maximo da lista. */
 }*COLLECTOR;
 
-static void collect(gpointer key, gpointer value, gpointer user_data){
-    key = 0; // Avoid unused parameter warning
+/**
+ * Coleciona ordenadamente elementos da TCD
+ * @param value Elemento da TCD
+ * @param user_data Informação do utilizador
+ * @returns 1 para percorrer todos os elementos pedidos
+ */
+static int collect(void* value, void* user_data){
     COLLECTOR col = (COLLECTOR) user_data;
-    if(col->list == NULL || col->func(col->list->data, value) < 0){
+    if(col->list == NULL || col->func(col->list->data, value) >= 0){
         col->list = g_slist_prepend(col->list, value);
     }else{
         int i = 0;
         for(GSList* cur = col->list; cur && i < col->maxSize; cur = cur->next, ++i){
-            if(!cur->next || col->func(cur->next->data, value) < 0){
+            if(!cur->next || col->func(cur->next->data, value) >= 0){
                     cur->next = g_slist_prepend(cur->next, value);
                     i = col->maxSize;
             }
         }
     }
+    return 1;
+}
+
+/**
+ * Chama a função de coleção de elementos ignorando a key
+ * @param key Chave do elemento (ignorado)
+ * @param value Elemento da TCD
+ * @param user_data Informação do utilizador
+ */
+static void collect_key_value(gpointer key, gpointer value, gpointer user_data){
+    collect(value, user_data);
 }
 
 USERS community_get_sorted_user_list(TAD_community com, ComCmpFunc func, int N){
@@ -168,10 +189,85 @@ USERS community_get_sorted_user_list(TAD_community com, ComCmpFunc func, int N){
     col->func = func;
     col->list = NULL;
     col->maxSize = N;
-    g_hash_table_foreach(com->users, collect, col);
+    g_hash_table_foreach(com->users, collect_key_value, col);
     USERS r = col->list;
     free(col);
     return r;
+}
+
+QUESTIONS community_get_sorted_question_list(TAD_community com, DATETIME from,
+                                    DATETIME to, ComCmpFunc func, int N){
+    COLLECTOR col = malloc(sizeof(struct _collector));
+    col->func = func;
+    col->list = NULL;
+    col->maxSize = N;
+    calendario_iterate(com->calendarioQuestions, from, to, col, collect);
+    QUESTIONS r = col->list;
+    free(col);
+    return r;
+}
+
+ANSWERS community_get_sorted_answer_list(TAD_community com, DATETIME from,
+                                        DATETIME to, ComCmpFunc func, int N){
+    COLLECTOR col = malloc(sizeof(struct _collector));
+    col->func = func;
+    col->list = NULL;
+    col->maxSize = N;
+    calendario_iterate(com->calendarioAnswers, from, to, col, collect);
+    ANSWERS r = col->list;
+    free(col);
+    return r;
+}
+
+/** Estrutura para colecionar elementos que cumprem uma certa condição. */
+typedef struct _filter{
+    int maxSize;        /**< Tamanho máximo da lista. */
+    int load;           /**< Tamanho atual da lista. */
+    void* filter_data;  /**< Informação do utilizador passada a função de filtragem. */
+    ComFilterFunc func; /**< Função de filtragem. */
+    GSList* last;       /**< Último elemento da lista. */
+    GSList* list;       /**< Lista de elementos filtrados. */
+}*FILTER;
+
+/**
+ * Filtra elementos da TCD.
+ * @param value Elemento da TCD.
+ * @param user_data Informação do utilizador.
+ * @returns 1 se ainda não echeu a lista, 0 caso contrário.
+ */
+static int filter(gpointer elem, gpointer user_data){
+    FILTER filt = (FILTER) user_data;
+    if(filt->load >= filt->maxSize) return 0;
+
+    if((*filt->func)(elem, filt->filter_data)){
+        if(filt->list == NULL){
+            filt->list = g_slist_append(filt->list, elem);
+            filt->last = filt->list;
+        }else{
+            filt->last = g_slist_append(filt->list, elem);
+            filt->last = filt->last->next;
+        }
+        filt->load++;
+    }
+    return 1;
+}
+
+QUESTIONS community_get_filtered_questions(TAD_community com, DATETIME from,
+                                        DATETIME to, int N, ComFilterFunc func,
+                                        void* filter_data){
+    FILTER f = (FILTER) malloc(sizeof(struct _filter));
+    f->maxSize = N;
+    f->load = 0;
+    f->filter_data = filter_data;
+    f->func = func;
+    f->last = NULL;
+    f->list = NULL;
+
+    calendario_iterate(com->calendarioQuestions, from, to, f, filter);
+
+    QUESTIONS qs = f->list;
+    free(f);
+    return qs;
 }
 
 long community_get_tag_id(TAD_community com, xmlChar* tag){
@@ -180,11 +276,13 @@ long community_get_tag_id(TAD_community com, xmlChar* tag){
     else return -2;
 }
 
-void community_iterate_questions(TAD_community com, DATETIME from, DATETIME to, void* data, CFunc calFunc){
+void community_iterate_questions(TAD_community com, DATETIME from,
+                                DATETIME to, void* data, CFunc calFunc){
     calendario_iterate(com->calendarioQuestions, from, to, data, calFunc);
 }
 
-void community_iterate_answers(TAD_community com, DATETIME from, DATETIME to, void* data, CFunc calFunc){
+void community_iterate_answers(TAD_community com, DATETIME from, DATETIME to,
+                                void* data, CFunc calFunc){
     calendario_iterate(com->calendarioAnswers, from, to, data, calFunc);
 }
 

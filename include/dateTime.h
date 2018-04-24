@@ -1,6 +1,10 @@
 #ifndef __DATE_TIME_H__
 #define __DATE_TIME_H__
 
+/**
+ * @file
+ * Módulo que define um dateTime. Esta estrutura representa uma data e hora.
+ */
 #include "types.h"
 
 /** Macro para obter a data mais antiga representavel */
@@ -11,13 +15,13 @@
 
  /**
  * Cria uma data.
- * @param ano O ano da data.
- * @param mes O mês da data.
- * @param dia O dia da data.
- * @param horas As horas da data.
- * @param minutos Os minutos da data.
- * @param segundos Os segundos da data.
- * @param milissegundos Os milissegundos da data.
+ * @param year O ano da data.
+ * @param month O mês da data.
+ * @param day O dia da data.
+ * @param hours As horas da data.
+ * @param minutes Os minutos da data.
+ * @param seconds Os segundos da data.
+ * @param milisseconds Os milissegundos da data.
  * @returns Uma data.
  */
 DATETIME dateTime_create(int year,
@@ -86,9 +90,10 @@ void dateTime_destroy(DATETIME d);
  /**
  * Compara duas datas.
  * @param dataA Uma data.
- * @param dataB Uma data
- * @returns Um número negativo se a primeira data for mais antiga, um número positivo se a primeira data for mais recente ou 0 se forem iguais.
+ * @param dataB Uma data.
+ * @returns Um número negativo se a primeira data for mais antiga, um número
+ *          positivo se a primeira data for mais recente ou 0 se forem iguais.
  */
 int dateTime_compare(DATETIME dataA, DATETIME dataB);
 
-#endif /*__DATE_TIME_H__*/
+#endif /* __DATE_TIME_H__ */

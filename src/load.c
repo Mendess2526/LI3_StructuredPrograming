@@ -2,6 +2,7 @@
 #include "question.h"
 #include "answer.h"
 #include "dateTime.h"
+#include "community.h"
 
 #include <string.h>
 #include <libxml/parser.h>
@@ -106,47 +107,47 @@ void start_post_element(void *user_data, const xmlChar *name, const xmlChar **at
         int atrType = postStrcmp(attrs[0]);
         switch(atrType){
             case USER_ID:
-            /*long*/id = strtol((char *) attrs[1],NULL,10);
+                    id = strtol((char *) attrs[1],NULL,10);
                     numAttr--;
                     break;
             case OWNER_USER_ID:
-            /*long*/owner_id = strtol((char *) attrs[1],NULL,10);
+                    owner_id = strtol((char *) attrs[1],NULL,10);
                     numAttr--;
                     break;
             case SCORE:
-            /*int*/ score = atoi((char *) attrs[1]);
+                    score = (int) strtol((char *) attrs[1], NULL, 10);
                     numAttr--;
                     break;
             case COMMENT_COUNT:
-            /*int*/ comment_count = atoi((char *) attrs[1]);
+                    comment_count = (int) strtol((char *) attrs[1], NULL, 10);
                     numAttr--;
                     break;
             case CREATION_DATE:
-       /*DATETIME*/ date = parseDate(attrs[1]);
+                    date = parseDate(attrs[1]);
                     numAttr--;
                     break;
             case OWNER_DISPLAY_NAME:
-       /*xmlChar* */owner_name = xmlStrdup(attrs[1]);
+                    owner_name = xmlStrdup(attrs[1]);
                     numAttr--;
                     break;
             case TITLE:
-       /*xmlChar* */title = xmlStrdup(attrs[1]);
+                    title = xmlStrdup(attrs[1]);
                     numAttr--;
                     break;
             case TAGS:
-       /*xmlChar* */tags = xmlStrdup(attrs[1]);
+                    tags = xmlStrdup(attrs[1]);
                     numAttr--;
                     break;
             case ANSWER_COUNT:
-            /*int*/ answer_count = atoi((char *) attrs[1]);
+                    answer_count = (int) strtol((char *) attrs[1], NULL, 10);
                     numAttr--;
                     break;
             case PARENT_ID:
-            /*long*/parentId = strtol((char *) attrs[1],NULL,10);
+                    parentId = strtol((char *) attrs[1], NULL, 10);
                     numAttr-=3;
                     break;
             case POST_TYPE:
-            /*int*/ postType = atoi((char *) attrs[1]);
+                    postType = (int) strtol((char *) attrs[1], NULL, 10);
             default: break;
         }
     }
@@ -188,7 +189,7 @@ void start_user_element(void *user_data, const xmlChar *name, const xmlChar **at
                     numAttr--;
                     break;
             case REPUTATION:
-                    reputation = atoi((char *) attrs[1]);
+                    reputation = (int) strtol((char *) attrs[1], NULL, 10);
                     numAttr--;
                     break;
             case DISPLAY_NAME:
@@ -230,6 +231,7 @@ void start_tag_element(void* user_data, const xmlChar* name, const xmlChar** att
                 tag = xmlStrdup(attrs[1]);
                 numAttr--;
                 break;
+            default:break;
         }
     }
     community_add_tag(com, id, tag);
@@ -302,20 +304,24 @@ static inline enum Post_attr postStrcmp(const xmlChar *attribute){
         case 'O': switch(attribute[5]){
                       case 'U': return OWNER_USER_ID;
                       case 'D': return OWNER_DISPLAY_NAME;
+                      default: return POST_NONE;
                   };
         case 'S': return SCORE;
         case 'C': switch(attribute[6]){
                       case 't': return COMMENT_COUNT;
                       case 'o': return CREATION_DATE;
+                      default: return POST_NONE;
                   };
         case 'T': switch(attribute[1]){
                       case 'i': return TITLE;
                       case 'a': return TAGS;
+                      default: return POST_NONE;
                   };
         case 'A': if(attribute[1] == 'n') return ANSWER_COUNT;
         case 'P': switch(attribute[1]){
                       case 'a': return PARENT_ID;
                       case 'o': return POST_TYPE;
+                      default: return POST_NONE;
                   };
         default: return POST_NONE;
     }
@@ -327,7 +333,6 @@ static inline enum User_attr userStrcmp(const xmlChar *attribute){
         case 'R': return REPUTATION;
         case 'D': if(attribute[1]=='i') return DISPLAY_NAME;
         case 'A': if(attribute[1]=='b') return ABOUT_ME;
-
         default: return USER_NONE;
     }
 }
@@ -336,7 +341,6 @@ static inline enum Tag_attr tagStrcmp(const xmlChar *attribute){
     switch(attribute[0]){
         case 'I': return TAG_ID;
         case 'T': return TAG_NAME;
-
         default: return TAG_NONE;
     }
 }

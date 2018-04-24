@@ -2,10 +2,10 @@
 #include <stdlib.h>
 
 struct _answer{
-    int parent_id;
     int score;
     int comment_count;
     long id;
+    long parent_id;
     long owner_id;
     DATETIME date;
     QUESTION parent_ptr;
@@ -69,4 +69,18 @@ void answer_destroy(ANSWER answer){
 
 void answer_destroy_generic(gpointer answer){
     answer_destroy((ANSWER) answer);
+}
+
+int answer_date_cmp(const void* a, const void* b){
+    DATETIME dataA = answer_get_date((ANSWER) b);
+    DATETIME dataB = answer_get_date((ANSWER) a);
+    return dateTime_compare(dataA, dataB);
+}
+
+int answer_score_cmp(const void* a, const void* b){
+    int scoreA = ((ANSWER) a)->score;
+    int scoreB = ((ANSWER) b)->score;
+    if(scoreA > scoreB) return 1;
+    if(scoreA < scoreB) return -1;
+    return 0;
 }
