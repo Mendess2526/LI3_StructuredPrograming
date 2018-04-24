@@ -106,10 +106,7 @@ long community_get_question_count(TAD_community com);
  */
 long community_get_answer_count(TAD_community com);
 
- /**
-  *
-  * 
- */
+ /** Lista ligada de users. */
 typedef GSList* USERS;
 
  /**
@@ -121,6 +118,7 @@ typedef GSList* USERS;
  */
 USERS community_get_sorted_user_list(TAD_community com, ComCmpFunc cfunc, int N);
 
+/** Lista ligada de questões. */
 typedef GSList* QUESTIONS;
 
  /**
@@ -134,6 +132,7 @@ typedef GSList* QUESTIONS;
  */
 QUESTIONS community_get_sorted_question_list(TAD_community com, DATETIME from, DATETIME to, ComCmpFunc func, int N);
 
+/** Lista ligada de respostas. */
 typedef GSList* ANSWERS;
 
  /**
@@ -146,9 +145,6 @@ typedef GSList* ANSWERS;
  * @returns Uma lista ordenada de respostas.
  */
 ANSWERS community_get_sorted_answer_list(TAD_community com, DATETIME from, DATETIME to, ComCmpFunc func, int N);
-
-typedef int (*ComFilterFunc) (void* elem, void* filter_data);
-
 
  /**
  * Retorna uma lista de questões filtrada conforme a função de filtragem.

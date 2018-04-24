@@ -75,8 +75,8 @@ int main(int argc, const char **argv){
     printf("%sQUERY  9:%s Both participated %sParams [10, 4, 5]%s\n",BLUE, RESET, GREEN, RESET);
     printAndDestroyLongList(both_participated(com, 10, 4, 5), 5);
 
-    printf("%sQUERY 10:%s Better answer %sParams [1]%s\n",BLUE, RESET, GREEN, RESET);
-    printf("Better answer: %ld\n", better_answer(com, 1));
+    printf("%sQUERY 10:%s Better answer %sParams [3883]%s\n",BLUE, RESET, GREEN, RESET);
+    printf("Better answer: %ld\n", better_answer(com, 3883));
 
     printf("%sQUERY 11:%s Most used best rep %sParams [5, 1/1/1, 30/11/9999]%s\n",BLUE, RESET, GREEN, RESET);
     printAndDestroyLongList(most_used_best_rep(com, 5, beginingOfTime, theHeatDeath), 5);

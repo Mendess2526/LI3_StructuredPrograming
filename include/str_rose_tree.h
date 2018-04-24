@@ -5,9 +5,7 @@
  * Modulo que define uma arvore n-aria para contar strings
  */
 
-/**
- *
- */
+/** Tipo abstráto de àrvore n-aria para contar strings */
 typedef struct str_rose_tree * STR_ROSE_TREE;
 
 /**

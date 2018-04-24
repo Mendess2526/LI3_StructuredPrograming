@@ -15,13 +15,13 @@
 
  /**
  * Cria uma data.
- * @param ano O ano da data.
- * @param mes O mês da data.
- * @param dia O dia da data.
- * @param horas As horas da data.
- * @param minutos Os minutos da data.
- * @param segundos Os segundos da data.
- * @param milissegundos Os milissegundos da data.
+ * @param year O ano da data.
+ * @param month O mês da data.
+ * @param day O dia da data.
+ * @param hours As horas da data.
+ * @param minutes Os minutos da data.
+ * @param seconds Os segundos da data.
+ * @param milisseconds Os milissegundos da data.
  * @returns Uma data.
  */
 DATETIME dateTime_create(int year,

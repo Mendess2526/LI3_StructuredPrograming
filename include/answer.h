@@ -90,7 +90,7 @@ QUESTION answer_get_parent_ptr(ANSWER answer);
  /**
  * Inicializa o apontador para a questão à qual foi dada a resposta.
  * @param answer Uma resposta.
- * @Param question A questão que está a ser respondida.
+ * @param question A questão que está a ser respondida.
  */
 void answer_set_parent_ptr(ANSWER answer, QUESTION question);
 

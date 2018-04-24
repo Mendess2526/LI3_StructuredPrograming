@@ -17,6 +17,13 @@ typedef struct TCD_community * TAD_community;
  */
 typedef int (*ComCmpFunc)(const void* a, const void* b);
 
+/** Especifíca o tipo de função passada á TAD_community para filtrar elementos.
+ * @param elem Elemento da TAD.
+ * @param filter_data Informação do utilizador.
+ * @returns 1 se passar no filtro, 0 caso contrário.
+ */
+typedef int (*ComFilterFunc) (void* elem, void* filter_data);
+
  /** Tipo abstrato de post. */
 typedef struct _post * POST;
 

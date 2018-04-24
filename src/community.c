@@ -6,18 +6,23 @@
 
 #include <stdlib.h>
 
+/** Hashtable de questões. */
 typedef GHashTable* QUESTIONS_HTABLE;
+/** Hashtable de respostas. */
 typedef GHashTable* ANSWERS_HTABLE;
+/** Hashtable de users. */
 typedef GHashTable* SO_USERS_HTABLE;
+/** Hashtable de tags. */
 typedef GHashTable* TAGS_HTABLE;
 
+/** Tipo concreto de dados para guardar questões, respostas, users e tags. */
 struct TCD_community{
-    QUESTIONS_HTABLE questions;
-    ANSWERS_HTABLE answers;
-    SO_USERS_HTABLE users;
-    TAGS_HTABLE tags;
-    CALENDARIO calendarioQuestions;
-    CALENDARIO calendarioAnswers;
+    QUESTIONS_HTABLE questions;     /**< Hashtable de questões. */
+    ANSWERS_HTABLE answers;         /**< Hashtable de respostas. */
+    SO_USERS_HTABLE users;          /**< Hashtable de users. */
+    TAGS_HTABLE tags;               /**< Hashtable de tags. */
+    CALENDARIO calendarioQuestions; /**< Calendário para guardar questões. */
+    CALENDARIO calendarioAnswers;   /**< Calendário para guardar respostas. */
 };
 
 /**
@@ -140,12 +145,19 @@ long community_get_answer_count(TAD_community com){
     return g_hash_table_size(com->answers);
 }
 
+/** Estrutura usada para colecionar elementos da TCD durante iterações. */
 typedef struct _collector{
-    GSList* list;
-    ComCmpFunc func;
-    int maxSize;
+    GSList* list;    /**< Lista de elementos. */
+    ComCmpFunc func; /**< Função para ordenar os elementos na lista. */
+    int maxSize;     /**< Tamanho maximo da lista. */
 }*COLLECTOR;
 
+/**
+ * Coleciona ordenadamente elementos da TCD
+ * @param value Elemento da TCD
+ * @param user_data Informação do utilizador
+ * @returns 1 para percorrer todos os elementos pedidos
+ */
 static int collect(void* value, void* user_data){
     COLLECTOR col = (COLLECTOR) user_data;
     if(col->list == NULL || col->func(col->list->data, value) >= 0){
@@ -162,6 +174,12 @@ static int collect(void* value, void* user_data){
     return 1;
 }
 
+/**
+ * Chama a função de coleção de elementos ignorando a key
+ * @param key Chave do elemento (ignorado)
+ * @param value Elemento da TCD
+ * @param user_data Informação do utilizador
+ */
 static void collect_key_value(gpointer key, gpointer value, gpointer user_data){
     collect(value, user_data);
 }
@@ -201,16 +219,23 @@ ANSWERS community_get_sorted_answer_list(TAD_community com, DATETIME from,
     return r;
 }
 
+/** Estrutura para colecionar elementos que cumprem uma certa condição. */
 typedef struct _filter{
-    int maxSize;
-    int load;
-    void* filter_data;
-    ComFilterFunc func;
-    GSList* last;
-    GSList* list;
+    int maxSize;        /**< Tamanho máximo da lista. */
+    int load;           /**< Tamanho atual da lista. */
+    void* filter_data;  /**< Informação do utilizador passada a função de filtragem. */
+    ComFilterFunc func; /**< Função de filtragem. */
+    GSList* last;       /**< Último elemento da lista. */
+    GSList* list;       /**< Lista de elementos filtrados. */
 }*FILTER;
 
-int filter(gpointer elem, gpointer user_data){
+/**
+ * Filtra elementos da TCD.
+ * @param value Elemento da TCD.
+ * @param user_data Informação do utilizador.
+ * @returns 1 se ainda não echeu a lista, 0 caso contrário.
+ */
+static int filter(gpointer elem, gpointer user_data){
     FILTER filt = (FILTER) user_data;
     if(filt->load >= filt->maxSize) return 0;
 

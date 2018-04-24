@@ -11,6 +11,7 @@
 #include <glib.h>
 #include <libxml/parserInternals.h>
 
+/** Lista ligada de posts. */
 typedef GSList * POSTS;
 
  /**

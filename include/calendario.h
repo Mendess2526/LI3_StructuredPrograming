@@ -14,11 +14,11 @@
 
  /**
  * Cria um calendário.
- * @param nANos Número de anos que o calendário tem.
+ * @param nYears Número de anos que o calendário tem.
  * @param compareFunc Função que compara datas dos elementos inseridos.
  * @param freeFunc Função que liberta a memória ocupada pelos elementos inseridos.
  */
-CALENDARIO calendario_create(int nAnos, CCompareFunc compareFunc, CFreeFunc freeFunc);
+CALENDARIO calendario_create(int nYears, CCompareFunc compareFunc, CFreeFunc freeFunc);
 
  /**
  * Adiciona um post no calendário.
