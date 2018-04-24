@@ -1,6 +1,11 @@
 #ifndef __CALENDARIO_H__
 #define __CALENDARIO_H__
 
+/**
+ * @file
+ * Módulo que define o calendário. Este é uma estrutura que permite guardar
+ * valores arbitrários associados a uma data.
+ */
 #include "post.h"
 #include "date.h"
 #include "types.h"
@@ -11,7 +16,7 @@
  * Cria um calendário.
  * @param nANos Número de anos que o calendário tem.
  * @param compareFunc Função que compara datas dos elementos inseridos.
- * @param freeFunc Função que liberta a memória ocupada pelos elemosntos inseridos.
+ * @param freeFunc Função que liberta a memória ocupada pelos elementos inseridos.
  */
 CALENDARIO calendario_create(int nAnos, CCompareFunc compareFunc, CFreeFunc freeFunc);
 
@@ -39,10 +44,8 @@ void calendario_iterate(CALENDARIO cal, DATETIME from, DATETIME to, void* data, 
  */
 void calendario_destroy(CALENDARIO cal);
 
- /**
- *
- * @param post
- */
+/* ------------- PRINTING --------------------- */
+
 void printCalendario(CALENDARIO cal, CPrintFunction printFunction);
 
-#endif
+#endif /* __CALENDARIO_H__ */

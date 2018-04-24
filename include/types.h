@@ -9,7 +9,7 @@
  */
 typedef struct TCD_community * TAD_community;
 
-typedef int (*ComCmpFunc)(void* a, void* b);
+typedef int (*ComCmpFunc)(const void* a, const void* b);
 
  /**
  * .

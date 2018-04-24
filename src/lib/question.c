@@ -95,3 +95,17 @@ void question_destroy(QUESTION question){
 void question_destroy_generic(gpointer question){
     question_destroy((QUESTION) question);
 }
+
+int question_answer_count_cmp(const void* a, const void* b){
+    return ((QUESTION) a)->answer_count - ((QUESTION) b)->answer_count;
+}
+
+int question_date_cmp(const void* a, const void* b){
+    DATETIME dataA = question_get_date((QUESTION) b);
+    DATETIME dataB = question_get_date((QUESTION) a);
+    return dateTime_compare(dataA,dataB);
+}
+
+int question_has_tag(QUESTION question, char* tag){
+    return strstr((char*) question->tags, tag) != NULL;
+}
