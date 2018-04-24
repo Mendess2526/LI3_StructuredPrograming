@@ -3,8 +3,8 @@
 
 /**
  * @file
- * Ficheiro que define a API para interagir com as estururas
- * definidas que armazenam toda a informação retirada dos ficheiros xml.
+ * \brief Módulo que define a API para interagir com as estururas
+ *        definidas que armazenam toda a informação retirada dos ficheiros xml.
  */
 #include "date.h"
 #include "soUser.h"

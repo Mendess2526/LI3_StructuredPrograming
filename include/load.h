@@ -2,8 +2,7 @@
 #define __LOAD_H__
 /**
  * @file
- * Modulo que carrega os dados dos ficheiros xml para a estrutura
- * definida
+ * \brief Módulo que carrega os dados dos ficheiros xml para a estrutura definida
  */
 #include "types.h"
 

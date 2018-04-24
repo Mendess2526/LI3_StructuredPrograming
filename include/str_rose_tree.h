@@ -2,7 +2,7 @@
 #define __STR_ROSE_TREE_H__
 /**
  * @file
- * Modulo que define uma arvore n-aria para contar strings
+ * \brief Módulo que define uma arvore n-aria para contar strings
  */
 
 /** Tipo abstráto de àrvore n-aria para contar strings */

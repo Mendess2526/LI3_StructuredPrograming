@@ -3,8 +3,8 @@
 
 /**
  * @file
- * Módulo que define o calendário. Este é uma estrutura que permite guardar
- * valores arbitrários associados a uma data.
+ * \brief Módulo que define o calendário. Este é uma estrutura que permite guardar
+ *        valores arbitrários associados a uma data.
  */
 #include "post.h"
 #include "date.h"

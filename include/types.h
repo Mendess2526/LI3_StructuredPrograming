@@ -2,7 +2,7 @@
 #define __TYPES_H__
 /**
  * @file
- * Modulo que define os princípais tipos usados.
+ * \brief Módulo que define os princípais tipos usados.
  */
 #include <glib.h>
 
