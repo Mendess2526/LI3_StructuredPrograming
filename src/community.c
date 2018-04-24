@@ -141,19 +141,19 @@ long community_get_answer_count(TAD_community com){
 }
 
 typedef struct _collector{
-    USERS list;
+    GSList* list;
     ComCmpFunc func;
     int maxSize;
 }*COLLECTOR;
 
 static int collect(void* value, void* user_data){
     COLLECTOR col = (COLLECTOR) user_data;
-    if(col->list == NULL || col->func(col->list->data, value) < 0){
+    if(col->list == NULL || col->func(col->list->data, value) >= 0){
         col->list = g_slist_prepend(col->list, value);
     }else{
         int i = 0;
         for(GSList* cur = col->list; cur && i < col->maxSize; cur = cur->next, ++i){
-            if(!cur->next || col->func(cur->next->data, value) < 0){
+            if(!cur->next || col->func(cur->next->data, value) >= 0){
                     cur->next = g_slist_prepend(cur->next, value);
                     i = col->maxSize;
             }
@@ -195,7 +195,7 @@ ANSWERS community_get_sorted_answer_list(TAD_community com, DATETIME from,
     col->func = func;
     col->list = NULL;
     col->maxSize = N;
-    calendario_iterate(com->calendarioQuestions, from, to, col, collect);
+    calendario_iterate(com->calendarioAnswers, from, to, col, collect);
     ANSWERS r = col->list;
     free(col);
     return r;
@@ -220,7 +220,7 @@ int filter(gpointer elem, gpointer user_data){
             filt->last = filt->list;
         }else{
             filt->last = g_slist_append(filt->list, elem);
-            filt->last = g_slist_next(filt->last);
+            filt->last = filt->last->next;
         }
         filt->load++;
     }

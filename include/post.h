@@ -101,6 +101,6 @@ void post_destroy_generic(gpointer post);
 
 int post_date_cmp(gconstpointer a, gconstpointer b);
 
-long post_search_thread_for_user(POST post, long id);
+QUESTION post_search_thread_for_user(POST post, long id);
 
 #endif /*__POST_H__*/
