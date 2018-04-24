@@ -1,5 +1,6 @@
 #ifndef __TYPES_H__
 #define __TYPES_H__
+
 /**
  * @file
  * \brief Módulo que define os princípais tipos usados.
@@ -30,14 +31,11 @@ typedef struct _post * POST;
  /** Tipo abstrato de questão. */
 typedef struct _question * QUESTION;
 
- /** Lista ligada de respostas. */
-typedef GSList * ANSWERS;
+ /** Tipo abstrato de user. */
+typedef struct _so_user * SO_USER;
 
  /** Tipo abstrato de resposta. */
 typedef struct _answer * ANSWER;
-
- /** Tipo abstrato de user. */
-typedef struct _so_user * SO_USER;
 
  /** Tipo abstrato de DateTime. */
 typedef struct _dateTime * DATETIME;
@@ -51,12 +49,13 @@ typedef struct _calendario * CALENDARIO;
  * @param user_data Informação do utilizador.
  * @returns 0 se a iteração sobre os elementos deve terminar, 1 caso contrário.
  */
-typedef int (*CFunc)(void* elem, void* user_data);
+typedef int (*CalFunc)(void* elem, void* user_data);
 
  /** Especifíca o tipo da função chamada para cada elemento do calendário para libertar a memória ocupada por este.
  *  @param data Elemento a destruir.
  */
-typedef GDestroyNotify CFreeFunc;
+typedef GDestroyNotify CalFreeFunc;
+
  /**
  * Especifíca o tipo da função que compara dois elementos do calendário.
  * @param a Elemento a.
@@ -64,12 +63,12 @@ typedef GDestroyNotify CFreeFunc;
  * @returns Positivo se a for mais antigo que b, 0 se tiverem a mesma data,
  *          negativo se a for mais recente que b.
  */
-typedef GCompareFunc CCompareFunc;
+typedef GCompareFunc CalCmpFunc;
 
  /**
  * Especifíca o tipo da função passada ao calendário para imprimir um elemento do mesmo.
  * @param e Elemento do calendário.
  */
-typedef void (*CPrintFunction)(void* e);
+typedef void (*CalPrintFunc)(void* e);
 
 #endif /* __TYPES_H__ */

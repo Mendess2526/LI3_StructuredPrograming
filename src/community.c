@@ -277,12 +277,12 @@ long community_get_tag_id(TAD_community com, xmlChar* tag){
 }
 
 void community_iterate_questions(TAD_community com, DATETIME from,
-                                DATETIME to, void* data, CFunc calFunc){
+                                DATETIME to, void* data, CalFunc calFunc){
     calendario_iterate(com->calendarioQuestions, from, to, data, calFunc);
 }
 
 void community_iterate_answers(TAD_community com, DATETIME from, DATETIME to,
-                                void* data, CFunc calFunc){
+                                void* data, CalFunc calFunc){
     calendario_iterate(com->calendarioAnswers, from, to, data, calFunc);
 }
 

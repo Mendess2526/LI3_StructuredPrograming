@@ -90,6 +90,8 @@ xmlChar *question_get_owner_name(QUESTION question);
  */
 int question_get_answer_count(QUESTION question);
 
+/** Lista ligada de respostas. */
+typedef GSList* ANSWERS;
 
  /**
  * Retorna uma lista com as respostas da questão.
