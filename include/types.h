@@ -18,7 +18,8 @@ typedef struct TCD_community * TAD_community;
  */
 typedef int (*ComCmpFunc)(const void* a, const void* b);
 
-/** Especifíca o tipo de função passada á TAD_community para filtrar elementos.
+/**
+ * Especifíca o tipo de função passada á TAD_community para filtrar elementos.
  * @param elem Elemento da TAD.
  * @param filter_data Informação do utilizador.
  * @returns 1 se passar no filtro, 0 caso contrário.
@@ -51,7 +52,8 @@ typedef struct _calendario * CALENDARIO;
  */
 typedef int (*CalFunc)(void* elem, void* user_data);
 
- /** Especifíca o tipo da função chamada para cada elemento do calendário para libertar a memória ocupada por este.
+ /**
+ * Especifíca o tipo da função chamada para cada elemento do calendário para libertar a memória ocupada por este.
  *  @param data Elemento a destruir.
  */
 typedef GDestroyNotify CalFreeFunc;

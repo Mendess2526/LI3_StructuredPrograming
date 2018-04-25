@@ -63,7 +63,7 @@ LONG_pair total_posts(TAD_community com, Date begin, Date end){
 
     dateTime_destroy(from);
     dateTime_destroy(to);
-    
+
     return create_long_pair(nrQuestions, nrAnswers);
 }
 
@@ -123,8 +123,8 @@ LONG_list most_voted_answers(TAD_community com, int N, Date begin, Date end){
 
 // query 7
 LONG_list most_answered_questions(TAD_community com, int N, Date begin, Date end){
-    DATETIME from = dateTime_create(get_year(begin), get_month(begin), get_year(begin), 0, 0, 0, 0);
-    DATETIME to = dateTime_create(get_year(end), get_month(end), get_year(end), 23, 59, 59, 999);
+    DATETIME from = dateTime_create(get_year(begin), get_month(begin), get_day(begin), 0, 0, 0, 0);
+    DATETIME to = dateTime_create(get_year(end), get_month(end), get_day(end), 23, 59, 59, 999);
 
     QUESTIONS qs = community_get_sorted_question_list(com, from, to, question_answer_count_cmp, N);
 
@@ -159,7 +159,7 @@ LONG_list contains_word(TAD_community com, char* word, int N){
 }
 
 // query 9
-int question_date_cmp_with_data(gconstpointer a, gconstpointer b, gpointer d){
+static int question_date_cmp_with_data(gconstpointer a, gconstpointer b, gpointer d){
     return question_date_cmp(a,b);
 }
 
@@ -171,14 +171,33 @@ LONG_list both_participated(TAD_community com, long id1, long id2, int N){
     SO_USER user2 = community_get_user(com, id2);
     if(!user2) return list;
 
-    POSTS posts = so_user_get_posts(user1);
+    POSTS posts;
+    long searchId;
+    if(so_user_get_post_count(user1) < so_user_get_post_count(user2)){
+        posts = so_user_get_posts(user1);
+        searchId = id2;
+    }else{
+        posts = so_user_get_posts(user2);
+        searchId = id1;
+    }
     GSequence* seq = g_sequence_new(NULL);
+    long* ids = malloc(sizeof(long)*N);
     for(int i = 0; posts && i<N; posts = posts->next){
-        QUESTION q = post_search_thread_for_user((POST) posts->data, id2);
+        QUESTION q = post_search_thread_for_user((POST) posts->data, searchId);
         if(q){
-            g_sequence_prepend(seq, q);
+            int exists = 0;
+            long qId = question_get_id(q);
+            for(int j = 0; !exists && j < i; j++)
+                if(ids[j] == qId) exists = 1;
+
+            if(!exists){
+                g_sequence_prepend(seq, q);
+                ids[i++] = qId;
+            }
         }
     }
+    free(ids);
+    //TODO fix inserting the same element more then once
     g_sequence_sort(seq, question_date_cmp_with_data, NULL);
     GSequenceIter* it = g_sequence_get_begin_iter(seq);
     for(int i = 0; i < N && !g_sequence_iter_is_end(it); i++){

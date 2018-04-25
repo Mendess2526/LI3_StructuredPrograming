@@ -160,12 +160,12 @@ typedef struct _collector{
  */
 static int collect(void* value, void* user_data){
     COLLECTOR col = (COLLECTOR) user_data;
-    if(col->list == NULL || col->func(col->list->data, value) >= 0){
+    if(col->list == NULL || col->func(col->list->data, value) < 0){
         col->list = g_slist_prepend(col->list, value);
     }else{
         int i = 0;
         for(GSList* cur = col->list; cur && i < col->maxSize; cur = cur->next, ++i){
-            if(!cur->next || col->func(cur->next->data, value) >= 0){
+            if(!cur->next || col->func(cur->next->data, value) < 0){
                     cur->next = g_slist_prepend(cur->next, value);
                     i = col->maxSize;
             }
@@ -363,15 +363,25 @@ void community_print_calendario(TAD_community com){
     printCalendario(com->calendarioAnswers, cPrintAnswer);
 }
 
+#define COLOR(idn) ((idn) == id ? "\033[32m" : "\033[31m")
+#define RESET "\033[0m"
 void community_print_thread(TAD_community com, long id){
     QUESTION q = g_hash_table_lookup(com->questions, &id);
-    if(!q)
-        printf("Not a question\n");
-    else{
-        printf("Id: %8ld, OwnerId: %8ld\n", question_get_id(q), question_get_owner_id(q));
-        for(ANSWERS as = question_get_answers(q); as; as = as->next)
-            printf("Id: %8ld, OwnerId: %8ld\n", answer_get_id((ANSWER) as->data),
+    if(!q){
+        ANSWER a = g_hash_table_lookup(com->answers, &id);
+        if(!a){
+            printf("Doesn't exist\n");
+            return;
+        }
+        q = answer_get_parent_ptr(a);
+    }else{
+        long idn = question_get_id(q);
+        printf("Id: %s%8ld"RESET", OwnerId: %8ld\n", COLOR(idn), question_get_id(q), question_get_owner_id(q));
+        for(ANSWERS as = question_get_answers(q); as; as = as->next){
+            idn = answer_get_id((ANSWER) as->data);
+            printf("Id: %s%8ld"RESET", OwnerId: %8ld\n", COLOR(idn), answer_get_id((ANSWER) as->data),
                                                 answer_get_owner_id((ANSWER) as->data));
+        }
     }
 }
 
