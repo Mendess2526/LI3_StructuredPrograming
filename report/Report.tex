@@ -1,4 +1,4 @@
-\documentclass[10pt,a4paper]{report}
+\documentclass[10pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[portuguese]{babel}
 \usepackage{titlesec}
@@ -6,7 +6,9 @@
 \usepackage{indentfirst}
 \usepackage{float}
 \usepackage{array}
+\usepackage{tikz}
 \usepackage{multirow}
+\usepackage{multicol}
 \usepackage{geometry}
 \usepackage[cache=false]{minted}
 \usepackage{pdflscape}
@@ -18,15 +20,13 @@
  left=3cm,
  right=3cm
 }
-\addto\captionsportuguese{% Replace "english" with the language you use
-      \renewcommand{\contentsname}%
-          {Índice}%
+\addto\captionsportuguese{
+      \renewcommand{\contentsname}
+          {Índice}
 }
-\titleformat{\chapter}{\normalfont\huge}{\thechapter.}{10pt}{\huge}
 \begin{document}
 \begin{titlepage}
     \center
-    \vspace*{4.0cm}
     {\huge {\bf Universidade do Minho}}\\[0.4cm]
     \vspace{3.0cm}
     \textsc{\huge{Processamento de xml}}\\[0.5cm] %TODO melhorar isto
@@ -52,29 +52,21 @@
 \end{titlepage}
 
 \tableofcontents
+\clearpage
 
-\chapter{Introdução}
-    Este trabalho tem como objetivo 
+\section{Introdução}
+    Este trabalho tem como objetivo o processamento de um dump da base de dados
+    do stackoverflow para responder a queries.
 
-\chapter{Descrição do Problema}
+\section{Descrição do Problema}
     Analisando as queries decidimos que seria necessário representar
     as seguintes entidades:
 
-    \section{Utilizadores}
-    Para represantar os \textbf{utilizadores} guardamos os seguintes atributos:
-    \begin{itemize}
-            \item Id
-            \item Biografia
-            \item Nome
-            \item Reputação
-            \item Número de posts
-            \item Lista dos posts
-    \end{itemize}
-
-    \section{Posts}
-    Para represantar os \textbf{posts} dividimos os atributos por duas
+    \subsection{Posts}
+    Para representar os \textbf{posts} dividimos os atributos por duas
      sub estruturas, cujos atributos são:
-        \subsection{Questões}
+        \subsubsection{Questões}
+        \begin{multicols}{2}
         \begin{itemize}
             \item Id
             \item Score
@@ -86,8 +78,10 @@
             \item Lista das respostas
             \item Tags
         \end{itemize}
+        \end{multicols}
 
-        \subsection{Respostas}
+        \subsubsection{Respostas}
+        \begin{multicols}{2}
         \begin{itemize}
             \item Id
             \item Score
@@ -98,9 +92,37 @@
             \item Nome do autor da resposta
             \item Referência da questão a que responde
         \end{itemize}
+        \end{multicols}
+    Além dos dados fornecidos diretamente pelos ficheiros xml, foi tb guardado na
+    \textbf{questão} a lista da \textbf{respostas} desta bem como uma contagem
+    destas, a \textbf{resposta}, inversamente, guarda uma referência para a
+    pergunta a que responde. Com estas informações extra as pesquisas que
+    envolvem relacionar estas duas entidades tornam-se muito eficientes.
 
+        \subsubsection{Posts}
+        Ambas estas estruturas podem ser represantadas de forma comun por um
+        \textbf{Post}. Esta estrutura é necessária para quando é preciso guardar
+        ambas independentemente do tipo que tem, como é o caso do utilizador.
 
-\chapter{Tipo Concreto de Dados}
+    \subsection{Utilizadores}
+    Para representar os \textbf{utilizadores} guardamos os seguintes atributos:
+    \begin{multicols}{3}
+    \begin{itemize}
+            \item Id
+            \item Biografia
+            \item Nome
+            \item Reputação
+            \item Número de posts
+            \item Lista dos posts
+    \end{itemize}
+    \end{multicols}
+    Mais uma vez foram guardadas mais informações para além das disponibilizadas
+    diretamente pelo xml. Foi guardado o número de \textbf{posts} do utilizador
+    (para determinar os utilizadores mais ativos) e a lista destes para permitir
+    pesquisas mais rápidas.
+
+\section{Estruturas de Dados}
+    \subsection{Tipo concreto de dados}
     Para armazenar as entidades descritas acima foi implementado um TCD que
     as armazena de diferentes formas.
     \begin{minted}{C}
@@ -113,18 +135,19 @@ struct TCD_community{
     CALENDARIO calendarioAnswers;
 };
     \end{minted}
-    \section{Hashtables}
+    \subsection{Hashtables}
         Todas as entidades são armazenadas numa hashtable pois para todas são
         necessárias pesquisas por id (ou nome no caso das tags).
-        \subsection{Tags}
+        \subsubsection{Tags}
         A hashtable das tags serve para criar uma associação "Nome Id" visto que
         as questões guardam uma lista com os nomes das tags e para responder à
         query 11 é necessário obter os ids das mesmas.
 
-    \section{Calendário}
+    \subsection{Calendário}
         Foi pensada a utilização de árvores binárias ordenadas por data,
-        mas isto foi considerado ineficiente por várias razões. Foi então,
-        concebida uma estrutura a qual demos o nome de \textbf{Calendário}.
+        mas isto foi considerado ineficiente quando comparada à solução
+        escolhida. Foi então concebida uma estrutura a qual demos o nome
+        de \textbf{Calendário}.
 
         Esta estrutura permite:
         \begin{itemize}
@@ -134,32 +157,42 @@ struct TCD_community{
                       por ordem cronológica normal ou inversa, conforme a
                       ordem dos argumentos.
         \end{itemize}
-        \subsection{DateTime}
+        \subsubsection{DateTime}
         Para a implementação deste foi necessário extender o \textbf{Date} para
-        incluir a hora, minuto, segundo e milissegundo do post. Foi então que
-        foi criado o \textbf{DateTime}
+        incluir a hora, minuto, segundo e milissegundo do post. Foi então foi
+        criado o \textbf{DateTime}
     \begin{minted}{C}
 struct _dateTime{
-    int year;
-    int month;
-    int day;
-    int hours;
-    int minutes;
-    int seconds;
-    int milisseconds;
+    int year, month, day;
+    int hours, minutes, seconds, milisseconds;
 };
     \end{minted}
-        
+        A estrutura em si consiste numa àrvore n-ària (rose tree) especializada.
+        No primeiro nivel temos uma lista de \textbf{anos}. Cada um destes
+        \textbf{anos} é por sí uma lista de \textbf{meses} constituidos por
+        uma lista de \textbf{dias} (de tamanho entre 29 e 31) e cada \textbf{dia}
+        é constituido por 24 \textbf{horas}, cada uma destas uma lista ligada de
+        elementos ordenada por data.
+    %\input{calendario.tex}
+        A escolha de utilização de uma lista ligada para a representar uma hora
+        foi devido às multiplas inserções ordenadas feitas sobre esta que, na
+        maior parte dos casos é feita à cabeça devido à natureza quase ordenada
+        dos posts nos ficheiros.
 
+    \subsection{String Rose Tree}
+    Para auxiliar à resolução da query 11 foi implementada uma estrutura para
+    contar \textit{strings}. Ésta consiste numa àrvore n-ária em que qualquer
+    string representa um caminho unico sobre a àrvore. Assim, quando é
+    efetivamente guardado o número de vezes que cada caminho é precorrido.
 
-\chapter{Modularização Funcional e Resolução das queries}
+\section{Modularização Funcional e Resolução das queries}
     Para aceder aos dados da estrutura principal foi definida uma API
     simples que permite:
     \begin{itemize}
         \item Pesquisas por id de questões, respostas, utilizadores.
-        \item Pesquisas por tag do id desta.
-        \item Pesquisa de listas ordenadas por qualquer critério de utilizadores,
-                questões e respostas.
+        \item Pesquisas de ids de tags dada a designação.
+        \item Pesquisa de listas, ordenadas por qualquer critério, de
+              utilizadores, questões e respostas.
         \item Pesquisa de questões filtradas por qualquer critério.
     \end{itemize}
 
@@ -168,7 +201,7 @@ struct _dateTime{
 
     Para a resolução da query 11 foi implementada uma estrutura para contar tags,
     para que esta contagem destas fosse eficiente.
-\chapter{Conclusões e Trabalho Futuro}
+\section{Conclusões e Trabalho Futuro}
 
 
 \end{document}

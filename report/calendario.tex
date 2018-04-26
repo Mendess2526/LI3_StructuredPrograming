@@ -1,0 +1,35 @@
+\begin{tikzpicture}[>=latex]
+\matrix[mymat,anchor=west,row 2/.style={nodes=draw}]
+at (0,0)
+(mat1)
+{
+  0       &     1       &     (...)       &     7 \\
+  * & * & (...) & ** \\
+};
+\matrix[mymat,anchor=west, row 2/.style={nodes=draw}]
+at (0,-3)
+(mat3)
+{
+  0 & 1 & 2 & 3 & 4 & 5 & (...) & 371 \\
+  * & * & * & * & * & * & (...) & * \\
+};
+
+  \node[above=0pt of mat1]
+  (cella) {Array de anos};
+
+  \node[above=-0pt of mat3]
+  (cella) {Array de meses e dias};
+
+  \node [matrix,draw] at (0,-5) (mat4){Post \\}
+child {node[matrix,draw] {Post \\}}
+child {node[matrix,draw] {Post \\}};
+
+  \node[above=0pt of mat4]
+  (cella) {GSequence de Posts};
+\begin{scope}[shorten <= -2pt]
+\draw[*->]
+  (mat1-2-1.south) -- (mat3-1-1.north);
+\draw[*->]
+  (mat3-2-1.south) -- (mat4.north);
+\end{scope}
+\end{tikzpicture}
