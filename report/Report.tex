@@ -13,10 +13,10 @@
 \usepackage[titletoc]{appendix}
 \geometry{
  a4paper,
- top=3cm,
- bottom=2.5cm,
+ top=1cm,
+ bottom=1cm,
  left=3cm,
- right=2.5cm
+ right=3cm
 }
 \addto\captionsportuguese{% Replace "english" with the language you use
       \renewcommand{\contentsname}%
@@ -51,7 +51,7 @@
 
 \end{titlepage}
 
-\tableofcontents %TODO mudar titulo para indice default
+\tableofcontents
 
 \chapter{Introdução}
     Este trabalho tem como objetivo 
@@ -61,7 +61,7 @@
     as seguintes entidades:
 
     \section{Utilizadores}
-    Para represantar os \textbf{users} guardamos os seguintes atributos:
+    Para represantar os \textbf{utilizadores} guardamos os seguintes atributos:
     \begin{itemize}
             \item Id
             \item Biografia
@@ -119,18 +119,18 @@ struct TCD_community{
         \subsection{Tags}
         A hashtable das tags serve para criar uma associação "Nome Id" visto que
         as questões guardam uma lista com os nomes das tags e para responder à
-        query 11 é necessario obter os ids das mesmas.
+        query 11 é necessário obter os ids das mesmas.
 
     \section{Calendário}
         Foi pensada a utilização de árvores binárias ordenadas por data,
         mas isto foi considerado ineficiente por várias razões. Foi então,
-        concebido uma estrutura a qual demos o nome de \textbf{Calendário}.
+        concebida uma estrutura a qual demos o nome de \textbf{Calendário}.
 
         Esta estrutura permite:
         \begin{itemize}
-                \item Guardar qualquer objecto desde que seja dada
-                      uma passada uma data associada a mesma.
-                \item Iterar sobre os objectos dado um intervalo de tempo
+                \item Guardar qualquer objeto desde que seja
+                      passada uma data associada ao mesmo.
+                \item Iterar sobre os objetos dado um intervalo de tempo
                       por ordem cronológica normal ou inversa, conforme a
                       ordem dos argumentos.
         \end{itemize}
@@ -149,34 +149,25 @@ struct _dateTime{
     int milisseconds;
 };
     \end{minted}
+        
 
-\chapter{Modularização Funcional}
+
+\chapter{Modularização Funcional e Resolução das queries}
     Para aceder aos dados da estrutura principal foi definida uma API
-    simples que permite pesquisas de Utilizadores e posts por id,
-    \begin{minted}{C}
-QUESTION community_get_question(TAD_community com, long id);
-ANSWER community_get_answer(TAD_community com, long id);
-SO_USER community_get_user(TAD_community com, long id);
-    \end{minted}
-    pesquisas do id das tags dado o nome,
-    \begin{minted}{C}
-long community_get_tag_id(TAD_community com, xmlChar* tag);
-    \end{minted}
-    obter listas ordenadas dos utilizadores
-    \begin{minted}{C}
-USERS community_get_sorted_user_list(TAD_community com, ComCmpFunc cfunc, int N);
-    \end{minted}
-    e obter questões ou respostas dentro de intervalos de tempo,
-    ordenadas cronológicamente.
-    \begin{minted}{C}
-void community_iterate_questions(TAD_community com, DATETIME from, DATETIME to,
-                                    void* data, CFunc calFunc);
-void community_iterate_answers(TAD_community com, DATETIME from, DATETIME to,
-                                    void* data, CFunc calFunc);
-    \end{minted}
+    simples que permite:
+    \begin{itemize}
+        \item Pesquisas por id de questões, respostas, utilizadores.
+        \item Pesquisas por tag do id desta.
+        \item Pesquisa de listas ordenadas por qualquer critério de utilizadores,
+                questões e respostas.
+        \item Pesquisa de questões filtradas por qualquer critério.
+    \end{itemize}
 
-\chapter{Resolução das queries}
-    
+    Com estas funções a resolução da maioria das queries mostrou-se
+    trivial.
+
+    Para a resolução da query 11 foi implementada uma estrutura para contar tags,
+    para que esta contagem destas fosse eficiente.
 \chapter{Conclusões e Trabalho Futuro}
 
 
