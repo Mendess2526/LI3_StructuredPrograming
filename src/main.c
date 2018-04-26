@@ -202,8 +202,11 @@ static void printAndDestroyLongList(LONG_list lL, int size){
     if(size < 0) for(size = 0;get_list(lL,size) != 0; size++);
     printf("%s[",YELLOW);
     for(int i = 0; i < size; i++){
-        printf(" %8ld", get_list(lL, i));
-        if(i<size-1) printf(",");
+        printf(" %6ld", get_list(lL, i));
+        if(i<size-1){
+            printf(",");
+            if(((i+1) % 10) == 0) printf("\n ");
+        }
     }
     printf("]%s\n",RESET);
     free_list(lL);
