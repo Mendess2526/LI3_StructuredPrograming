@@ -34,7 +34,7 @@
     \vspace{3.0cm}
     \textsc{\huge{Mestrado Integrado em Engenharia Informática}}\\[0.5cm]
     \vspace{2.0cm}
-    \textsc{Laboratorios de Informática 3}\\[0.5cm]
+    \textsc{Laboratórios de Informática 3}\\[0.5cm]
     \textsc{(2º Ano, 2º Semestre, 2017/2018)}\\[0.5cm]
     \vspace{1.5cm}
     \begin{flushleft}
@@ -47,7 +47,7 @@
     \begin{flushright}
         Braga
 
-        Abril 2018
+        Maio 2018
     \end{flushright}
 
 \end{titlepage}
@@ -62,12 +62,12 @@
     algoritemia e programação imperativa.
 
 \section{Descrição do Problema}
-    Analisando as queries decidimos que seria necessário representar
+    Fazendo uma análise às queries, decidimos que seria necessário representar
     as seguintes entidades:
 
     \subsection{Posts}
     Para representar os \textbf{posts} dividimos os atributos por duas
-     sub estruturas, cujos atributos são:
+     sub estruturas, cujos atributos de cada uma das sub estruturas são:
         \subsubsection{Questões}
         \begin{multicols}{2}
         \begin{itemize}
@@ -96,17 +96,21 @@
             \item Referência da questão a que responde
         \end{itemize}
         \end{multicols}
-    Além dos dados fornecidos diretamente pelos ficheiros xml, foi tb guardado na
-    \textbf{questão} a lista da \textbf{respostas} desta bem como uma contagem
-    destas, a \textbf{resposta}, inversamente, guarda uma referência para a
-    pergunta a que responde. Com estas informações extra as pesquisas que
-    envolvem relacionar estas duas entidades tornam-se muito eficientes.
+    Além dos dados fornecidos diretamente pelos ficheiros xml, decidimos também 
+    guardar na \textbf{questão} a lista das \textbf{respostas} de cada questão, bem 
+    como uma contagem destas. Na \textbf{resposta}, inversamente, guardamos uma
+    referência para a pergunta a que esta responde. Com estas informações extra
+    as pesquisas que envolvem relacionar estas duas entidades tornam-se 
+    mais eficientes.
 
-        \subsubsection{Posts}
-        Ambas estas estruturas podem ser represantadas de forma comun por um
-        \textbf{Post}. Esta estrutura é necessária para quando é preciso guardar
-        ambas independentemente do tipo que tem, como é o caso do utilizador.
+        \subsubsection{Post}
+        Ambas estas estruturas, questões e respostas, podem ser representadas de
+        forma abstrata por um \textbf{Post}.
 
+        Esta estrutura é necessária, pois o utilizador precisa de guardar
+        todas as questões e respostas, sem ser necessário uma distinção entre 
+        os dois tipos.
+        
     \subsection{Utilizadores}
     Para representar os \textbf{utilizadores} guardamos os seguintes atributos:
     \begin{multicols}{3}
@@ -121,8 +125,8 @@
     \end{multicols}
     Mais uma vez foram guardadas mais informações para além das disponibilizadas
     diretamente pelo xml. Foi guardado o número de \textbf{posts} do utilizador
-    (para determinar os utilizadores mais ativos) e a lista destes para permitir
-    pesquisas mais rápidas.
+    (para determinar os utilizadores mais ativos de forma mais rápida) e a lista 
+    destes para permitir pesquisas mais rápidas.
 
 \section{Estruturas de Dados}
     \subsection{Tipo concreto de dados}
@@ -150,62 +154,66 @@ struct TCD_community{
     \subsection{Calendário}
         Foi pensada a utilização de árvores binárias ordenadas por data,
         mas isto foi considerado ineficiente quando comparada à solução
-        escolhida. Foi então concebida uma estrutura a qual demos o nome
+        escolhida. Foi então concebida uma estrutura à qual foi dado o nome
         de \textbf{Calendário}.
 
         Esta estrutura permite:
         \begin{itemize}
                 \item Guardar qualquer objeto desde que seja
                       passada uma data associada ao mesmo.
-                \item Iterar sobre os objetos dado um intervalo de tempo
+                \item Iterar sobre os objetos, dado um intervalo de tempo,
                       por ordem cronológica normal ou inversa, conforme a
                       ordem dos argumentos.
         \end{itemize}
+        
+        A estrutura em si consiste numa árvore n-ària (rose tree) especializada.
+        
+        No primeiro nível temos uma lista de \textbf{anos}. Cada um destes,
+        é constituído por uma lista de \textbf{meses} que são constituídos por
+        uma lista de \textbf{dias}, cujo tamanho varia entre 29 e 31. Cada 
+        \textbf{dia} é constituido por 24 \textbf{horas}, e cada uma destas horas
+        é uma lista ligada de elementos ordenada por data.
+
+        %\input{calendario.tex}
+        A utilização de uma lista ligada para representar uma hora é mais
+        eficiente, pois é necessário fazer inserções ordenadas, que são, em quase
+        todos os casos, feitas à cabeça devido aos posts serem inseridos quase
+        cronologicamente.
+        
         \subsubsection{DateTime}
-        Para a implementação deste foi necessário extender o \textbf{Date} para
-        incluir a hora, minuto, segundo e milissegundo do post. Foi então foi
-        criado o \textbf{DateTime}
+        Para a implementação da estrutura \textbf{Calendário} foi necessário
+        extender o \textbf{Date} para incluir a hora, minuto, segundo e
+        milissegundo da data do post. Foi então criado o \textbf{DateTime}.
     \begin{minted}{C}
 struct _dateTime{
     int year, month, day;
     int hours, minutes, seconds, milisseconds;
 };
     \end{minted}
-        A estrutura em si consiste numa àrvore n-ària (rose tree) especializada.
-        No primeiro nivel temos uma lista de \textbf{anos}. Cada um destes
-        \textbf{anos} é por sí uma lista de \textbf{meses} constituidos por
-        uma lista de \textbf{dias} (de tamanho entre 29 e 31) e cada \textbf{dia}
-        é constituido por 24 \textbf{horas}, cada uma destas uma lista ligada de
-        elementos ordenada por data.
-    %\input{calendario.tex}
-        A escolha de utilização de uma lista ligada para a representar uma hora
-        foi devido às multiplas inserções ordenadas feitas sobre esta que, na
-        maior parte dos casos é feita à cabeça devido à natureza quase ordenada
-        dos posts nos ficheiros.
 
     \subsection{String Rose Tree}
     Para auxiliar à resolução da query 11 foi implementada uma estrutura para
-    contar \textit{strings}. Ésta consiste numa àrvore n-ária em que qualquer
-    string representa um caminho único sobre a àrvore. Assim, quando é inserida
-    uma string, efetivamente é guardado o número de vezes que esse caminho é
-    precorrido.
+    contar \textit{strings}. Esta, consiste numa árvore n-ária em que qualquer
+    string representa um caminho único sobre a árvore. Assim, quando é inserida
+    uma string, efetivamente, é guardado o número de vezes que esse caminho é
+    percorrido.
 
 \section{Modularização Funcional e Resolução das queries}
     Para aceder aos dados da estrutura principal foi definida uma API
     simples que permite:
     \begin{itemize}
-        \item Pesquisas por id de questões, respostas, utilizadores.
+        \item Pesquisas por id de questões, respostas e utilizadores.
         \item Pesquisas de ids de tags dada a designação.
         \item Pesquisa de listas, ordenadas por qualquer critério, de
               utilizadores, questões e respostas.
-        \item Pesquisa de questões filtradas por qualquer critério.
+        \item Pesquisas de questões filtradas por qualquer critério.
     \end{itemize}
 
     Com estas funções a resolução da maioria das queries mostrou-se
     trivial.
 
     Para a resolução da query 11 foi implementada uma estrutura para contar tags,
-    para que esta contagem destas fosse eficiente.
+    para que esta contagem fosse eficiente.
 
 \section{Conclusões e Trabalho Futuro}
     Em conclusão, o grupo considera que o trabalho foi realizado na sua
@@ -213,8 +221,8 @@ struct _dateTime{
 
     Um aspecto que poderia ser melhorado é a ordenação de utilizadores. Estes
     foram guardados apenas numa tabela de hash e quando é necessária um lista
-    ordenada dos mesmos esta tem de ser percorrida na sua totalidade. Esta
-    decisão centrou-se no facto de nenhuma única ordenação se apresentar
+    ordenada dos mesmos, esta tem de ser percorrida na sua totalidade. Esta
+    decisão, centrou-se no facto de que nenhuma única ordenação se apresenta
     particularmente vantajosa, face às demais.
 
 \end{document}
