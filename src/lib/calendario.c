@@ -32,8 +32,8 @@ typedef struct _year{
 struct _calendario{
     int nYears;
     YEAR *years;
-    CCompareFunc compareFunc;
-    CFreeFunc freeFunc;
+    CalCmpFunc compareFunc;
+    CalFreeFunc freeFunc;
 };
 
 /**
@@ -72,7 +72,7 @@ static YEAR year_create();
  * @param compareFunc função de comparação para ordenar os posts
  *                    cronológicamente
  */
-static inline void hour_add_post(HOUR h, void* post, CCompareFunc compareFunc);
+static inline void hour_add_post(HOUR h, void* post, CalCmpFunc compareFunc);
 /**
  * Adiciona um post a um dia.
  * @param day dia onde adicionar
@@ -81,7 +81,7 @@ static inline void hour_add_post(HOUR h, void* post, CCompareFunc compareFunc);
  * @param compareFunc função de comparação para ordenar os posts
  *                    cronológicamente
  */
-static void day_add_post(DAY day, DATETIME d, void* post, CCompareFunc compareFunc);
+static void day_add_post(DAY day, DATETIME d, void* post, CalCmpFunc compareFunc);
 /**
  * Adiciona um post a um mês.
  * @param month mês onde adicionar
@@ -90,7 +90,7 @@ static void day_add_post(DAY day, DATETIME d, void* post, CCompareFunc compareFu
  * @param compareFunc função de comparação para ordenar os posts
  *                    cronológicamente
  */
-static void month_add_post(MONTH month, DATETIME d, void* post, CCompareFunc compareFunc);
+static void month_add_post(MONTH month, DATETIME d, void* post, CalCmpFunc compareFunc);
 /**
  * Adiciona um post a um ano.
  * @param year ano onde adicionar
@@ -99,7 +99,7 @@ static void month_add_post(MONTH month, DATETIME d, void* post, CCompareFunc com
  * @param compareFunc função de comparação para ordenar os posts
  *                    cronológicamente
  */
-static void year_add_post(YEAR year, DATETIME d, void* post, CCompareFunc compareFunc);
+static void year_add_post(YEAR year, DATETIME d, void* post, CalCmpFunc compareFunc);
 
 /**
  * Itera sobre os posts de uma hora por ordem cronologica.
@@ -108,7 +108,7 @@ static void year_add_post(YEAR year, DATETIME d, void* post, CCompareFunc compar
  * @param calFunc Função que será aplicada a todos os elementos
  * @returns 1 se a iteração deve continuar, 0 caso contrário.
  */
-static inline int hour_iterate_forward(HOUR hour, void *data, CFunc calFunc);
+static inline int hour_iterate_forward(HOUR hour, void *data, CalFunc calFunc);
 /**
  * Itera sobre os posts de um dia por ordem cronologica.
  * @param day Dia onde iterar
@@ -116,7 +116,7 @@ static inline int hour_iterate_forward(HOUR hour, void *data, CFunc calFunc);
  * @param calFunc Função que será aplicada a todos os elementos
  * @returns 1 se a iteração deve continuar, 0 caso contrário.
  */
-static inline int day_iterate_forward(DAY day, void *data, CFunc calFunc);
+static inline int day_iterate_forward(DAY day, void *data, CalFunc calFunc);
 /**
  * Itera sobre os posts de um mês por ordem cronologica.
  * @param month Mês onde iterar
@@ -128,7 +128,7 @@ static inline int day_iterate_forward(DAY day, void *data, CFunc calFunc);
  * @param calFunc Função que será aplicada a todos os elementos
  * @returns 1 se a iteração deve continuar, 0 caso contrário.
  */
-static inline int month_iterate_forward(MONTH month, DATETIME from, DATETIME to, int isStartM, int isEndM, void* data, CFunc calFunc);
+static inline int month_iterate_forward(MONTH month, DATETIME from, DATETIME to, int isStartM, int isEndM, void* data, CalFunc calFunc);
 /**
  * Itera sobre os posts de um ano por ordem cronologica.
  * @param year Ano onde iterar
@@ -140,7 +140,7 @@ static inline int month_iterate_forward(MONTH month, DATETIME from, DATETIME to,
  * @param calFunc Função que será aplicada a todos os elementos
  * @returns 1 se a iteração deve continuar, 0 caso contrário.
  */
-static inline int year_iterate_forward(YEAR year, DATETIME from, DATETIME to, int isStartY, int isEndY, void* data, CFunc calFunc);
+static inline int year_iterate_forward(YEAR year, DATETIME from, DATETIME to, int isStartY, int isEndY, void* data, CalFunc calFunc);
 /**
  * Itera sobre os posts de um calendario por ordem cronologica.
  * @param hour Hora onde iterar
@@ -150,7 +150,7 @@ static inline int year_iterate_forward(YEAR year, DATETIME from, DATETIME to, in
  * @param calFunc Função que será aplicada a todos os elementos
  * @returns 1 se a iteração deve continuar, 0 caso contrário.
  */
-static void calendario_iterate_forward(CALENDARIO cal, DATETIME from, DATETIME to, void* data, CFunc calFunc);
+static void calendario_iterate_forward(CALENDARIO cal, DATETIME from, DATETIME to, void* data, CalFunc calFunc);
 
 /**
  * Itera sobre os posts de uma hora por ordem cronologica inversa.
@@ -159,7 +159,7 @@ static void calendario_iterate_forward(CALENDARIO cal, DATETIME from, DATETIME t
  * @param calFunc Função que será aplicada a todos os elementos
  * @returns 1 se a iteração deve continuar, 0 caso contrário.
  */
-static inline int hour_iterate_backwards(HOUR hour, void *data, CFunc calFunc);
+static inline int hour_iterate_backwards(HOUR hour, void *data, CalFunc calFunc);
 /**
  * Itera sobre os posts de um dia por ordem cronologica inversa.
  * @param day Dia onde iterar
@@ -167,7 +167,7 @@ static inline int hour_iterate_backwards(HOUR hour, void *data, CFunc calFunc);
  * @param calFunc Função que será aplicada a todos os elementos
  * @returns 1 se a iteração deve continuar, 0 caso contrário.
  */
-static inline int day_iterate_backwards(DAY day, void *data, CFunc calFunc);
+static inline int day_iterate_backwards(DAY day, void *data, CalFunc calFunc);
 /**
  * Itera sobre os posts de um mês por ordem cronologica inversa.
  * @param month Mês onde iterar
@@ -179,7 +179,7 @@ static inline int day_iterate_backwards(DAY day, void *data, CFunc calFunc);
  * @param calFunc Função que será aplicada a todos os elementos
  * @returns 1 se a iteração deve continuar, 0 caso contrário.
  */
-static inline int month_iterate_backwards(MONTH month, DATETIME from, DATETIME to, int isStartM, int isEndM, void* data, CFunc calFunc);
+static inline int month_iterate_backwards(MONTH month, DATETIME from, DATETIME to, int isStartM, int isEndM, void* data, CalFunc calFunc);
 /**
  * Itera sobre os posts de um ano por ordem cronologica inversa.
  * @param year Ano onde iterar
@@ -191,7 +191,7 @@ static inline int month_iterate_backwards(MONTH month, DATETIME from, DATETIME t
  * @param calFunc Função que será aplicada a todos os elementos
  * @returns 1 se a iteração deve continuar, 0 caso contrário.
  */
-static inline int year_iterate_backwards(YEAR year, DATETIME from, DATETIME to, int isStartY, int isEndY, void* data, CFunc calFunc);
+static inline int year_iterate_backwards(YEAR year, DATETIME from, DATETIME to, int isStartY, int isEndY, void* data, CalFunc calFunc);
 /**
  * Itera sobre os posts de um calendario por ordem cronologica inversa.
  * @param hour Hora onde iterar
@@ -201,32 +201,32 @@ static inline int year_iterate_backwards(YEAR year, DATETIME from, DATETIME to, 
  * @param calFunc Função que será aplicada a todos os elementos
  * @returns 1 se a iteração deve continuar, 0 caso contrário.
  */
-static void calendario_iterate_backwards(CALENDARIO cal, DATETIME from, DATETIME to, void* data, CFunc calFunc);
+static void calendario_iterate_backwards(CALENDARIO cal, DATETIME from, DATETIME to, void* data, CalFunc calFunc);
 
 /**
  * Liberta a memória ocupada por uma hora
  * @param h Instância a libertar
  * @param freeFunc função que liberta os elementos da estrutura
  */
-static void hour_destroy(HOUR h, CFreeFunc freeFunc);
+static void hour_destroy(HOUR h, CalFreeFunc freeFunc);
 /**
  * Liberta a memória ocupada por um dia
  * @param d Instância a libertar
  * @param freeFunc função que liberta os elementos da estrutura
  */
-static void day_destroy(DAY d, CFreeFunc freeFunc);
+static void day_destroy(DAY d, CalFreeFunc freeFunc);
 /**
  * Liberta a memória ocupada por um mês
  * @param m Instância a libertar
  * @param freeFunc função que liberta os elementos da estrutura
  */
-static void month_destroy(MONTH m, CFreeFunc freeFunc);
+static void month_destroy(MONTH m, CalFreeFunc freeFunc);
 /**
  * Liberta a memória ocupada por um ano
  * @param y Instância a libertar
  * @param freeFunc função que liberta os elementos da estrutura
  */
-static void year_destroy(YEAR y, CFreeFunc freeFunc);
+static void year_destroy(YEAR y, CalFreeFunc freeFunc);
 
 static int nrDays (int m){
     if(m == 3 || m == 5 || m == 8 || m == 10) return 30;
@@ -262,7 +262,7 @@ static YEAR year_create(){
     return a;
 }
 
-CALENDARIO calendario_create(int nYears, CCompareFunc compareFunc, CFreeFunc freeFunc){
+CALENDARIO calendario_create(int nYears, CalCmpFunc compareFunc, CalFreeFunc freeFunc){
     CALENDARIO c = (CALENDARIO) malloc(sizeof(struct _calendario));
     c->nYears = nYears;
     c->years = (YEAR*) calloc(nYears, sizeof(struct _year*));
@@ -271,26 +271,26 @@ CALENDARIO calendario_create(int nYears, CCompareFunc compareFunc, CFreeFunc fre
     return c;
 }
 
-static inline void hour_add_post(HOUR h, void* post, CCompareFunc compareFunc){
+static inline void hour_add_post(HOUR h, void* post, CalCmpFunc compareFunc){
     h->count += 1;
     h->posts = g_list_insert_sorted(h->posts, post, compareFunc);
     if(h->last==NULL) h->last = h->posts;
     while(h->last->next!=NULL) h->last = h->last->next;
 }
 
-static void day_add_post(DAY day, DATETIME d, void* post, CCompareFunc compareFunc){
+static void day_add_post(DAY day, DATETIME d, void* post, CalCmpFunc compareFunc){
     int hour = dateTime_get_hours(d);
     if(day->hours[hour] == NULL) day->hours[hour] = hour_create();
     hour_add_post(day->hours[hour], post, compareFunc);
 }
 
-static void month_add_post(MONTH month, DATETIME d, void* post, CCompareFunc compareFunc){
+static void month_add_post(MONTH month, DATETIME d, void* post, CalCmpFunc compareFunc){
     int day = dateTime_get_day(d);
     if(month->days[day] == NULL) month->days[day] = day_create();
     day_add_post(month->days[day], d, post, compareFunc);
 }
 
-static void year_add_post(YEAR year, DATETIME d, void* post, CCompareFunc compareFunc){
+static void year_add_post(YEAR year, DATETIME d, void* post, CalCmpFunc compareFunc){
     int month = dateTime_get_month(d);
     if(year->months[month] == NULL)
         year->months[month] = month_create(nrDays(month));
@@ -303,7 +303,7 @@ void calendario_add_post(CALENDARIO cal, void* post, DATETIME d){
     year_add_post(cal->years[year], d, post, cal->compareFunc);
 }
 
-static inline int hour_iterate_forward(HOUR hour, void* data, CFunc calFunc){
+static inline int hour_iterate_forward(HOUR hour, void* data, CalFunc calFunc){
     if(!hour) return 1;
     for(GList* cur = hour->last; cur != NULL; cur = cur->prev){
         if((*calFunc)(cur->data, data) == 0)
@@ -312,7 +312,7 @@ static inline int hour_iterate_forward(HOUR hour, void* data, CFunc calFunc){
     return 1;
 }
 
-static inline int day_iterate_forward(DAY day, void* data, CFunc calFunc){
+static inline int day_iterate_forward(DAY day, void* data, CalFunc calFunc){
     if(!day) return 1;
     for(int i=0; i<24; i++){
         if(hour_iterate_forward(day->hours[i], data, calFunc) == 0)
@@ -321,7 +321,7 @@ static inline int day_iterate_forward(DAY day, void* data, CFunc calFunc){
     return 1;
 }
 
-static inline int month_iterate_forward(MONTH month, DATETIME from, DATETIME to, int isStartM, int isEndM, void* data, CFunc calFunc){
+static inline int month_iterate_forward(MONTH month, DATETIME from, DATETIME to, int isStartM, int isEndM, void* data, CalFunc calFunc){
     if(!month) return 1;
     int fromD;
     int toD;
@@ -354,7 +354,7 @@ static inline int month_iterate_forward(MONTH month, DATETIME from, DATETIME to,
     return 1;
 }
 
-static inline int year_iterate_forward(YEAR year, DATETIME from, DATETIME to, int isStartY, int isEndY, void* data, CFunc calFunc){
+static inline int year_iterate_forward(YEAR year, DATETIME from, DATETIME to, int isStartY, int isEndY, void* data, CalFunc calFunc){
     if(!year) return 1;
     int fromM;
     int toM;
@@ -390,7 +390,7 @@ static inline int year_iterate_forward(YEAR year, DATETIME from, DATETIME to, in
     return 1;
 }
 
-static void calendario_iterate_forward(CALENDARIO cal, DATETIME from, DATETIME to, void* data, CFunc calFunc){
+static void calendario_iterate_forward(CALENDARIO cal, DATETIME from, DATETIME to, void* data, CalFunc calFunc){
     if(!from || !to) return;
     int fromY = ANO2INDEX(dateTime_get_year(from));
     int toY = ANO2INDEX(dateTime_get_year(to));
@@ -407,7 +407,7 @@ static void calendario_iterate_forward(CALENDARIO cal, DATETIME from, DATETIME t
     }
 }
 
-static inline int hour_iterate_backwards(HOUR hour, void* data, CFunc calFunc){
+static inline int hour_iterate_backwards(HOUR hour, void* data, CalFunc calFunc){
     if(!hour) return 1;
     for(GList* cur = hour->posts; cur != NULL; cur = cur->next){
         if((*calFunc)(cur->data, data) == 0)
@@ -416,7 +416,7 @@ static inline int hour_iterate_backwards(HOUR hour, void* data, CFunc calFunc){
     return 1;
 }
 
-static inline int day_iterate_backwards(DAY day, void* data, CFunc calFunc){
+static inline int day_iterate_backwards(DAY day, void* data, CalFunc calFunc){
     if(!day) return 1;
     for(int i=23; i>=0; i--){
         if(hour_iterate_backwards(day->hours[i], data, calFunc) == 0)
@@ -425,7 +425,7 @@ static inline int day_iterate_backwards(DAY day, void* data, CFunc calFunc){
     return 1;
 }
 
-static inline int month_iterate_backwards(MONTH month, DATETIME from, DATETIME to, int isStartM, int isEndM, void* data, CFunc calFunc){
+static inline int month_iterate_backwards(MONTH month, DATETIME from, DATETIME to, int isStartM, int isEndM, void* data, CalFunc calFunc){
     if(!month) return 1;
     int fromD;
     int toD;
@@ -458,7 +458,7 @@ static inline int month_iterate_backwards(MONTH month, DATETIME from, DATETIME t
     return 1;
 }
 
-static inline int year_iterate_backwards(YEAR year, DATETIME from, DATETIME to, int isStartY, int isEndY, void* data, CFunc calFunc){
+static inline int year_iterate_backwards(YEAR year, DATETIME from, DATETIME to, int isStartY, int isEndY, void* data, CalFunc calFunc){
     if(!year) return 1;
     int fromM;
     int toM;
@@ -494,7 +494,7 @@ static inline int year_iterate_backwards(YEAR year, DATETIME from, DATETIME to, 
     return 1;
 }
 
-static void calendario_iterate_backwards(CALENDARIO cal, DATETIME from, DATETIME to, void* data, CFunc calFunc){
+static void calendario_iterate_backwards(CALENDARIO cal, DATETIME from, DATETIME to, void* data, CalFunc calFunc){
     if(!from || !to) return;
     int fromY = ANO2INDEX(dateTime_get_year(from));
     int toY = ANO2INDEX(dateTime_get_year(to));
@@ -511,20 +511,20 @@ static void calendario_iterate_backwards(CALENDARIO cal, DATETIME from, DATETIME
     }
 }
 
-void calendario_iterate(CALENDARIO cal, DATETIME from, DATETIME to, void* data, CFunc calFunc){
+void calendario_iterate(CALENDARIO cal, DATETIME from, DATETIME to, void* data, CalFunc calFunc){
     if(dateTime_compare(from,to) < 0)
         calendario_iterate_forward(cal,from, to, data, calFunc);
     else calendario_iterate_backwards(cal, from, to, data, calFunc);
 }
 
-static void hour_destroy(HOUR h, CFreeFunc freeFunc){
+static void hour_destroy(HOUR h, CalFreeFunc freeFunc){
     if(h==NULL) return;
     if(freeFunc) g_list_free_full(h->posts, freeFunc);
     else g_list_free(h->posts);
     free(h);
 }
 
-static void day_destroy(DAY d, CFreeFunc freeFunc){
+static void day_destroy(DAY d, CalFreeFunc freeFunc){
     if(d==NULL) return;
     for(int i=0; i<24; i++){
         hour_destroy(d->hours[i], freeFunc);
@@ -533,7 +533,7 @@ static void day_destroy(DAY d, CFreeFunc freeFunc){
     free(d);
 }
 
-static void month_destroy(MONTH m, CFreeFunc freeFunc){
+static void month_destroy(MONTH m, CalFreeFunc freeFunc){
     if(m==NULL) return;
     for(int i=0; i<(m->nDays); i++){
         day_destroy(m->days[i], freeFunc);
@@ -542,7 +542,7 @@ static void month_destroy(MONTH m, CFreeFunc freeFunc){
     free(m);
 }
 
-static void year_destroy(YEAR y, CFreeFunc freeFunc){
+static void year_destroy(YEAR y, CalFreeFunc freeFunc){
     if(y==NULL) return;
     for(int i=0; i<12; i++){
         month_destroy(y->months[i], freeFunc);
@@ -559,14 +559,14 @@ void calendario_destroy(CALENDARIO cal){
     free(cal);
 }
 
-static void printHora(HOUR hour, CPrintFunction printFuncion){
+static void printHora(HOUR hour, CalPrintFunc printFuncion){
     if(!hour) return;
     for(GList *cur = hour->posts; cur; cur = g_list_next(cur)){
         (*printFuncion)(cur->data);
     }
 }
 
-static void printDia(DAY day, CPrintFunction printFuncion){
+static void printDia(DAY day, CalPrintFunc printFuncion){
     if(!day) return;
     for(int i=0; i<24; i++){
         printf("\t\t\tHora: %d\n",i);
@@ -574,7 +574,7 @@ static void printDia(DAY day, CPrintFunction printFuncion){
     }
 }
 
-static void printMes(MONTH month, CPrintFunction printFuncion){
+static void printMes(MONTH month, CalPrintFunc printFuncion){
     if(!month) return;
     for(int i=0; i<month->nDays; i++){
         printf("\t\tDia: %d\n",i);
@@ -582,7 +582,7 @@ static void printMes(MONTH month, CPrintFunction printFuncion){
     }
 }
 
-static void printAno(YEAR year, CPrintFunction printFuncion){
+static void printAno(YEAR year, CalPrintFunc printFuncion){
     if(!year) return;
     for(int i=0; i<12;i++){
         printf("\tMes: %d\n",i);
@@ -590,7 +590,7 @@ static void printAno(YEAR year, CPrintFunction printFuncion){
     }
 }
 
-void printCalendario(CALENDARIO cal, CPrintFunction printFuncion){
+void printCalendario(CALENDARIO cal, CalPrintFunc printFuncion){
     for(int i=0; i< cal->nYears; i++){
         printf("Ano: %d\n",i);
         printAno(cal->years[i], printFuncion);

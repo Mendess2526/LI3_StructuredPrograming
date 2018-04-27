@@ -1,5 +1,6 @@
 #include "question.h"
 #include "common.h"
+#include "dateTimeInterval.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -74,6 +75,14 @@ int question_get_answer_count(QUESTION question){
     return question->answer_count;
 }
 
+int question_get_answer_count_between_dates(QUESTION question, DATETIME_INTERVAL dti){
+    int i = 0;
+    for(ANSWERS as = question->answers; as; as = as->next){
+        if(dateTime_interval_is_between(dti, answer_get_date((ANSWER) as->data)))
+            i++;
+    }
+    return i;
+}
 ANSWERS question_get_answers(QUESTION question){
     return question->answers;
 }
@@ -98,6 +107,12 @@ void question_destroy_generic(gpointer question){
 
 int question_answer_count_cmp(const void* a, const void* b){
     return ((QUESTION) a)->answer_count - ((QUESTION) b)->answer_count;
+}
+
+int question_answer_count_cmp_with_dates(const void* a, const void* b, const void* dates){
+    DATETIME_INTERVAL dti = (DATETIME_INTERVAL) dates;
+    return question_get_answer_count_between_dates((QUESTION) a, dti)
+         - question_get_answer_count_between_dates((QUESTION) b, dti);
 }
 
 int question_date_cmp(const void* a, const void* b){

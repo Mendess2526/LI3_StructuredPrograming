@@ -3,8 +3,8 @@
 
 /**
  * @file
- * Módulo que define o calendário. Este é uma estrutura que permite guardar
- * valores arbitrários associados a uma data.
+ * \brief Módulo que define o calendário. Este é uma estrutura que permite guardar
+ *        valores arbitrários associados a uma data.
  */
 #include "post.h"
 #include "date.h"
@@ -18,7 +18,7 @@
  * @param compareFunc Função que compara datas dos elementos inseridos.
  * @param freeFunc Função que liberta a memória ocupada pelos elementos inseridos.
  */
-CALENDARIO calendario_create(int nYears, CCompareFunc compareFunc, CFreeFunc freeFunc);
+CALENDARIO calendario_create(int nYears, CalCmpFunc compareFunc, CalFreeFunc freeFunc);
 
  /**
  * Adiciona um post no calendário.
@@ -36,7 +36,7 @@ void calendario_add_post(CALENDARIO cal, void* post, DATETIME d);
  * @param data Informação passada a calFunc.
  * @param calFunc Função chamada para cada elemento entre as datas.
  */
-void calendario_iterate(CALENDARIO cal, DATETIME from, DATETIME to, void* data, CFunc calFunc);
+void calendario_iterate(CALENDARIO cal, DATETIME from, DATETIME to, void* data, CalFunc calFunc);
 
  /**
  * Liberta a memória ocupada pelo calendário.
@@ -46,6 +46,6 @@ void calendario_destroy(CALENDARIO cal);
 
 /* ------------- PRINTING --------------------- */
 
-void printCalendario(CALENDARIO cal, CPrintFunction printFunction);
+void printCalendario(CALENDARIO cal, CalPrintFunc printFunction);
 
 #endif /* __CALENDARIO_H__ */

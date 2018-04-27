@@ -3,8 +3,8 @@
 
 /**
  * @file
- * Ficheiro que define a API para interagir com as estururas
- * definidas que armazenam toda a informação retirada dos ficheiros xml.
+ * \brief Módulo que define a API para interagir com as estururas
+ *        definidas que armazenam toda a informação retirada dos ficheiros xml.
  */
 #include "date.h"
 #include "soUser.h"
@@ -132,6 +132,18 @@ typedef GSList* QUESTIONS;
  */
 QUESTIONS community_get_sorted_question_list(TAD_community com, DATETIME from, DATETIME to, ComCmpFunc func, int N);
 
+ /**
+ * Retorna uma lista ordenada de questões.
+ * @param com Uma instância da estrutura.
+ * @param from A data de início.
+ * @param to A data do fim.
+ * @param func Função de comparação.
+ * @param N Tamanho da lista retornada.
+ * @param compare_data Informação extra passada a função de comparação.
+ * @returns Uma lista ordenada de questões.
+ */
+QUESTIONS community_get_sorted_question_list_with_data(TAD_community com, DATETIME from, DATETIME to, ComGetValueFunc func, int N, void* compare_data);
+
 /** Lista ligada de respostas. */
 typedef GSList* ANSWERS;
 
@@ -174,7 +186,7 @@ long community_get_tag_id(TAD_community com, xmlChar* tag);
  * @param data Informação para passar à função.
  * @param calFunc A função aplicada a cada questão.
  */
-void community_iterate_questions(TAD_community com, DATETIME from, DATETIME to, void* data, CFunc calFunc);
+void community_iterate_questions(TAD_community com, DATETIME from, DATETIME to, void* data, CalFunc calFunc);
 
  /**
  * Itera pelas respostas, por ordem cronológica, aplicando a função dada a cada resposta.
@@ -184,17 +196,15 @@ void community_iterate_questions(TAD_community com, DATETIME from, DATETIME to, 
  * @param data Informação para passar à função.
  * @param calFunc A função aplicada a cada resposta.
  */
-void community_iterate_answers(TAD_community com, DATETIME from, DATETIME to, void* data, CFunc calFunc);
+void community_iterate_answers(TAD_community com, DATETIME from, DATETIME to, void* data, CalFunc calFunc);
 
 /* ------------- PRINTING --------------------- */
 
-void printUsers(TAD_community com);
+void community_print_users(TAD_community com);
 
-void printQuestions(TAD_community com);
+void community_print_questions(TAD_community com);
 
-void printAnswers(TAD_community com);
-
-void printFavouritesCount(TAD_community com);
+void community_print_answers(TAD_community com);
 
 void community_print_calendario(TAD_community com);
 

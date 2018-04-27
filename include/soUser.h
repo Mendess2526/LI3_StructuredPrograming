@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Módulo que define um user.
+ * \brief Módulo que define um user.
  */
 #include "post.h"
 #include "types.h"

@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Módulo que define uma resposta.
+ * \brief Módulo que define uma resposta.
  */
 #include "dateTime.h"
 #include "question.h"

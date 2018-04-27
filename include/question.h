@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Módulo que define uma questão.
+ * \brief Módulo que define uma questão.
  */
 #include "dateTime.h"
 #include "answer.h"
@@ -90,6 +90,10 @@ xmlChar *question_get_owner_name(QUESTION question);
  */
 int question_get_answer_count(QUESTION question);
 
+int question_get_answer_count_between_dates(QUESTION question, DATETIME_INTERVAL dti);
+
+/** Lista ligada de respostas. */
+typedef GSList* ANSWERS;
 
  /**
  * Retorna uma lista com as respostas da questão.
@@ -130,6 +134,8 @@ void question_destroy_generic(gpointer question);
  *          as questões têm o mesmo número de respostas.
  */
 int question_answer_count_cmp(const void* a, const void* b);
+
+int question_answer_count_cmp_with_dates(const void* a, const void* b, const void* dates);
 
  /**
  * Compara duas questões conforme a data.

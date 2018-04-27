@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Módulo que define um dateTime. Esta estrutura representa uma data e hora.
+ * \brief Módulo que define um dateTime. Esta estrutura representa uma data e hora.
  */
 #include "types.h"
 
