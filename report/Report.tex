@@ -13,6 +13,7 @@
 \usepackage[cache=false]{minted}
 \usepackage{pdflscape}
 \usepackage[titletoc]{appendix}
+\usepackage{hyperref}
 \geometry{
  a4paper,
  top=1cm,
@@ -55,8 +56,10 @@
 \clearpage
 
 \section{Introdução}
-    Este trabalho tem como objetivo o processamento de um dump da base de dados
-    do stackoverflow para responder a queries.
+    Este trabalho tem como objetivo o processamento de qualquer \textit{dump}
+    da base de dados do site \href{www.stackoverflow.com}{StackOverflow} para
+    responder a queries de forma eficiente, aplicando conhecimentos de
+    algoritemia e programação imperativa.
 
 \section{Descrição do Problema}
     Analisando as queries decidimos que seria necessário representar
@@ -136,12 +139,13 @@ struct TCD_community{
 };
     \end{minted}
     \subsection{Hashtables}
-        Todas as entidades são armazenadas numa hashtable pois para todas são
-        necessárias pesquisas por id (ou nome no caso das tags).
+        Todas as entidades são armazenadas numa tabela de hash pois para todas
+        são necessárias pesquisas por id (ou nome no caso das tags).
+
         \subsubsection{Tags}
-        A hashtable das tags serve para criar uma associação "Nome Id" visto que
-        as questões guardam uma lista com os nomes das tags e para responder à
-        query 11 é necessário obter os ids das mesmas.
+        A tabela de hash das \textit{tags} serve para criar uma associação
+        $Nome \to Id$ visto que as questões guardam uma lista com os nomes das
+        tags e para responder à query 11 é necessário obter os ids das mesmas.
 
     \subsection{Calendário}
         Foi pensada a utilização de árvores binárias ordenadas por data,
@@ -182,8 +186,9 @@ struct _dateTime{
     \subsection{String Rose Tree}
     Para auxiliar à resolução da query 11 foi implementada uma estrutura para
     contar \textit{strings}. Ésta consiste numa àrvore n-ária em que qualquer
-    string representa um caminho unico sobre a àrvore. Assim, quando é
-    efetivamente guardado o número de vezes que cada caminho é precorrido.
+    string representa um caminho único sobre a àrvore. Assim, quando é inserida
+    uma string, efetivamente é guardado o número de vezes que esse caminho é
+    precorrido.
 
 \section{Modularização Funcional e Resolução das queries}
     Para aceder aos dados da estrutura principal foi definida uma API
@@ -201,7 +206,15 @@ struct _dateTime{
 
     Para a resolução da query 11 foi implementada uma estrutura para contar tags,
     para que esta contagem destas fosse eficiente.
-\section{Conclusões e Trabalho Futuro}
 
+\section{Conclusões e Trabalho Futuro}
+    Em conclusão, o grupo considera que o trabalho foi realizado na sua
+    totalidade de forma eficiente e correta, respondendo a todas as queries.
+
+    Um aspecto que poderia ser melhorado é a ordenação de utilizadores. Estes
+    foram guardados apenas numa tabela de hash e quando é necessária um lista
+    ordenada dos mesmos esta tem de ser percorrida na sua totalidade. Esta
+    decisão centrou-se no facto de nenhuma única ordenação se apresentar
+    particularmente vantajosa, face às demais.
 
 \end{document}
