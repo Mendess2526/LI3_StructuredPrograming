@@ -25,6 +25,7 @@
       \renewcommand{\contentsname}
           {Índice}
 }
+
 \begin{document}
 \begin{titlepage}
     \center
@@ -96,11 +97,11 @@
             \item Referência da questão a que responde
         \end{itemize}
         \end{multicols}
-    Além dos dados fornecidos diretamente pelos ficheiros xml, decidimos também 
-    guardar na \textbf{questão} a lista das \textbf{respostas} de cada questão, bem 
-    como uma contagem destas. Na \textbf{resposta}, inversamente, guardamos uma
-    referência para a pergunta a que esta responde. Com estas informações extra
-    as pesquisas que envolvem relacionar estas duas entidades tornam-se 
+    Além dos dados fornecidos diretamente pelos ficheiros xml, decidimos também
+    guardar na \textbf{questão} a lista das \textbf{respostas} de cada questão,
+    bem como uma contagem destas. Na \textbf{resposta}, inversamente, guardamos
+    uma referência para a pergunta a que esta responde. Com estas informações
+    extra as pesquisas que envolvem relacionar estas duas entidades tornam-se
     mais eficientes.
 
         \subsubsection{Post}
@@ -108,9 +109,9 @@
         forma abstrata por um \textbf{Post}.
 
         Esta estrutura é necessária, pois o utilizador precisa de guardar
-        todas as questões e respostas, sem ser necessário uma distinção entre 
+        todas as questões e respostas, sem ser necessário uma distinção entre
         os dois tipos.
-        
+
     \subsection{Utilizadores}
     Para representar os \textbf{utilizadores} guardamos os seguintes atributos:
     \begin{multicols}{3}
@@ -125,7 +126,7 @@
     \end{multicols}
     Mais uma vez foram guardadas mais informações para além das disponibilizadas
     diretamente pelo xml. Foi guardado o número de \textbf{posts} do utilizador
-    (para determinar os utilizadores mais ativos de forma mais rápida) e a lista 
+    (para determinar os utilizadores mais ativos de forma mais rápida) e a lista
     destes para permitir pesquisas mais rápidas.
 
 \section{Estruturas de Dados}
@@ -165,21 +166,22 @@ struct TCD_community{
                       por ordem cronológica normal ou inversa, conforme a
                       ordem dos argumentos.
         \end{itemize}
-        
+
         A estrutura em si consiste numa árvore n-ària (rose tree) especializada.
-        
+
         No primeiro nível temos uma lista de \textbf{anos}. Cada um destes,
         é constituído por uma lista de \textbf{meses} que são constituídos por
-        uma lista de \textbf{dias}, cujo tamanho varia entre 29 e 31. Cada 
+        uma lista de \textbf{dias}, cujo tamanho varia entre 29 e 31. Cada
         \textbf{dia} é constituido por 24 \textbf{horas}, e cada uma destas horas
         é uma lista ligada de elementos ordenada por data.
 
-        %\input{calendario.tex}
+        \input{calendario.tex}
+
         A utilização de uma lista ligada para representar uma hora é mais
         eficiente, pois é necessário fazer inserções ordenadas, que são, em quase
         todos os casos, feitas à cabeça devido aos posts serem inseridos quase
         cronologicamente.
-        
+
         \subsubsection{DateTime}
         Para a implementação da estrutura \textbf{Calendário} foi necessário
         extender o \textbf{Date} para incluir a hora, minuto, segundo e
