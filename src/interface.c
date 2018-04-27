@@ -3,6 +3,7 @@
 #include "community.h"
 #include "question.h"
 #include "answer.h"
+#include "dateTimeInterval.h"
 #include "str_rose_tree.h"
 
 #include <string.h>
@@ -30,17 +31,19 @@ STR_pair info_from_post(TAD_community com, long id){
     }
     return NULL;
 }
+
 // query 2
 LONG_list top_most_active(TAD_community com, int N){
     USERS usr = community_get_sorted_user_list(com, so_user_post_count_cmp, N);
-    LONG_list list = create_list(N);
-    for(int i=0; i<N; i++) set_list(list, i, 0);
-    for(int i=0; usr && i<N; i++){
-        set_list(list, i, so_user_get_id((SO_USER) usr->data));
+    LONG_list list = create_list(N+1);
+    int i=0;
+    while(usr && i<N){
+        set_list(list, i++, so_user_get_id((SO_USER) usr->data));
         USERS tmp = usr;
         usr = usr->next;
         g_slist_free_1(tmp);
     }
+    set_list(list, i, 0);
     g_slist_free(usr);
     return list;
 }
@@ -125,13 +128,15 @@ LONG_list most_voted_answers(TAD_community com, int N, Date begin, Date end){
 LONG_list most_answered_questions(TAD_community com, int N, Date begin, Date end){
     DATETIME from = dateTime_create(get_year(begin), get_month(begin), get_day(begin), 0, 0, 0, 0);
     DATETIME to = dateTime_create(get_year(end), get_month(end), get_day(end), 23, 59, 59, 999);
-
-    QUESTIONS qs = community_get_sorted_question_list(com, from, to, question_answer_count_cmp, N);
+    DATETIME_INTERVAL dti = dateTime_interval_create(
+            dateTime_create(get_year(begin), get_month(begin), get_day(begin), 0, 0, 0, 0),
+            dateTime_create(get_year(end), get_month(end), get_day(end), 23, 59, 59, 999));
+    QUESTIONS qs = community_get_sorted_question_list_with_data(com, from, to, (ComGetValueFunc) question_get_answer_count_between_dates, N, dti);
 
     LONG_list r = gslist2llist(qs, N);
 
-    dateTime_destroy(from);
-    dateTime_destroy(to);
+    dateTime_interval_destroy_full(dti);
+
     g_slist_free(qs);
 
     return r;
@@ -164,13 +169,13 @@ static int question_date_cmp_with_data(gconstpointer a, gconstpointer b, gpointe
 }
 
 LONG_list both_participated(TAD_community com, long id1, long id2, int N){
-    LONG_list list = create_list(N);
-    for(int i=0; i<N; i++) set_list(list, i, 0);
+    LONG_list list = create_list(N+1);
+    // Get the users
     SO_USER user1 = community_get_user(com, id1);
     if(!user1) return list;
     SO_USER user2 = community_get_user(com, id2);
     if(!user2) return list;
-
+    // Pick the user with the least posts
     POSTS posts;
     long searchId;
     if(so_user_get_post_count(user1) < so_user_get_post_count(user2)){
@@ -180,6 +185,7 @@ LONG_list both_participated(TAD_community com, long id1, long id2, int N){
         posts = so_user_get_posts(user2);
         searchId = id1;
     }
+    // Get the questions in which both participated
     GSequence* seq = g_sequence_new(NULL);
     long* ids = malloc(sizeof(long)*N);
     for(int i = 0; posts && i<N; posts = posts->next){
@@ -190,20 +196,22 @@ LONG_list both_participated(TAD_community com, long id1, long id2, int N){
             for(int j = 0; !exists && j < i; j++)
                 if(ids[j] == qId) exists = 1;
 
-            if(!exists){
+            if(!exists){// Avoid repeats
                 g_sequence_prepend(seq, q);
                 ids[i++] = qId;
             }
         }
     }
     free(ids);
-    //TODO fix inserting the same element more then once
     g_sequence_sort(seq, question_date_cmp_with_data, NULL);
+    // Add to the list for return
     GSequenceIter* it = g_sequence_get_begin_iter(seq);
-    for(int i = 0; i < N && !g_sequence_iter_is_end(it); i++){
-        set_list(list, i, question_get_id((QUESTION) g_sequence_get(it)));
+    int i = 0;
+    while(i < N && !g_sequence_iter_is_end(it)){
+        set_list(list, i++, question_get_id((QUESTION) g_sequence_get(it)));
         it = g_sequence_iter_next(it);
     }
+    set_list(list, i, 0);
     g_sequence_free(seq);
     return list;
 }
@@ -267,11 +275,13 @@ LONG_list most_used_best_rep(TAD_community com, int N, Date begin, Date end){
     char** topTags = str_rtree_get_most_common_strings(rt, N);
     str_rtree_destroy(rt);
 
-    LONG_list l = create_list(N);
-    for(int i = 0; i < N; i++){
+    LONG_list l = create_list(N+1);
+    int i = 0;
+    while(i < N && topTags[i]){
         set_list(l, i, community_get_tag_id(com,(xmlChar*) topTags[i]));
-        free(topTags[i]);
+        free(topTags[i++]);
     }
+    set_list(l, i, 0);
     free(topTags);
 
     return l;
@@ -292,4 +302,3 @@ static inline LONG_list gslist2llist(GSList* list, int maxSize){
     set_list(l, i, 0);
     return l;
 }
-

@@ -18,6 +18,15 @@ typedef struct TCD_community * TAD_community;
  */
 typedef int (*ComCmpFunc)(const void* a, const void* b);
 
+ /**
+ * Especifíca o tipo de função passada à TAD_community para comparar elementos desta.
+ * @param a Elemento a.
+ * @param b Elemento b.
+ * @param user_data Informação extra.
+ * @returns Positivo se a for maior que b, 0 se forem iguais, negativo se b menor que a.
+ */
+typedef int (*ComGetValueFunc)(const void* a, const void* user_data);
+
 /**
  * Especifíca o tipo de função passada á TAD_community para filtrar elementos.
  * @param elem Elemento da TAD.
@@ -40,6 +49,9 @@ typedef struct _answer * ANSWER;
 
  /** Tipo abstrato de DateTime. */
 typedef struct _dateTime * DATETIME;
+
+/** Tipo abstrato de um par de DateTime */
+typedef struct _dateTime_interval * DATETIME_INTERVAL;
 
  /** Tipo abstrato de Calendário. */
 typedef struct _calendario * CALENDARIO;

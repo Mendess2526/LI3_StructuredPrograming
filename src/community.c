@@ -160,13 +160,59 @@ typedef struct _collector{
  */
 static int collect(void* value, void* user_data){
     COLLECTOR col = (COLLECTOR) user_data;
-    if(col->list == NULL || col->func(col->list->data, value) < 0){
+    if(col->list == NULL || (*col->func)(col->list->data, value) < 0){
         col->list = g_slist_prepend(col->list, value);
     }else{
         int i = 0;
         for(GSList* cur = col->list; cur && i < col->maxSize; cur = cur->next, ++i){
-            if(!cur->next || col->func(cur->next->data, value) < 0){
+            if(!cur->next || (*col->func)(cur->next->data, value) < 0){
                     cur->next = g_slist_prepend(cur->next, value);
+                    i = col->maxSize;
+            }
+        }
+    }
+    return 1;
+}
+
+/**
+ * Estrutura usada para colecionar elementos da TCD durante iterações.
+ * Guardando informação extra que é passada à função de comparação.
+ */
+typedef struct _collector_with_data{
+    GSList* list;         /**< Lista de elementos. */
+    ComGetValueFunc func;     /**< Função para determinar a posição na lista. */
+    void* data;           /**< Informação extra passada à função de comparação */
+    int maxSize;          /**< Tamanho maximo da lista. */
+}*COLLECTOR_WITH_DATA;
+
+typedef struct _col_pair{
+    int value;
+    void* elem;
+}*COLLECTOR_PAIR;
+
+COLLECTOR_PAIR col_pair_create(int value, void* elem){
+    COLLECTOR_PAIR clp = malloc(sizeof(struct _col_pair));
+    clp->value = value;
+    clp->elem = elem;
+    return clp;
+}
+
+/**
+ * Coleciona ordenadamente elementos da TCD
+ * @param value Elemento da TCD
+ * @param user_data Informação do utilizador
+ * @returns 1 para percorrer todos os elementos pedidos
+ */
+static int collect_with_data(void* value, void* user_data){
+    COLLECTOR_WITH_DATA col = (COLLECTOR_WITH_DATA) user_data;
+    int cmpValue = (*col->func)(value, col->data);
+    if(col->list == NULL || ((COLLECTOR_PAIR) col->list->data)->value < cmpValue){
+        col->list = g_slist_prepend(col->list, col_pair_create(cmpValue, value));
+    }else{
+        int i = 0;
+        for(GSList* cur = col->list; cur && i < col->maxSize; cur = cur->next, ++i){
+            if(!cur->next || ((COLLECTOR_PAIR) cur->next->data)->value < cmpValue){
+                    cur->next = g_slist_prepend(cur->next, col_pair_create(cmpValue, value));
                     i = col->maxSize;
             }
         }
@@ -202,6 +248,24 @@ QUESTIONS community_get_sorted_question_list(TAD_community com, DATETIME from,
     col->list = NULL;
     col->maxSize = N;
     calendario_iterate(com->calendarioQuestions, from, to, col, collect);
+    QUESTIONS r = col->list;
+    free(col);
+    return r;
+}
+
+QUESTIONS community_get_sorted_question_list_with_data(TAD_community com, DATETIME from,
+                                    DATETIME to, ComGetValueFunc func, int N, void* compare_data){
+    COLLECTOR_WITH_DATA col = malloc(sizeof(struct _collector_with_data));
+    col->func = func;
+    col->list = NULL;
+    col->data = compare_data;
+    col->maxSize = N;
+    calendario_iterate(com->calendarioQuestions, from, to, col, collect_with_data);
+    for(GSList* cur = col->list; cur; cur = cur->next){
+        COLLECTOR_PAIR p = cur->data;
+        cur->data = p->elem;
+        free(p);
+    }
     QUESTIONS r = col->list;
     free(col);
     return r;
@@ -300,7 +364,7 @@ void printUser(gpointer key, gpointer value, gpointer user_data){
     printf((char *)user_data, *((gint64 *)key), id, reputation, name, bio);
 }
 
-void printUsers(TAD_community com){
+void community_print_users(TAD_community com){
     g_hash_table_foreach(com->users, printUser,
             "Key{%08ld} User    {id:%3ld, reputation:%4d, name:%.5s, bio:%.5s}\n");
 }
@@ -324,7 +388,7 @@ void printQuestion(gpointer key, gpointer value, gpointer user_data){
             *((long *) key), id, dateStr, title, score, answerCount, ownerId, NULL);
 }
 
-void printQuestions(TAD_community com){
+void community_print_questions(TAD_community com){
     g_hash_table_foreach(com->questions, printQuestion,
             "Key{%08ld} Question{id:%3ld, Date:%s, Title:%.5s, Score:%4d, AnswerCount:%4d, OwnerId:%3ld, OwnerName:%.5s}\n");
 }
@@ -347,7 +411,7 @@ void printAnswer(gpointer key, gpointer value, gpointer user_data){
             *((long *) key), id, dateStr, score, parentId, ownerId, NULL);
 }
 
-void printAnswers(TAD_community com){
+void community_print_answers(TAD_community com){
     g_hash_table_foreach(com->answers, printAnswer,
             "Key{%08ld} Answer  {id:%3ld, Date:%s, Score:%4d, ParentId:%3ld, OwnerId:%3ld, OwnerName:%.5s}\n");
 }

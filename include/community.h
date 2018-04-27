@@ -132,6 +132,18 @@ typedef GSList* QUESTIONS;
  */
 QUESTIONS community_get_sorted_question_list(TAD_community com, DATETIME from, DATETIME to, ComCmpFunc func, int N);
 
+ /**
+ * Retorna uma lista ordenada de questões.
+ * @param com Uma instância da estrutura.
+ * @param from A data de início.
+ * @param to A data do fim.
+ * @param func Função de comparação.
+ * @param N Tamanho da lista retornada.
+ * @param compare_data Informação extra passada a função de comparação.
+ * @returns Uma lista ordenada de questões.
+ */
+QUESTIONS community_get_sorted_question_list_with_data(TAD_community com, DATETIME from, DATETIME to, ComGetValueFunc func, int N, void* compare_data);
+
 /** Lista ligada de respostas. */
 typedef GSList* ANSWERS;
 
@@ -188,13 +200,11 @@ void community_iterate_answers(TAD_community com, DATETIME from, DATETIME to, vo
 
 /* ------------- PRINTING --------------------- */
 
-void printUsers(TAD_community com);
+void community_print_users(TAD_community com);
 
-void printQuestions(TAD_community com);
+void community_print_questions(TAD_community com);
 
-void printAnswers(TAD_community com);
-
-void printFavouritesCount(TAD_community com);
+void community_print_answers(TAD_community com);
 
 void community_print_calendario(TAD_community com);
 
