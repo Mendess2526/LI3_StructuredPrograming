@@ -4,6 +4,7 @@
 \usepackage{titlesec}
 \usepackage{graphicx}
 \usepackage{indentfirst}
+\usepackage{enumerate}
 \usepackage{float}
 \usepackage{array}
 \usepackage{tikz}
@@ -203,19 +204,45 @@ struct _dateTime{
 \section{Modularização Funcional e Resolução das queries}
     Para aceder aos dados da estrutura principal foi definida uma API
     simples que permite:
-    \begin{itemize}
-        \item Pesquisas por id de questões, respostas e utilizadores.
-        \item Pesquisas de ids de tags dada a designação.
+    \begin{enumerate}[1.]
+        \item Pesquisas por id de \textbf{questões}, \textbf{respostas} e
+        \textbf{utilizadores}.
+        \item Pesquisas de ids de \textbf{tags} dada a designação.
         \item Pesquisa de listas, ordenadas por qualquer critério, de
-              utilizadores, questões e respostas.
-        \item Pesquisas de questões filtradas por qualquer critério.
-    \end{itemize}
+        \textbf{utilizadores}, \textbf{questões} e \textbf{respostas}.
+        \item Pesquisas de \textbf{questões} filtradas por qualquer critério.
+        \item Pesquisas genéricas de \textbf{questões}/\textbf{respostas}
+        num determinado intervalo de tempo.
+    \end{enumerate}
 
     Com estas funções a resolução da maioria das queries mostrou-se
     trivial.
 
+    Para as queries que necessitam de pesquisas por ID (queries: 1, 5, 9 10)
+    são conseguidas por \textbf{1}.
+
+    Para as queries que necessitam de pesquisas de utilizadores ordenados
+    (queries: 2, 11) são conseguidas atravez de \textbf{3} bastando
+    fornecer uma função de comparação para definir o critério de ordenação.
+
+    Para queries que necessitam de pesquisas de
+    \textbf{perguntas}/\textbf{respostas} num intervalo de tempo ordenadas
+    (queries: 6 e 7) são também conseguidas atravez de \textbf{3}. No caso de não
+    ser necessária a filtragem do intervalo de tempo simplesmente passamos as
+    datas maximas definidas pelas macros \mintinline{C}{dateTime_get_epoch()} e
+    \mintinline{C}{dateTime_get_year2038()} em $dateTime.h$.
+
+    Para queries que necessitam de listas de questões que obedeçam a um
+    determinado critério (queries: 4, 8), são conseguidas atravez de \textbf{4}.
+
+    Nos caso em que estes metodos especializados não necessários (query: 3)
+    fizemos uso de uma iteração genérica (\textbf{5}).
+
     Para a resolução da query 11 foi implementada uma estrutura para contar tags,
-    para que esta contagem fosse eficiente.
+    para que esta contagem fosse eficiente. Com isto o unico trabalho necessário
+    foi obter as \textbf{tags} das \textbf{quetões} dos \textbf{utilizadores}
+    com melhor reputação (\textbf{1}). Depois abtemos a lista ordenada por
+    ocorrencia das tags e atravez de \textbf{2} obtemos os ids das mesmas.
 
 \section{Conclusões e Trabalho Futuro}
     Em conclusão, o grupo considera que o trabalho foi realizado na sua
