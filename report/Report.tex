@@ -195,6 +195,7 @@ struct _dateTime{
     \end{minted}
 
     \subsection{String Rose Tree}
+    \label{sec:str_rose_tree}
     Para auxiliar à resolução da query 11 foi implementada uma estrutura para
     contar \textit{strings}. Esta, consiste numa árvore n-ária em que qualquer
     string representa um caminho único sobre a árvore. Assim, quando é inserida
@@ -238,11 +239,12 @@ struct _dateTime{
     Nos caso em que estes metodos especializados não necessários (query: 3)
     fizemos uso de uma iteração genérica (\textbf{5}).
 
-    Para a resolução da query 11 foi implementada uma estrutura para contar tags,
-    para que esta contagem fosse eficiente. Com isto o unico trabalho necessário
-    foi obter as \textbf{tags} das \textbf{quetões} dos \textbf{utilizadores}
-    com melhor reputação (\textbf{1}). Depois abtemos a lista ordenada por
-    ocorrencia das tags e atravez de \textbf{2} obtemos os ids das mesmas.
+    Como referido anteriormente (\ref{sec:str_rose_tree}) para a resolução da
+    query 11 foi implementada uma estrutura para contar tags, para que esta
+    contagem fosse eficiente. Com isto o unico trabalho necessário foi obter as
+    \textbf{tags} das \textbf{quetões} dos \textbf{utilizadores} com melhor
+    reputação (\textbf{1}). Depois abtemos a lista ordenada por ocorrencia das
+    tags e atravez de \textbf{2} obtemos os ids das mesmas.
 
 \section{Conclusões e Trabalho Futuro}
     Em conclusão, o grupo considera que o trabalho foi realizado na sua
