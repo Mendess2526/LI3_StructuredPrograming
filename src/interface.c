@@ -14,22 +14,19 @@ static LONG_list gslist2llist(GSList* list, int maxSize);
 // query 1
 STR_pair info_from_post(TAD_community com, long id){
     QUESTION question = community_get_question(com, id);
-    if(question){
-        char *name = (char *) question_get_owner_name(question);
-        if(name == NULL){
-            SO_USER user = community_get_user(
-                    com,
-                    question_get_owner_id(question));
-            name = (char *) so_user_get_name(user);
-        }
-        return create_str_pair((char *) question_get_title(question), name);
+    if(!question){
+        ANSWER answer = community_get_answer(com, id);
+        if(!answer) return NULL;
+        question = answer_get_parent_ptr(answer);
+        if(!question) return NULL;
     }
-    ANSWER answer = community_get_answer(com, id);
-    if(answer){
-        long qId = answer_get_parent_id(answer);
-        return info_from_post(com, qId);
+    char *name = (char *) question_get_owner_name(question);
+    if(name == NULL){
+        SO_USER user = community_get_user(com,
+                question_get_owner_id(question));
+        name = (char *) so_user_get_name(user);
     }
-    return NULL;
+    return create_str_pair((char *) question_get_title(question), name);
 }
 
 // query 2
