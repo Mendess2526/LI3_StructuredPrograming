@@ -53,7 +53,7 @@ xmlChar *question_get_title(QUESTION question){
 }
 
 char** question_get_tags(QUESTION question){
-    if(!question->tags || question->tags == '\0') return NULL;
+    if(!question->tags || *question->tags == '\0') return NULL;
     xmlChar* tagsUnparsed = xmlStrdup(question->tags);
     char** result = malloc(sizeof(char *)*6);
     memset(result, 0, sizeof(char*)*6);
