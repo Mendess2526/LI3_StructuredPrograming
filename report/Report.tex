@@ -58,7 +58,8 @@
 \clearpage
 
 \section{Introdução}
-    Este trabalho tem como objetivo o processamento de qualquer \textit{dump}
+    Este trabalho foi feito no âmbito da unidade curricular laboratórios de
+    informática 3 e tem como objetivo o processamento de qualquer \textit{dump}
     da base de dados do site \href{www.stackoverflow.com}{StackOverflow} para
     responder a queries de forma eficiente, aplicando conhecimentos de
     algoritemia e programação imperativa.
@@ -156,7 +157,7 @@ struct TCD_community{
     \subsection{Calendário}
         Foi pensada a utilização de árvores binárias ordenadas por data,
         mas isto foi considerado ineficiente quando comparada à solução
-        escolhida. Foi então concebida uma estrutura à qual foi dado o nome
+        escolhida. Foi então concebida uma estrutura à qual lhe foi dada o nome
         de \textbf{Calendário}.
 
         Esta estrutura permite:
@@ -219,40 +220,40 @@ struct _dateTime{
     Com estas funções a resolução da maioria das queries mostrou-se
     trivial.
 
-    Para as queries que necessitam de pesquisas por ID (queries: 1, 5, 9 10)
-    são conseguidas por \textbf{1}.
+    Para as queries que necessitam de pesquisas por ID (queries: 1, 5, 9 e 10)
+    são resolvidas por \textbf{1}.
 
     Para as queries que necessitam de pesquisas de utilizadores ordenados
-    (queries: 2, 11) são conseguidas atravez de \textbf{3} bastando
-    fornecer uma função de comparação para definir o critério de ordenação.
+    (queries: 2 e 11) são conseguidas através de \textbf{3}, sendo que assim 
+    basta fornecer uma função de comparação para definir o critério de ordenação.
 
-    Para queries que necessitam de pesquisas de
+    Para as queries que necessitam de pesquisas de
     \textbf{perguntas}/\textbf{respostas} num intervalo de tempo ordenadas
-    (queries: 6 e 7) são também conseguidas atravez de \textbf{3}. No caso de não
-    ser necessária a filtragem do intervalo de tempo simplesmente passamos as
-    datas maximas definidas pelas macros \mintinline{C}{dateTime_get_epoch()} e
+    (queries: 6 e 7) são também resolvidas através de \textbf{3}. No caso de não
+    ser necessária a filtragem do intervalo de tempo, simplesmente passamos as
+    datas máximas definidas pelas macros \mintinline{C}{dateTime_get_epoch()} e
     \mintinline{C}{dateTime_get_year2038()} em $dateTime.h$.
 
-    Para queries que necessitam de listas de questões que obedeçam a um
-    determinado critério (queries: 4, 8), são conseguidas atravez de \textbf{4}.
+    Para as queries que necessitam de listas de questões que obedeçam a um
+    determinado critério (queries: 4 e 8), são conseguidas através de \textbf{4}.
 
-    Nos caso em que estes metodos especializados não necessários (query: 3)
+    Nos casos em que estes métodos especializados não são necessários (query: 3)
     fizemos uso de uma iteração genérica (\textbf{5}).
 
-    Como referido anteriormente (\ref{sec:str_rose_tree}) para a resolução da
+    Como referido anteriormente, (\ref{sec:str_rose_tree}) para a resolução da
     query 11 foi implementada uma estrutura para contar tags, para que esta
-    contagem fosse eficiente. Com isto o unico trabalho necessário foi obter as
+    contagem fosse eficiente. Com isto, o único trabalho necessário foi obter as
     \textbf{tags} das \textbf{quetões} dos \textbf{utilizadores} com melhor
-    reputação (\textbf{1}). Depois abtemos a lista ordenada por ocorrencia das
-    tags e atravez de \textbf{2} obtemos os ids das mesmas.
+    reputação (\textbf{1}). Em seguida, obtemos a lista ordenada por ocorrência
+    das tags e através de \textbf{2} obtemos os ids das mesmas.
 
 \section{Conclusões e Trabalho Futuro}
     Em conclusão, o grupo considera que o trabalho foi realizado na sua
     totalidade de forma eficiente e correta, respondendo a todas as queries.
 
-    Um aspecto que poderia ser melhorado é a ordenação de utilizadores. Estes
+    Um aspeto que poderia ser melhorado é a ordenação de utilizadores. Estes,
     foram guardados apenas numa tabela de hash e quando é necessária um lista
-    ordenada dos mesmos, esta tem de ser percorrida na sua totalidade. Esta
+    ordenada dos mesmos, esta, tem de ser percorrida na sua totalidade. Esta
     decisão, centrou-se no facto de que nenhuma única ordenação se apresenta
     particularmente vantajosa, face às demais.
 
