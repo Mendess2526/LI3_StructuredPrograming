@@ -131,6 +131,7 @@ LONG_list most_answered_questions(TAD_community com, int N, Date begin, Date end
     DATETIME_INTERVAL dti = dateTime_interval_create(
             dateTime_create(get_year(begin), get_month(begin), get_day(begin), 0, 0, 0, 0),
             dateTime_create(get_year(end), get_month(end), get_day(end), 23, 59, 59, 999));
+
     QUESTIONS qs = community_get_sorted_question_list_with_data(com, from, to, (ComGetValueFunc) question_get_answer_count_between_dates, N, dti);
 
     LONG_list r = gslist2llist(qs, N);
@@ -244,10 +245,9 @@ static void gather_tags(SO_USER usr, STR_ROSE_TREE rt, DATETIME from, DATETIME t
     POSTS posts = so_user_get_posts(usr);
     for(; posts; posts = posts->next){
         DATETIME postDate = post_get_date(posts->data);
-        if(post_is_question(posts->data)
-           && dateTime_compare(postDate, from) >= 0
-           && dateTime_compare(postDate, to)   <= 0){
-
+        int afterFrom = dateTime_compare(postDate, from) >= 0;
+        int beforeTo = dateTime_compare(postDate, to)   <= 0;
+        if(post_is_question(posts->data) && afterFrom && beforeTo){
             char** tags = question_get_tags((QUESTION) post_get_question(posts->data));
             for(int i=0; tags[i]; i++){
                 str_rtree_add(rt, tags[i]);
@@ -255,6 +255,7 @@ static void gather_tags(SO_USER usr, STR_ROSE_TREE rt, DATETIME from, DATETIME t
             }
             free(tags);
         }
+        if(!afterFrom) return;
     }
 }
 
@@ -265,7 +266,8 @@ LONG_list most_used_best_rep(TAD_community com, int N, Date begin, Date end){
     DATETIME to = dateTime_create(get_year(end), get_month(end), get_day(end), 23, 59, 59, 999);
 
     STR_ROSE_TREE rt = str_rtree_create();
-    for(USERS cur = users; cur; cur = cur->next){
+    int n = 0;
+    for(USERS cur = users; n++<N && cur; cur = cur->next){
         gather_tags(cur->data, rt, from, to);
     }
     g_slist_free(users);
