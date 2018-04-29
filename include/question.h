@@ -84,12 +84,18 @@ char** question_get_tags(QUESTION question);
 xmlChar *question_get_owner_name(QUESTION question);
 
  /**
- * Retorna o número de resposta que a questão tem.
+ * Retorna o número de respostas que a questão tem.
  * @param question Uma questão.
  * @returns O número de respostas que a questão tem.
  */
 int question_get_answer_count(QUESTION question);
 
+ /**
+ * Retorna o número de respostas que a questão tem dentro de um intervalo de tempo.
+ * @param question Uma questão.
+ * @param dti Um intervalo de tempo.
+ * @returns O número de respostas que a questão tem dentro de um intervalo de tempo.
+ */
 int question_get_answer_count_between_dates(QUESTION question, DATETIME_INTERVAL dti);
 
 /** Lista ligada de respostas. */
@@ -135,6 +141,14 @@ void question_destroy_generic(gpointer question);
  */
 int question_answer_count_cmp(const void* a, const void* b);
 
+ /**
+ * Compara duas questões conforme o número de respostas que a questão tem dentro de um intervalo de tempo.
+ * @param a Uma questão.
+ * @param b Uma questão.
+ * @returns Um número positivo se a questão a tem maior número de respostas, um
+ *          número negativo se a questão b tem maior número de respostas ou 0 se
+ *          as questões têm o mesmo número de respostas.
+ */
 int question_answer_count_cmp_with_dates(const void* a, const void* b, const void* dates);
 
  /**
