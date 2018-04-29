@@ -67,9 +67,9 @@ int main(int argc, const char **argv){
 #if !USING_DUMMY
     com = load(com,folder);
 #endif
-    
+
     free(folder);
-    
+
 #if USING_DUMMY
     int i = 1;
     community_add_user(com, DUMMYU(i,30)); i++;
@@ -167,10 +167,10 @@ int main(int argc, const char **argv){
     free_date(end);
 
     printf("%sQUERY  5:%s Get user info\n",BLUE, RESET);
-    printf("\t%sParams [314961]%s\n", GREEN, RESET);
-    printAndDestroyUser(get_user_info(com, 314961));
-    printf("\t%sParams [315025]%s\n", GREEN, RESET);
-    printAndDestroyUser(get_user_info(com, 315025));
+    printf("\t%sParams [15811]%s\n", GREEN, RESET);
+    printAndDestroyUser(get_user_info(com, 15811));
+    printf("\t%sParams [449]%s\n", GREEN, RESET);
+    printAndDestroyUser(get_user_info(com, 449));
 
     printf("%sQUERY  6:%s Most voted answer",BLUE, RESET);
     printf("\t%sParams [5, 1/11/2015, 30/11/2015]%s\n", GREEN, RESET);

@@ -223,7 +223,7 @@ long better_answer(TAD_community com, long id){
     if(question == NULL) return 0;
     ANSWERS answers = question_get_answers(question);
     double bestP = 0;
-    long idBest = 0;
+    long idBest = -1;
     for(ANSWERS cur = answers;cur != NULL;cur = cur->next){
         int score = answer_get_score(cur->data);
         long idAnswer = answer_get_id(cur->data);
