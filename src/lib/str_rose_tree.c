@@ -67,7 +67,6 @@ static void node_get_most_common_strings(STR_RT_NODE node, GSequence* seq, char*
     if(node == NULL) return;
     wordBag[depth] = node->c;
     if(node->count > 0){
-        //printf("%s\n", wordBag);
         g_sequence_prepend(seq, str_count_create(wordBag, node->count));
     }
     if(node->nextNodes != NULL){
@@ -97,7 +96,6 @@ STR_ROSE_TREE str_rtree_create(){
 void str_rtree_add(STR_ROSE_TREE tree, char* word){
     int idx = CHAR2INDEX(*word);
     int depth = 1;
-    //printf("Added: %s\n", word);
     tree->trees[idx] = str_tree_node_add(tree->trees[idx], word, &depth);
     if(depth > tree->biggestWord) tree->biggestWord = depth;
 }
@@ -119,7 +117,6 @@ char** str_rtree_get_most_common_strings(STR_ROSE_TREE tree, int N){
     int i;
     for(i = 0; i < N && !g_sequence_iter_is_end(it); it = g_sequence_iter_next(it)){
         STR_COUNT_PAIR scp = (STR_COUNT_PAIR) g_sequence_get(it);
-        //printf("%3d: %s\n", scp->count, scp->word);
         tags[i++] = mystrdup(scp->word);
     }
     tags[i] = NULL;
