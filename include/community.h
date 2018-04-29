@@ -59,7 +59,7 @@ void community_add_user(TAD_community com, SO_USER user);
  * @param id O id da tag.
  * @param tag O nome da tag.
  */
-void community_add_tag(TAD_community com, long id, xmlChar* tag);
+void community_add_tag(TAD_community com, long id, const xmlChar* tag);
 
  /**
  * Encontra o user com o id fornecido.

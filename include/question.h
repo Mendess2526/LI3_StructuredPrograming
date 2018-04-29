@@ -29,10 +29,10 @@ QUESTION question_create(long id,
                         DATETIME date,
                         int score,
                         long ownerId,
-                        xmlChar *title,
-                        xmlChar *tags,
+                        const xmlChar *title,
+                        const xmlChar *tags,
                         int answerCount,
-                        xmlChar *ownerName);
+                        const xmlChar *ownerName);
 
  /**
  * Retorna o id da questão.

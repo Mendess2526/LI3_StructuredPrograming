@@ -24,8 +24,8 @@ typedef GSList * POSTS;
  */
 SO_USER so_user_create(long id,
                         int reputation,
-                        xmlChar *name,
-                        xmlChar *bio);
+                        const xmlChar *name,
+                        const xmlChar *bio);
 
  /**
  * Retorna o id do user.
