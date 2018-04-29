@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <glib.h>
 #include <string.h>
+#include <stdio.h>
 
 typedef struct string_rose_tree_node * STR_RT_NODE;
 
@@ -66,10 +67,11 @@ static void node_get_most_common_strings(STR_RT_NODE node, GSequence* seq, char*
     if(node == NULL) return;
     wordBag[depth] = node->c;
     if(node->count > 0){
+        //printf("%s\n", wordBag);
         g_sequence_prepend(seq, str_count_create(wordBag, node->count));
     }
     if(node->nextNodes != NULL){
-        for(int i=0; i < NUM_NODES; i++){
+        for(int i = NUM_NODES-1; i >= 0; i--){
             node_get_most_common_strings(node->nextNodes[i], seq, wordBag, depth+1);
         }
     }
@@ -95,6 +97,7 @@ STR_ROSE_TREE str_rtree_create(){
 void str_rtree_add(STR_ROSE_TREE tree, char* word){
     int idx = CHAR2INDEX(*word);
     int depth = 1;
+    //printf("Added: %s\n", word);
     tree->trees[idx] = str_tree_node_add(tree->trees[idx], word, &depth);
     if(depth > tree->biggestWord) tree->biggestWord = depth;
 }
@@ -105,17 +108,21 @@ gint cmpCount(gconstpointer a, gconstpointer b, gpointer user_data){
 
 char** str_rtree_get_most_common_strings(STR_ROSE_TREE tree, int N){
     GSequence* seq = g_sequence_new(str_count_destroy);
-    for(int i=0; i < NUM_NODES; i++){
+    for(int i = NUM_NODES-1; i >= 0; i--){
         char wordBag[tree->biggestWord];
         memset(wordBag, 0, sizeof(char)*tree->biggestWord);
         node_get_most_common_strings(tree->trees[i], seq, wordBag, 0);
     }
     g_sequence_sort(seq, cmpCount, NULL);
     GSequenceIter* it = g_sequence_get_begin_iter(seq);
-    char** tags = malloc(sizeof(char*)*N);
-    for(int i = 0; i < N && !g_sequence_iter_is_end(it); it = g_sequence_iter_next(it)){
-        tags[i++] = mystrdup(((STR_COUNT_PAIR) g_sequence_get(it))->word);
+    char** tags = malloc(sizeof(char*)*(N+1));
+    int i;
+    for(i = 0; i < N && !g_sequence_iter_is_end(it); it = g_sequence_iter_next(it)){
+        STR_COUNT_PAIR scp = (STR_COUNT_PAIR) g_sequence_get(it);
+        //printf("%3d: %s\n", scp->count, scp->word);
+        tags[i++] = mystrdup(scp->word);
     }
+    tags[i] = NULL;
     g_sequence_free(seq);
     return tags;
 }
