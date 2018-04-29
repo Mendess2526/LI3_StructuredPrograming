@@ -18,7 +18,8 @@ struct _question{
 };
 
 QUESTION question_create(long id, DATETIME date, int score, long ownerId,
-                        xmlChar *title, xmlChar *tags, int answerCount, xmlChar *ownerName){
+                        const xmlChar *title, const xmlChar *tags,
+                        int answerCount, const xmlChar *ownerName){
     QUESTION q = malloc(sizeof(struct _question));
     q->id = id;
     q->date = date;
@@ -53,7 +54,7 @@ xmlChar *question_get_title(QUESTION question){
 }
 
 char** question_get_tags(QUESTION question){
-    if(!question->tags || question->tags == '\0') return NULL;
+    if(!question->tags || *question->tags == '\0') return NULL;
     xmlChar* tagsUnparsed = xmlStrdup(question->tags);
     char** result = malloc(sizeof(char *)*6);
     memset(result, 0, sizeof(char*)*6);

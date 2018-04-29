@@ -115,10 +115,10 @@ void community_add_user(TAD_community com, SO_USER user){
     g_hash_table_insert(com->users, (gpointer) id, user);
 }
 
-void community_add_tag(TAD_community com, long id, xmlChar* tag){
+void community_add_tag(TAD_community com, long id, const xmlChar* tag){
     gint64* id_aloc = newId(id);
 
-    g_hash_table_insert(com->tags, (gpointer) tag, id_aloc);
+    g_hash_table_insert(com->tags, xmlStrdup(tag), id_aloc);
 }
 
 QUESTION community_get_question(TAD_community com, long id){
