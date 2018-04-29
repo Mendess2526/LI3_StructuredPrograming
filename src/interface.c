@@ -125,9 +125,8 @@ LONG_list most_voted_answers(TAD_community com, int N, Date begin, Date end){
 LONG_list most_answered_questions(TAD_community com, int N, Date begin, Date end){
     DATETIME from = dateTime_create(get_year(begin), get_month(begin), get_day(begin), 0, 0, 0, 0);
     DATETIME to = dateTime_create(get_year(end), get_month(end), get_day(end), 23, 59, 59, 999);
-    DATETIME_INTERVAL dti = dateTime_interval_create(
-            dateTime_create(get_year(begin), get_month(begin), get_day(begin), 0, 0, 0, 0),
-            dateTime_create(get_year(end), get_month(end), get_day(end), 23, 59, 59, 999));
+    DATETIME_INTERVAL dti = dateTime_interval_create(from, to);
+
     QUESTIONS qs = community_get_sorted_question_list_with_data(com, from, to, (ComGetValueFunc) question_get_answer_count_between_dates, N, dti);
 
     LONG_list r = gslist2llist(qs, N);
@@ -166,12 +165,14 @@ static int question_date_cmp_with_data(gconstpointer a, gconstpointer b, gpointe
 }
 
 LONG_list both_participated(TAD_community com, long id1, long id2, int N){
-    LONG_list list = create_list(N+1);
     // Get the users
     SO_USER user1 = community_get_user(com, id1);
-    if(!user1) return list;
     SO_USER user2 = community_get_user(com, id2);
-    if(!user2) return list;
+    if(!user1 || !user2){
+        LONG_list l = create_list(1);
+        set_list(l, 0, 0);
+        return l;
+    }
     // Pick the user with the least posts
     POSTS posts;
     long searchId;
@@ -185,7 +186,8 @@ LONG_list both_participated(TAD_community com, long id1, long id2, int N){
     // Get the questions in which both participated
     GSequence* seq = g_sequence_new(NULL);
     long* ids = malloc(sizeof(long)*N);
-    for(int i = 0; posts && i<N; posts = posts->next){
+    int i;
+    for(i = 0; posts && i<N; posts = posts->next){
         QUESTION q = post_search_thread_for_user((POST) posts->data, searchId);
         if(q){
             int exists = 0;
@@ -200,10 +202,12 @@ LONG_list both_participated(TAD_community com, long id1, long id2, int N){
         }
     }
     free(ids);
+    LONG_list list = create_list(i == 0 ? 1 : i);
+    // Sort the list
     g_sequence_sort(seq, question_date_cmp_with_data, NULL);
-    // Add to the list for return
+    // Add to the LONG_list for return
     GSequenceIter* it = g_sequence_get_begin_iter(seq);
-    int i = 0;
+    i = 0;
     while(i < N && !g_sequence_iter_is_end(it)){
         set_list(list, i++, question_get_id((QUESTION) g_sequence_get(it)));
         it = g_sequence_iter_next(it);

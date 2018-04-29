@@ -18,7 +18,8 @@ struct _question{
 };
 
 QUESTION question_create(long id, DATETIME date, int score, long ownerId,
-                        xmlChar *title, xmlChar *tags, int answerCount, xmlChar *ownerName){
+                        const xmlChar *title, const xmlChar *tags,
+                        int answerCount, const xmlChar *ownerName){
     QUESTION q = malloc(sizeof(struct _question));
     q->id = id;
     q->date = date;

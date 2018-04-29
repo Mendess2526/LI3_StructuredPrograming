@@ -94,10 +94,10 @@ void start_post_element(void *user_data, const xmlChar *name, const xmlChar **at
     long id = -2, owner_id = -2;
     int score = 0, comment_count = 0;
     DATETIME date = NULL;
-    xmlChar *owner_name = NULL;
+    const xmlChar *owner_name = NULL;
     //question attr
-    xmlChar *title = NULL;
-    xmlChar *tags = NULL;
+    const xmlChar *title = NULL;
+    const xmlChar *tags = NULL;
     int answer_count = 0;
     //answer attr
     long parentId = -2;
@@ -127,15 +127,15 @@ void start_post_element(void *user_data, const xmlChar *name, const xmlChar **at
                     numAttr--;
                     break;
             case OWNER_DISPLAY_NAME:
-                    owner_name = xmlStrdup(attrs[1]);
+                    owner_name = attrs[1];
                     numAttr--;
                     break;
             case TITLE:
-                    title = xmlStrdup(attrs[1]);
+                    title = attrs[1];
                     numAttr--;
                     break;
             case TAGS:
-                    tags = xmlStrdup(attrs[1]);
+                    tags = attrs[1];
                     numAttr--;
                     break;
             case ANSWER_COUNT:
@@ -162,9 +162,6 @@ void start_post_element(void *user_data, const xmlChar *name, const xmlChar **at
     }else if(date){
         dateTime_destroy(date);
     }
-    if(owner_name) xmlFree(owner_name);
-    if(title)      xmlFree(title);
-    if(tags)       xmlFree(tags);
 }
 
 /**
@@ -179,8 +176,8 @@ void start_user_element(void *user_data, const xmlChar *name, const xmlChar **at
     int numAttr = 4;
     long id = -2;
     int reputation = 0;
-    xmlChar *displayName = NULL;
-    xmlChar *bio = NULL;
+    const xmlChar *displayName = NULL;
+    const xmlChar *bio = NULL;
     for(;numAttr > 0 && attrs!=NULL && attrs[0]!=NULL;attrs += 2){
         int atrType = userStrcmp(attrs[0]);
         switch(atrType){
@@ -193,19 +190,17 @@ void start_user_element(void *user_data, const xmlChar *name, const xmlChar **at
                     numAttr--;
                     break;
             case DISPLAY_NAME:
-                    displayName = xmlStrdup(attrs[1]);
+                    displayName = attrs[1];
                     numAttr--;
                     break;
             case ABOUT_ME:
-                    bio = xmlStrdup(attrs[1]);
+                    bio = attrs[1];
                     numAttr--;
                     break;
             default: break;
         }
     }
     community_add_user(com,so_user_create(id,reputation,displayName,bio));
-    if(displayName) xmlFree(displayName);
-    if(bio) xmlFree(bio);
 }
 
 /**
@@ -218,7 +213,7 @@ void start_tag_element(void* user_data, const xmlChar* name, const xmlChar** att
     if(name[0] == 't') return;
     TAD_community com = (TAD_community) user_data;
     long id = -2;
-    xmlChar* tag = NULL;
+    const xmlChar* tag = NULL;
     int numAttr = 2;
     for(;numAttr > 0 && attrs!=NULL && attrs[0] != NULL; attrs += 2){
         int atrType = tagStrcmp(attrs[0]);
@@ -228,7 +223,7 @@ void start_tag_element(void* user_data, const xmlChar* name, const xmlChar** att
                 numAttr--;
                 break;
             case TAG_NAME:
-                tag = xmlStrdup(attrs[1]);
+                tag = attrs[1];
                 numAttr--;
                 break;
             default:break;

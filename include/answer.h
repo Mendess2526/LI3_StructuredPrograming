@@ -28,7 +28,7 @@ ANSWER answer_create(long id,
                     int score,
                     long ownerId,
                     long parentId,
-                    xmlChar *ownerName,
+                    const xmlChar *ownerName,
                     int comment_count);
 
  /**
