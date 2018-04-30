@@ -227,6 +227,7 @@ static int collect_with_data(void* value, void* user_data){
  * @param user_data Informação do utilizador
  */
 static void collect_key_value(gpointer key, gpointer value, gpointer user_data){
+    (void) key;
     collect(value, user_data);
 }
 

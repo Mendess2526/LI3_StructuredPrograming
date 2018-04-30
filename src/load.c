@@ -88,7 +88,7 @@ static inline DATETIME parseDate(const xmlChar *dateStr);
  * @param attrs Array de strings onde se encontram os atributos e respetivos valores
  */
 void start_post_element(void *user_data, const xmlChar *name, const xmlChar **attrs){
-    if(name[0] == 'p') return;
+    (void) name;
     TAD_community com = (TAD_community) user_data;
     int numAttr = 9;
     long id = -2, owner_id = -2;
@@ -171,7 +171,7 @@ void start_post_element(void *user_data, const xmlChar *name, const xmlChar **at
  * @param attrs Array de strings onde se encontram os atributos e respetivos valores
  */
 void start_user_element(void *user_data, const xmlChar *name, const xmlChar **attrs){
-    if(name[0] == 'u') return;
+    (void) name;
     TAD_community com = (TAD_community) user_data;
     int numAttr = 4;
     long id = -2;
@@ -210,7 +210,7 @@ void start_user_element(void *user_data, const xmlChar *name, const xmlChar **at
  * @param attrs Array de strings onde se encontram os atributos e respetivos valores
  */
 void start_tag_element(void* user_data, const xmlChar* name, const xmlChar** attrs){
-    if(name[0] == 't') return;
+    (void) name;
     TAD_community com = (TAD_community) user_data;
     long id = -2;
     const xmlChar* tag = NULL;
@@ -229,7 +229,7 @@ void start_tag_element(void* user_data, const xmlChar* name, const xmlChar** att
             default:break;
         }
     }
-    community_add_tag(com, id, tag);
+    if(id != -2) community_add_tag(com, id, tag);
 }
 
 /**
@@ -238,7 +238,7 @@ void start_tag_element(void* user_data, const xmlChar* name, const xmlChar** att
  * @param msg Mensagem de erro
  */
 void error_handler(void *user_data, const char *msg, ...) {
-    printf("user_data: %p\n", user_data);
+    (void) user_data;
     va_list args;
     va_start(args, msg);
     g_logv("XML", G_LOG_LEVEL_CRITICAL, msg, args);
@@ -246,7 +246,8 @@ void error_handler(void *user_data, const char *msg, ...) {
 }
 
 /**
- * Carrega os dados dos ficheiros para um instancia da estrutura
+ * Carrega os da
+ * dos dos ficheiros para um instancia da estrutura
  * @param com Instancia da estrutura
  * @param dump_path Caminho para a diretoria dos ficheiros
  * @returns A instancia da estrutura

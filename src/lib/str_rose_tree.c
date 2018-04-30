@@ -101,6 +101,7 @@ void str_rtree_add(STR_ROSE_TREE tree, char* word){
 }
 
 gint cmpCount(gconstpointer a, gconstpointer b, gpointer user_data){
+    (void) user_data;
     return ((STR_COUNT_PAIR) b)->count - ((STR_COUNT_PAIR) a)->count;
 }
 
