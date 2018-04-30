@@ -6,6 +6,11 @@
 #include <string.h>
 #include <stdio.h>
 
+typedef struct string_count_pair{
+    char* word;
+    int count;
+}*STR_COUNT_PAIR;
+
 typedef struct string_rose_tree_node * STR_RT_NODE;
 
 struct string_rose_tree_node{
@@ -19,29 +24,42 @@ struct str_rose_tree{
     STR_RT_NODE* trees;
 };
 
-typedef struct string_count_pair{
-    char* word;
-    int count;
-}*STR_COUNT_PAIR;
-
+/** Converte um char no indice correto. */
 #define CHAR2INDEX(c) ((int) (c)-' ')
+/** Define o número de nós do array de nós. */
 #define NUM_NODES ('~'-' ' + 1)
 
-
+/**
+ * Cria uma instancia de STR_COUNT_PAIR.
+ * @param string String
+ * @param count Contagem
+ * @returns Instância de STR_COUTN_PAIR
+ */
 static STR_COUNT_PAIR str_count_create(char* string, int count){
     STR_COUNT_PAIR scp = malloc(sizeof(struct string_count_pair));
     scp->word = mystrdup(string);
     scp->count = count;
     return scp;
 }
-
+/**
+ * Liberta a memória de um STR_COUNT_PAIR
+ * @param p Instância a libertar
+ */
 static void str_count_destroy(gpointer p){
     STR_COUNT_PAIR scp = (STR_COUNT_PAIR) p;
     free(scp->word);
     free(scp);
 }
 
-static STR_RT_NODE str_tree_node_add(STR_RT_NODE node, char* c, int *depth){
+/**
+ * Conta uma string a partir de um nó.
+ * @param node Nó a partir do qual contar.
+ * @param c String a contar.
+ * @param depth Profundidade que foi prenchida.
+ * @returns O nó que foi passado como argumento, caso fosse NULL
+ *          é retornado um nó inicializado.
+ */
+static STR_RT_NODE node_add(STR_RT_NODE node, char* c, int *depth){
     if(*c == '\0') return NULL;
 
     if(node == NULL){
@@ -57,13 +75,21 @@ static STR_RT_NODE str_tree_node_add(STR_RT_NODE node, char* c, int *depth){
         if(node->nextNodes == NULL)
             node->nextNodes = calloc(NUM_NODES, sizeof(STR_RT_NODE));
         node->nextNodes[CHAR2INDEX(*(c+1))] =
-            str_tree_node_add(node->nextNodes[CHAR2INDEX(*(c+1))], c+1, depth);
+            node_add(node->nextNodes[CHAR2INDEX(*(c+1))], c+1, depth);
     }
     *depth += 1;
     return node;
 }
 
-static void node_get_most_common_strings(STR_RT_NODE node, GSequence* seq, char* wordBag, int depth){
+/**
+ * Coleciona as strings com contagem superior a 0, associadas a essa mesma contagem,
+ * numa GSequence.
+ * @param node Nó a partir do qual procurar
+ * @param seq GSequence onde inserir
+ * @param wordBag String onde colocar a string encontrada neste nó
+ * @param depth profundidade deste nó
+ */
+static void node_get_strings(STR_RT_NODE node, GSequence* seq, char* wordBag, int depth){
     if(node == NULL) return;
     wordBag[depth] = node->c;
     if(node->count > 0){
@@ -71,17 +97,21 @@ static void node_get_most_common_strings(STR_RT_NODE node, GSequence* seq, char*
     }
     if(node->nextNodes != NULL){
         for(int i = NUM_NODES-1; i >= 0; i--){
-            node_get_most_common_strings(node->nextNodes[i], seq, wordBag, depth+1);
+            node_get_strings(node->nextNodes[i], seq, wordBag, depth+1);
         }
     }
     wordBag[depth] = '\0';
 }
 
-static void str_tree_node_destroy(STR_RT_NODE node){
+/**
+ * Liberta a memória ocupada por um nó e sub-nós da arvore.
+ * @param node Nó a libertar
+ */
+static void node_destroy(STR_RT_NODE node){
     if(!node) return;
     for(int i=0; i < NUM_NODES; i++)
         if(node->nextNodes)
-            str_tree_node_destroy(node->nextNodes[i]);
+            node_destroy(node->nextNodes[i]);
     free(node->nextNodes);
     free(node);
 }
@@ -96,11 +126,19 @@ STR_ROSE_TREE str_rtree_create(){
 void str_rtree_add(STR_ROSE_TREE tree, char* word){
     int idx = CHAR2INDEX(*word);
     int depth = 1;
-    tree->trees[idx] = str_tree_node_add(tree->trees[idx], word, &depth);
+    tree->trees[idx] = node_add(tree->trees[idx], word, &depth);
     if(depth > tree->biggestWord) tree->biggestWord = depth;
 }
 
-gint cmpCount(gconstpointer a, gconstpointer b, gpointer user_data){
+/**
+ * Função que compara as contagem de duas strings.
+ * @param a Par a.
+ * @param b Par b.
+ * @param user_data (ignored).
+ * @returns Positivo se a contagem de b for maior que de a, negativo se a de a
+ *          maior que a de b, 0 caso sejam iguais.
+ */
+static gint cmpCount(gconstpointer a, gconstpointer b, gpointer user_data){
     (void) user_data;
     return ((STR_COUNT_PAIR) b)->count - ((STR_COUNT_PAIR) a)->count;
 }
@@ -110,7 +148,7 @@ char** str_rtree_get_most_common_strings(STR_ROSE_TREE tree, int N){
     for(int i = NUM_NODES-1; i >= 0; i--){
         char wordBag[tree->biggestWord];
         memset(wordBag, 0, sizeof(char)*tree->biggestWord);
-        node_get_most_common_strings(tree->trees[i], seq, wordBag, 0);
+        node_get_strings(tree->trees[i], seq, wordBag, 0);
     }
     g_sequence_sort(seq, cmpCount, NULL);
     GSequenceIter* it = g_sequence_get_begin_iter(seq);
@@ -127,7 +165,7 @@ char** str_rtree_get_most_common_strings(STR_ROSE_TREE tree, int N){
 
 void str_rtree_destroy(STR_ROSE_TREE tree){
     for(int i = 0; i < NUM_NODES; i++)
-        str_tree_node_destroy(tree->trees[i]);
+        node_destroy(tree->trees[i]);
     free(tree->trees);
     free(tree);
 }
