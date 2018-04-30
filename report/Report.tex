@@ -187,7 +187,8 @@ struct TCD_community{
         \subsubsection{DateTime}
         Para a implementação da estrutura \textbf{Calendário} foi necessário
         extender o \textbf{Date} para incluir a hora, minuto, segundo e
-        milissegundo da data do post. Foi então criado o \textbf{DateTime}.
+        milissegundo garantindo assim uma ordenação mais consistente. Foi
+        então criado o \textbf{DateTime}.
     \begin{minted}{C}
 struct _dateTime{
     int year, month, day;
@@ -224,7 +225,7 @@ struct _dateTime{
     são resolvidas por \textbf{1}.
 
     Para as queries que necessitam de pesquisas de utilizadores ordenados
-    (queries: 2 e 11) são conseguidas através de \textbf{3}, sendo que assim 
+    (queries: 2 e 11) são conseguidas através de \textbf{3}, sendo que assim
     basta fornecer uma função de comparação para definir o critério de ordenação.
 
     Para as queries que necessitam de pesquisas de
