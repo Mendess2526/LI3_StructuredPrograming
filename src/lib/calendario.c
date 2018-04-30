@@ -341,7 +341,7 @@ static inline int day_iterate_forward(DAY day, void* data, CalFunc calFunc){
     return 1;
 }
 
-static inline int month_iterate_forward(MONTH month, DATETIME from, DATETIME to, int isStartM, int isEndM, void* data, CalFunc calFunc){
+static int month_iterate_forward(MONTH month, DATETIME from, DATETIME to, int isStartM, int isEndM, void* data, CalFunc calFunc){
     if(!month) return 1;
     int fromD;
     int toD;
@@ -374,7 +374,7 @@ static inline int month_iterate_forward(MONTH month, DATETIME from, DATETIME to,
     return 1;
 }
 
-static inline int year_iterate_forward(YEAR year, DATETIME from, DATETIME to, int isStartY, int isEndY, void* data, CalFunc calFunc){
+static int year_iterate_forward(YEAR year, DATETIME from, DATETIME to, int isStartY, int isEndY, void* data, CalFunc calFunc){
     if(!year) return 1;
     int fromM;
     int toM;
@@ -445,7 +445,7 @@ static inline int day_iterate_backwards(DAY day, void* data, CalFunc calFunc){
     return 1;
 }
 
-static inline int month_iterate_backwards(MONTH month, DATETIME from, DATETIME to, int isStartM, int isEndM, void* data, CalFunc calFunc){
+static int month_iterate_backwards(MONTH month, DATETIME from, DATETIME to, int isStartM, int isEndM, void* data, CalFunc calFunc){
     if(!month) return 1;
     int fromD;
     int toD;
@@ -478,7 +478,7 @@ static inline int month_iterate_backwards(MONTH month, DATETIME from, DATETIME t
     return 1;
 }
 
-static inline int year_iterate_backwards(YEAR year, DATETIME from, DATETIME to, int isStartY, int isEndY, void* data, CalFunc calFunc){
+static int year_iterate_backwards(YEAR year, DATETIME from, DATETIME to, int isStartY, int isEndY, void* data, CalFunc calFunc){
     if(!year) return 1;
     int fromM;
     int toM;

@@ -353,40 +353,41 @@ void community_iterate_answers(TAD_community com, DATETIME from, DATETIME to,
 
 /* --------------- PRINTING ------------------- */
 
-void printAnswer(gpointer key, gpointer value, gpointer user_data);
-void printQuestion(gpointer key, gpointer value, gpointer user_data);
-void printUser(gpointer key, gpointer value, gpointer user_data);
-
-void printUser(gpointer key, gpointer value, gpointer user_data){
-    long id = so_user_get_id((SO_USER) value);
-    int reputation = so_user_get_reputation((SO_USER) value);
-    xmlChar *name = so_user_get_name((SO_USER) value);
-    xmlChar *bio = so_user_get_bio((SO_USER) value);
-    printf((char *)user_data, *((gint64 *)key), id, reputation, name, bio);
-}
+/**
+ * Função que é passada à hashtable de users para imprimir um user.
+ * @param key Chave do valor na hashtable.
+ * @param value User.
+ * @param user_data String com o formato de impressão.
+ */
+static void printUser(gpointer key, gpointer value, gpointer user_data);
+/**
+ * Função que é passada à hashtable de questões para imprimir uma questão.
+ * @param key Chave do valor na hashtable.
+ * @param value Questão.
+ * @param user_data String com o formato de impressão.
+ */
+static void printQuestion(gpointer key, gpointer value, gpointer user_data);
+/**
+ * Função que é passada à hashtable de repostas para imprimir uma reposta.
+ * @param key Chave do valor na hashtable.
+ * @param value Reposta.
+ * @param user_data String com o formato de impressão.
+ */
+static void printAnswer(gpointer key, gpointer value, gpointer user_data);
+/**
+ * Função que é passada ao calendário para imprimir o id de uma questão.
+ * @param question Questão à qual será extraido o id.
+ */
+static void cPrintQuestion(void* question);
+/**
+ * Função que é passada ao calendário para imprimir o id de uma resposta.
+ * @param answer Resposta à qual será extraido o id.
+ */
+static void cPrintAnswer(void* answer);
 
 void community_print_users(TAD_community com){
     g_hash_table_foreach(com->users, printUser,
             "Key{%08ld} User    {id:%3ld, reputation:%4d, name:%.5s, bio:%.5s}\n");
-}
-
-void printQuestion(gpointer key, gpointer value, gpointer user_data){
-    QUESTION question = (QUESTION) value;
-    if(question == NULL){ printf("NULL VALUE: Key:%ld\n",*((gint64 *) key)); return;}
-    long id = question_get_id(question);
-    DATETIME date = question_get_date(question);
-    xmlChar *title = question_get_title(question);
-    int score = question_get_score(question);
-    int answerCount = question_get_answer_count(question);
-    long ownerId = question_get_owner_id(question);
-    char dateStr[11];
-    if(date)
-        sprintf(dateStr, "%02d:%02d:%4d",
-            dateTime_get_day(date), dateTime_get_month(date), dateTime_get_year(date));
-    else
-        sprintf(dateStr,"(null)");
-    printf((char *) user_data,
-            *((long *) key), id, dateStr, title, score, answerCount, ownerId, NULL);
 }
 
 void community_print_questions(TAD_community com){
@@ -394,35 +395,11 @@ void community_print_questions(TAD_community com){
             "Key{%08ld} Question{id:%3ld, Date:%s, Title:%.5s, Score:%4d, AnswerCount:%4d, OwnerId:%3ld, OwnerName:%.5s}\n");
 }
 
-void printAnswer(gpointer key, gpointer value, gpointer user_data){
-    ANSWER answer = (ANSWER) value;
-    if(answer == NULL){ printf("NULL VALUE: Key:%ld\n",*((gint64 *) key)); return;}
-    long id = answer_get_id(answer);
-    DATETIME date = answer_get_date(answer);
-    int score = answer_get_score(answer);
-    long ownerId = answer_get_owner_id(answer);
-    char dateStr[11];
-    long parentId = answer_get_parent_id(answer);
-    if(date)
-        sprintf(dateStr, "%02d:%02d:%04d",
-            dateTime_get_day(date), dateTime_get_month(date), dateTime_get_year(date));
-    else
-        sprintf(dateStr,"(null)");
-    printf((char *) user_data,
-            *((long *) key), id, dateStr, score, parentId, ownerId, NULL);
-}
-
 void community_print_answers(TAD_community com){
     g_hash_table_foreach(com->answers, printAnswer,
             "Key{%08ld} Answer  {id:%3ld, Date:%s, Score:%4d, ParentId:%3ld, OwnerId:%3ld, OwnerName:%.5s}\n");
 }
 
-void cPrintQuestion(void* question){
-    printf("\t\t\t\tPost: %ld\n", question_get_id((QUESTION) question));
-}
-void cPrintAnswer(void* answer){
-    printf("\t\t\t\tPost: %ld\n",answer_get_id((ANSWER) answer));
-}
 void community_print_calendario(TAD_community com){
     printCalendario(com->calendarioQuestions, cPrintQuestion);
     printCalendario(com->calendarioAnswers, cPrintAnswer);
@@ -448,5 +425,58 @@ void community_print_thread(TAD_community com, long id){
                                                 answer_get_owner_id((ANSWER) as->data));
         }
     }
+}
+
+static void printUser(gpointer key, gpointer value, gpointer user_data){
+    long id = so_user_get_id((SO_USER) value);
+    int reputation = so_user_get_reputation((SO_USER) value);
+    xmlChar *name = so_user_get_name((SO_USER) value);
+    xmlChar *bio = so_user_get_bio((SO_USER) value);
+    printf((char *)user_data, *((gint64 *)key), id, reputation, name, bio);
+}
+
+static void printQuestion(gpointer key, gpointer value, gpointer user_data){
+    QUESTION question = (QUESTION) value;
+    if(question == NULL){ printf("NULL VALUE: Key:%ld\n",*((gint64 *) key)); return;}
+    long id = question_get_id(question);
+    DATETIME date = question_get_date(question);
+    xmlChar *title = question_get_title(question);
+    int score = question_get_score(question);
+    int answerCount = question_get_answer_count(question);
+    long ownerId = question_get_owner_id(question);
+    char dateStr[11];
+    if(date)
+        sprintf(dateStr, "%02d:%02d:%4d",
+            dateTime_get_day(date), dateTime_get_month(date), dateTime_get_year(date));
+    else
+        sprintf(dateStr,"(null)");
+    printf((char *) user_data,
+            *((long *) key), id, dateStr, title, score, answerCount, ownerId, NULL);
+}
+
+static void printAnswer(gpointer key, gpointer value, gpointer user_data){
+    ANSWER answer = (ANSWER) value;
+    if(answer == NULL){ printf("NULL VALUE: Key:%ld\n",*((gint64 *) key)); return;}
+    long id = answer_get_id(answer);
+    DATETIME date = answer_get_date(answer);
+    int score = answer_get_score(answer);
+    long ownerId = answer_get_owner_id(answer);
+    char dateStr[11];
+    long parentId = answer_get_parent_id(answer);
+    if(date)
+        sprintf(dateStr, "%02d:%02d:%04d",
+            dateTime_get_day(date), dateTime_get_month(date), dateTime_get_year(date));
+    else
+        sprintf(dateStr,"(null)");
+    printf((char *) user_data,
+            *((long *) key), id, dateStr, score, parentId, ownerId, NULL);
+}
+
+static void cPrintQuestion(void* question){
+    printf("\t\t\t\tPost: %ld\n", question_get_id((QUESTION) question));
+}
+
+static void cPrintAnswer(void* answer){
+    printf("\t\t\t\tPost: %ld\n",answer_get_id((ANSWER) answer));
 }
 

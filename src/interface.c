@@ -47,7 +47,7 @@ LONG_list top_most_active(TAD_community com, int N){
 
 
 // query 3
-int calFun(void* elem, void* user_data){
+static int calFun(void* elem, void* user_data){
     (void) elem;
     long* nr = (long*) user_data;
     *nr+= 1;
