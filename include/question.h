@@ -1,7 +1,7 @@
 #ifndef __QUESTION_H__
 #define __QUESTION_H__
 
-/**
+ /**
  * @file
  * \brief Módulo que define uma questão.
  */
@@ -98,7 +98,7 @@ int question_get_answer_count(QUESTION question);
  */
 int question_get_answer_count_between_dates(QUESTION question, DATETIME_INTERVAL dti);
 
-/** Lista ligada de respostas. */
+ /** Lista ligada de respostas. */
 typedef GSList* ANSWERS;
 
  /**
@@ -145,6 +145,7 @@ int question_answer_count_cmp(const void* a, const void* b);
  * Compara duas questões conforme o número de respostas que a questão tem dentro de um intervalo de tempo.
  * @param a Uma questão.
  * @param b Uma questão.
+ * @param dates Um intervalo de tempo.
  * @returns Um número positivo se a questão a tem maior número de respostas, um
  *          número negativo se a questão b tem maior número de respostas ou 0 se
  *          as questões têm o mesmo número de respostas.

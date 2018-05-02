@@ -1,7 +1,7 @@
 #ifndef __SO_USER_H__
 #define __SO_USER_H__
 
-/**
+ /**
  * @file
  * \brief Módulo que define um user.
  */
@@ -11,7 +11,7 @@
 #include <glib.h>
 #include <libxml/parserInternals.h>
 
-/** Lista ligada de posts. */
+ /** Lista ligada de posts. */
 typedef GSList * POSTS;
 
  /**

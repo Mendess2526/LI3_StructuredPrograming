@@ -1,12 +1,16 @@
 #ifndef __POST_H__
 #define __POST_H__
 
+ /**
+ * @file
+ * \brief Módulo que define um post.
+ */
 #include "dateTime.h"
 #include "question.h"
 #include "answer.h"
-#include <glib.h>
 #include "types.h"
 
+#include <glib.h>
 #include <libxml/parserInternals.h>
 
 
@@ -26,14 +30,14 @@ POST post_create(enum POST_TYPE type, void* c);
  /**
  * Verifica se um post é uma questão.
  * @param post Um post.
- * @returns 1 se for uma questão 0 caso contrário.
+ * @returns 1 se for uma questão, 0 caso contrário.
  */
 int post_is_question(POST post);
 
  /**
  * Verifica se um post é uma resposta.
  * @param post Um post.
- * @returns 1 se for uma resposta 0 caso contrário.
+ * @returns 1 se for uma resposta, 0 caso contrário.
  */
 int post_is_answer(POST post);
 
@@ -73,16 +77,16 @@ DATETIME post_get_date(POST post);
 int post_get_score(POST post);
 
  /**
- * Retorna o id do dono do post.
+ * Retorna o id do autor do post.
  * @param post Um post.
- * @returns O id do dono do post ou - 2 caso não seja questão ou resposta.
+ * @returns O id do autor do post ou - 2 caso não seja questão ou resposta.
  */
 long post_get_owner_id(POST post);
 
  /**
- * Retorna o nome do dono do post.
+ * Retorna o nome do autor do post.
  * @param post Um post.
- * @returns O nome do dono do post ou NULL caso não seja questão ou resposta.
+ * @returns O nome do autor do post ou NULL caso não seja questão ou resposta.
  */
 xmlChar *post_get_owner_name(POST post);
 
@@ -94,13 +98,26 @@ xmlChar *post_get_owner_name(POST post);
 void post_destroy(POST post, int freeQorA);
 
  /**
- *
+ * Liberta a memória ocupada pelo post.
  * @param post
  */
 void post_destroy_generic(gpointer post);
 
-int post_date_cmp(gconstpointer a, gconstpointer b);
-
+ /**
+  * Se o user existir na thread a que o post pertence retorna a questão.
+  * @param post Um post.
+  * @param id Id do user a procurar.
+  * @returns Uma questão.
+  */
 QUESTION post_search_thread_for_user(POST post, long id);
 
-#endif /*__POST_H__*/
+ /**
+  * Compara as datas de dois posts.
+  * @param a Um post.
+  * @param b Um post.
+  * @returns Um número negativo se o primeiro post for mais antigo, um número
+ *          positivo se o primeiro post for mais recente ou 0 se tiverem a mesma data.
+  */
+int post_date_cmp(gconstpointer a, gconstpointer b);
+
+#endif /* __POST_H__ */

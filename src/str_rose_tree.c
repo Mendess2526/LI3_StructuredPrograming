@@ -24,41 +24,75 @@ struct str_rose_tree{
     STR_RT_NODE* trees;
 };
 
-/** Converte um char no indice correto. */
+ /** Converte um char no índice correto. */
 #define CHAR2INDEX(c) ((int) (c)-' ')
-/** Define o número de nós do array de nós. */
+ /** Define o número de nós do array de nós. */
 #define NUM_NODES ('~'-' ' + 1)
 
-/**
- * Cria uma instancia de STR_COUNT_PAIR.
- * @param string String
- * @param count Contagem
- * @returns Instância de STR_COUTN_PAIR
+
+ /**
+ * Cria uma instância de STR_COUNT_PAIR.
+ * @param string String.
+ * @param count Contagem.
+ * @returns Instância de STR_COUTN_PAIR.
  */
+static STR_COUNT_PAIR str_count_create(char* string, int count);
+
+ /**
+ * Liberta a memória de um STR_COUNT_PAIR.
+ * @param p Instância a libertar.
+ */
+static void str_count_destroy(gpointer p);
+
+ /**
+ * Conta uma string a partir de um nó.
+ * @param node Nó a partir do qual contar.
+ * @param c String a contar.
+ * @param depth Profundidade que foi preenchida.
+ * @returns O nó que foi passado como argumento, caso seja NULL
+ *          é retornado um nó inicializado.
+ */
+static STR_RT_NODE node_add(STR_RT_NODE node, char* c, int *depth);
+
+ /**
+ * Coleciona as strings com contagem superior a 0, associadas a essa mesma contagem,
+ * numa GSequence.
+ * @param node Nó a partir do qual procurar.
+ * @param seq GSequence onde inserir.
+ * @param wordBag String onde colocar a string encontrada neste nó.
+ * @param depth Profundidade deste nó.
+ */
+static void node_get_strings(STR_RT_NODE node, GSequence* seq, char* wordBag, int depth);
+
+ /**
+ * Liberta a memória ocupada por um nó e sub-nós da árvore.
+ * @param node Nó a libertar.
+ */
+static void node_destroy(STR_RT_NODE node);
+
+ /**
+ * Função que compara as contagens de duas strings.
+ * @param a Par a.
+ * @param b Par b.
+ * @param user_data (ignored).
+ * @returns Um número positivo se a contagem de b for maior que de a, um número
+ *          negativo se a contagem de a for maior que a de b, 0 caso sejam iguais.
+ */
+static gint cmpCount(gconstpointer a, gconstpointer b, gpointer user_data);
+
 static STR_COUNT_PAIR str_count_create(char* string, int count){
     STR_COUNT_PAIR scp = malloc(sizeof(struct string_count_pair));
     scp->word = mystrdup(string);
     scp->count = count;
     return scp;
 }
-/**
- * Liberta a memória de um STR_COUNT_PAIR
- * @param p Instância a libertar
- */
+
 static void str_count_destroy(gpointer p){
     STR_COUNT_PAIR scp = (STR_COUNT_PAIR) p;
     free(scp->word);
     free(scp);
 }
 
-/**
- * Conta uma string a partir de um nó.
- * @param node Nó a partir do qual contar.
- * @param c String a contar.
- * @param depth Profundidade que foi prenchida.
- * @returns O nó que foi passado como argumento, caso fosse NULL
- *          é retornado um nó inicializado.
- */
 static STR_RT_NODE node_add(STR_RT_NODE node, char* c, int *depth){
     if(*c == '\0') return NULL;
 
@@ -81,14 +115,6 @@ static STR_RT_NODE node_add(STR_RT_NODE node, char* c, int *depth){
     return node;
 }
 
-/**
- * Coleciona as strings com contagem superior a 0, associadas a essa mesma contagem,
- * numa GSequence.
- * @param node Nó a partir do qual procurar
- * @param seq GSequence onde inserir
- * @param wordBag String onde colocar a string encontrada neste nó
- * @param depth profundidade deste nó
- */
 static void node_get_strings(STR_RT_NODE node, GSequence* seq, char* wordBag, int depth){
     if(node == NULL) return;
     wordBag[depth] = node->c;
@@ -103,10 +129,6 @@ static void node_get_strings(STR_RT_NODE node, GSequence* seq, char* wordBag, in
     wordBag[depth] = '\0';
 }
 
-/**
- * Liberta a memória ocupada por um nó e sub-nós da arvore.
- * @param node Nó a libertar
- */
 static void node_destroy(STR_RT_NODE node){
     if(!node) return;
     for(int i=0; i < NUM_NODES; i++)
@@ -130,14 +152,6 @@ void str_rtree_add(STR_ROSE_TREE tree, char* word){
     if(depth > tree->biggestWord) tree->biggestWord = depth;
 }
 
-/**
- * Função que compara as contagem de duas strings.
- * @param a Par a.
- * @param b Par b.
- * @param user_data (ignored).
- * @returns Positivo se a contagem de b for maior que de a, negativo se a de a
- *          maior que a de b, 0 caso sejam iguais.
- */
 static gint cmpCount(gconstpointer a, gconstpointer b, gpointer user_data){
     (void) user_data;
     return ((STR_COUNT_PAIR) b)->count - ((STR_COUNT_PAIR) a)->count;

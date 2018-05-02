@@ -37,4 +37,3 @@ void dateTime_interval_destroy_full(DATETIME_INTERVAL dti){
     dateTime_destroy(dti->to);
     dateTime_interval_destroy(dti);
 }
-

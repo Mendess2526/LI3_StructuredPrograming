@@ -1,7 +1,7 @@
 #ifndef __CALENDARIO_H__
 #define __CALENDARIO_H__
 
-/**
+ /**
  * @file
  * \brief Módulo que define o calendário. Este é uma estrutura que permite guardar
  *        valores arbitrários associados a uma data.
@@ -46,7 +46,8 @@ void calendario_destroy(CALENDARIO cal);
 
 /* ------------- PRINTING --------------------- */
 
-/**Imprime o calendário.
+/**
+ * Imprime o calendário.
  * @param cal Um calendário.
  * @printFunction Função que imprime um elemento.
  */

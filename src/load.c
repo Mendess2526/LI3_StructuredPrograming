@@ -12,80 +12,80 @@
 #define USERS_FILE "/Users.xml"
 #define TAGS_FILE "/Tags.xml"
 
-/**
- * \enum Post_attr
- * \brief Define os atributos de um post
+ /**
+ * \enum Post_attr.
+ * \brief Define os atributos de um post.
  */
 typedef enum _post_attr{
-    POST_ID,            /**< Id */
-    OWNER_USER_ID,      /**< Owner Id */
-    SCORE,              /**< Score */
-    COMMENT_COUNT,      /**< Contagem de commentarios */
-    CREATION_DATE,      /**< Data */
-    OWNER_DISPLAY_NAME, /**< Owner Display Name */
-    TITLE,              /**< Titulo do post (exclusivo de questões) */
-    TAGS,               /**< Tags do post (exclusivo de questões) */
-    ANSWER_COUNT,       /**< Numero de respostas (exclusivo de questões) */
-    PARENT_ID,          /**< Id do questao a que o post responde (exclusivo de respostas) */
-    POST_TYPE,          /**< Tipo do post */
-    POST_NONE           /**< Nenhuma das anteriores */
+    POST_ID,            /**< Id. */
+    OWNER_USER_ID,      /**< Owner Id. */
+    SCORE,              /**< Score. */
+    COMMENT_COUNT,      /**< Contagem de comentários. */
+    CREATION_DATE,      /**< Data. */
+    OWNER_DISPLAY_NAME, /**< Owner Display Name. */
+    TITLE,              /**< Título do post (exclusivo de questões). */
+    TAGS,               /**< Tags do post (exclusivo de questões). */
+    ANSWER_COUNT,       /**< Número de respostas (exclusivo de questões). */
+    PARENT_ID,          /**< Id da questão a que o post(resposta) responde (exclusivo de respostas). */
+    POST_TYPE,          /**< Tipo do post. */
+    POST_NONE           /**< Nenhuma das anteriores. */
 }Post_attr;
 
-/**
+ /**.
  * \enum User_attr
- * \brief Define os atributos de um user
+ * \brief Define os atributos de um user.
  */
 typedef enum _user_attr{
-    USER_ID,            /**< Id */
-    REPUTATION,         /**< Reputação */
-    DISPLAY_NAME,       /**< User Name */
-    ABOUT_ME,           /**< Biografia */
-    USER_NONE           /**< Nenhuma das anteriores */
+    USER_ID,            /**< Id. */
+    REPUTATION,         /**< Reputação. */
+    DISPLAY_NAME,       /**< User Name. */
+    ABOUT_ME,           /**< Biografia. */
+    USER_NONE           /**< Nenhuma das anteriores. */
 }User_attr;
 
-/**
- * \enum Tag_atr
- * \brief Define os atributos de uma tag
+ /**
+ * \enum Tag_attr.
+ * \brief Define os atributos de uma tag.
  */
 typedef enum _tag_attr{
-    TAG_ID,     /**< Id */
-    TAG_NAME,   /**< Nome */
-    TAG_NONE    /**< Nenhuma das anteriores */
+    TAG_ID,     /**< Id. */
+    TAG_NAME,   /**< Name. */
+    TAG_NONE    /**< Nenhuma das anteriores. */
 }Tag_attr;
 
-/**
- * Retorna o atributo de post associado à string dada
- * @param attribute Atributo a testar
- * @return O enum do atributo correspondente
+ /**
+ * Retorna o atributo do post associado à string dada.
+ * @param attribute Atributo a testar.
+ * @return O enum do atributo correspondente.
  */
 static inline Post_attr postStrcmp(const xmlChar *attribute);
 
-/**
- * Retorna o atributo de user associado à string dada
- * @param attribute Atributo a testar
- * @return O enum do atributo correspondente
+ /**
+ * Retorna o atributo do user associado à string dada.
+ * @param attribute Atributo a testar.
+ * @return O enum do atributo correspondente.
  */
 static inline User_attr userStrcmp(const xmlChar *attribute);
 
-/**
- * Retorna o atributo de tag associado à string dada
- * @param attribute Atributo a testar
- * @return O enum do atributo correspondente
+ /**
+ * Retorna o atributo da tag associado à string dada.
+ * @param attribute Atributo a testar.
+ * @return O enum do atributo correspondente.
  */
 static inline Tag_attr tagStrcmp(const xmlChar *attribute);
 
-/**
- * Converte uma string num DATETIME
- * @param dateStr string a converter
- * @returns A data convertida
+ /**
+ * Converte uma string num DATETIME.
+ * @param dateStr String a converter.
+ * @returns A data convertida.
  */
 static inline DATETIME parseDate(const xmlChar *dateStr);
 
-/**
- * Função passada ao saxHandler para fazer parse do ficheiro de posts
- * @param user_data Apontador generico usado para passar a instancia da estrutura
- * @param name Nome do elemento de xml encontrado
- * @param attrs Array de strings onde se encontram os atributos e respetivos valores
+ /**
+ * Função passada ao saxHandler para fazer parse de um post.
+ * @param user_data Apontador genérico usado para passar a instância da estrutura.
+ * @param name Nome do elemento de xml encontrado.
+ * @param attrs Array de strings onde se encontram os atributos e respetivos valores.
  */
 static void start_post_element(void *user_data, const xmlChar *name, const xmlChar **attrs){
     (void) name;
@@ -164,11 +164,11 @@ static void start_post_element(void *user_data, const xmlChar *name, const xmlCh
     }
 }
 
-/**
- * Função passada ao saxHandler para fazer parse do ficheiro de users
- * @param user_data Apontador generico usado para passar a instancia da estrutura
- * @param name Nome do elemento de xml encontrado
- * @param attrs Array de strings onde se encontram os atributos e respetivos valores
+ /**
+ * Função passada ao saxHandler para fazer parse de um user.
+ * @param user_data Apontador genérico usado para passar a instância da estrutura.
+ * @param name Nome do elemento de xml encontrado.
+ * @param attrs Array de strings onde se encontram os atributos e respetivos valores.
  */
 static void start_user_element(void *user_data, const xmlChar *name, const xmlChar **attrs){
     (void) name;
@@ -203,11 +203,11 @@ static void start_user_element(void *user_data, const xmlChar *name, const xmlCh
     community_add_user(com,so_user_create(id,reputation,displayName,bio));
 }
 
-/**
- * Função passada ao saxHandler para fazer parse do ficheiro de tags
- * @param user_data Apontador generico usado para passar a instancia da estrutura
- * @param name Nome do elemento de xml encontrado
- * @param attrs Array de strings onde se encontram os atributos e respetivos valores
+ /**
+ * Função passada ao saxHandler para fazer parse de uma tag.
+ * @param user_data Apontador genérico usado para passar a instância da estrutura.
+ * @param name Nome do elemento de xml encontrado.
+ * @param attrs Array de strings onde se encontram os atributos e respetivos valores.
  */
 static void start_tag_element(void* user_data, const xmlChar* name, const xmlChar** attrs){
     (void) name;
@@ -232,10 +232,10 @@ static void start_tag_element(void* user_data, const xmlChar* name, const xmlCha
     if(id != -2) community_add_tag(com, id, tag);
 }
 
-/**
- * Funcão que é chamada caso o xml estaja mal formatado
- * @param user_data Apontador generico usado para passar a instancia da estrutura
- * @param msg Mensagem de erro
+ /**
+ * Funcão que é chamada caso o xml estaja mal formado.
+ * @param user_data Apontador genérico usado para passar a instância da estrutura.
+ * @param msg Mensagem de erro.
  */
 static void error_handler(void *user_data, const char *msg, ...) {
     (void) user_data;
@@ -245,13 +245,6 @@ static void error_handler(void *user_data, const char *msg, ...) {
     va_end(args);
 }
 
-/**
- * Carrega os da
- * dos dos ficheiros para um instancia da estrutura
- * @param com Instancia da estrutura
- * @param dump_path Caminho para a diretoria dos ficheiros
- * @returns A instancia da estrutura
- */
 TAD_community load(TAD_community com, char *dump_path){
     int n;
     char xmlPath[strlen(dump_path)+10];
