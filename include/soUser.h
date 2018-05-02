@@ -1,7 +1,7 @@
 #ifndef __SO_USER_H__
 #define __SO_USER_H__
 
-/**
+ /**
  * @file
  * \brief Módulo que define um user.
  */
@@ -11,7 +11,7 @@
 #include <glib.h>
 #include <libxml/parserInternals.h>
 
-/** Lista ligada de posts. */
+ /** Lista ligada de posts. */
 typedef GSList * POSTS;
 
  /**
@@ -24,8 +24,8 @@ typedef GSList * POSTS;
  */
 SO_USER so_user_create(long id,
                         int reputation,
-                        xmlChar *name,
-                        xmlChar *bio);
+                        const xmlChar *name,
+                        const xmlChar *bio);
 
  /**
  * Retorna o id do user.

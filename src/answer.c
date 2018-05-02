@@ -12,7 +12,7 @@ struct _answer{
     xmlChar *owner_name;
 };
 
-ANSWER answer_create(long id, DATETIME date, int score, long ownerId, long parentId, xmlChar *ownerName, int comment_count){
+ANSWER answer_create(long id, DATETIME date, int score, long ownerId, long parentId, const xmlChar *ownerName, int comment_count){
     ANSWER answer = (ANSWER) malloc(sizeof(struct _answer));
     answer->id = id;
     answer->date = date;

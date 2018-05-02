@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 
-/** Macro para compara dois inteiros positivos */
+/** Macro para compara dois inteiros positivos. */
 #define INT_CMP(a,b) (((a) > (b)) - ((a) < (b)))
 
 struct _dateTime{
@@ -61,20 +61,19 @@ void dateTime_destroy(DATETIME d){
 
 int dateTime_compare(DATETIME dataA, DATETIME dataB){
     int c;
-    c = INT_CMP(dateTime_get_year(dataA), dateTime_get_year(dataB));
+    c = INT_CMP(dataA->year, dataB->year);
     if(c) return c;
-    c = INT_CMP(dateTime_get_month(dataA), dateTime_get_month(dataB));
+    c = INT_CMP(dataA->month, dataB->month);
     if(c) return c;
-    c = INT_CMP(dateTime_get_day(dataA), dateTime_get_day(dataB));
+    c = INT_CMP(dataA->day, dataB->day);
     if(c) return c;
-    c = INT_CMP(dateTime_get_hours(dataA), dateTime_get_hours(dataB));
+    c = INT_CMP(dataA->hours, dataB->hours);
     if(c) return c;
-    c = INT_CMP(dateTime_get_minutes(dataA), dateTime_get_minutes(dataB));
+    c = INT_CMP(dataA->minutes, dataB->minutes);
     if(c) return c;
-    c = INT_CMP(dateTime_get_seconds(dataA), dateTime_get_seconds(dataB));
+    c = INT_CMP(dataA->seconds, dataB->seconds);
     if(c) return c;
-    c = INT_CMP(dateTime_get_milisseconds(dataA), dateTime_get_milisseconds(dataB));
+    c = INT_CMP(dataA->milisseconds, dataB->milisseconds);
     if(c) return c;
     return 0;
 }
-

@@ -12,7 +12,7 @@ struct _so_user{
     POSTS posts;
 };
 
-SO_USER so_user_create(long id, int reputation, xmlChar *name, xmlChar *bio){
+SO_USER so_user_create(long id, int reputation, const xmlChar *name, const xmlChar *bio){
     SO_USER user = malloc (sizeof(struct _so_user));
     user->id = id;
     user->reputation = reputation;

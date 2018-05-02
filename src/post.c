@@ -8,6 +8,14 @@ struct _post{
     void* c;
 };
 
+ /**
+  * Verifica se um user é autor da questão ou alguma das respostas desta.
+  * @param question Uma questão.
+  * @param id Id do user.
+  * @returns 1 se é o autor, 0 caso contrário.
+  */
+static int searchFromQuestion(QUESTION question, long id);
+
 POST post_create(enum POST_TYPE type, void* c){
     POST p = (POST) malloc(sizeof(struct _post));
     p->type = type;
@@ -111,7 +119,7 @@ void post_destroy_generic(gpointer post){
     post_destroy((POST) post, 0);
 }
 
-static long searchFromQuestion(QUESTION question, long id){
+static int searchFromQuestion(QUESTION question, long id){
     if(question_get_owner_id(question) == id)
         return 1;
 
@@ -141,4 +149,3 @@ int post_date_cmp(gconstpointer a, gconstpointer b){
     DATETIME dataB = post_get_date((POST) a);
     return dateTime_compare(dataA, dataB);
 }
-

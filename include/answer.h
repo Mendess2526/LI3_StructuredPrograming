@@ -1,7 +1,7 @@
 #ifndef __ANSWER_H__
 #define __ANSWER_H__
 
-/**
+ /**
  * @file
  * \brief Módulo que define uma resposta.
  */
@@ -28,7 +28,7 @@ ANSWER answer_create(long id,
                     int score,
                     long ownerId,
                     long parentId,
-                    xmlChar *ownerName,
+                    const xmlChar *ownerName,
                     int comment_count);
 
  /**
@@ -121,7 +121,7 @@ int answer_date_cmp(const void* a, const void* b);
  * @param a Uma resposta.
  * @param b Uma resposta.
  * @returns Um número positivo se a resposta a tem um score superior, um número
- *          negativo se a resposta b tem um score superior ou 0 se têm score 
+ *          negativo se a resposta b tem um score superior ou 0 se têm score
  *          igual.
  */
 int answer_score_cmp(const void* a, const void* b);

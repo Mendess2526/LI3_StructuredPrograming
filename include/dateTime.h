@@ -1,16 +1,16 @@
 #ifndef __DATE_TIME_H__
 #define __DATE_TIME_H__
 
-/**
+ /**
  * @file
  * \brief Módulo que define um dateTime. Esta estrutura representa uma data e hora.
  */
 #include "types.h"
 
-/** Macro para obter a data mais antiga representavel */
+ /** Macro para obter a data mais antiga representável. */
 #define dateTime_get_epoch() (dateTime_create(1901,11,1,20,45,52,0))
 
-/** Macro para obter a data mais futura representavel */
+ /** Macro para obter a data mais futura representável. */
 #define dateTime_get_year2038() (dateTime_create(2038,0,18,3,14,7,0))
 
  /**
