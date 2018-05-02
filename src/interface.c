@@ -47,7 +47,8 @@ LONG_list top_most_active(TAD_community com, int N){
 
 
 // query 3
-int calFun(void* elem, void* user_data){
+static int calFun(void* elem, void* user_data){
+    (void) elem;
     long* nr = (long*) user_data;
     *nr+= 1;
     return 1;
@@ -161,6 +162,7 @@ LONG_list contains_word(TAD_community com, char* word, int N){
 
 // query 9
 static int question_date_cmp_with_data(gconstpointer a, gconstpointer b, gpointer d){
+    (void) d;
     return question_date_cmp(a,b);
 }
 
