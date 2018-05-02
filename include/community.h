@@ -1,7 +1,7 @@
 #ifndef __COMMUNITY_H__
 #define __COMMUNITY_H__
 
-/**
+ /**
  * @file
  * \brief Módulo que define a API para interagir com as estururas
  *        definidas que armazenam toda a informação retirada dos ficheiros xml.
@@ -14,8 +14,8 @@
 
 #include <glib.h>
 
-/**
- * Alias para a função community_create
+ /**
+ * Alias para a função community_create.
  * @returns Uma instância da estrutura.
  */
 TAD_community init();
@@ -47,25 +47,25 @@ void community_add_question(TAD_community com, QUESTION question);
 void community_add_answer(TAD_community com, ANSWER answer);
 
  /**
- * Adiciona um user ao tipo abstrato de dados.
+ * Adiciona um user à estrutura.
  * @param com Uma instância da estrutura.
  * @param user O user a adicionar.
  */
 void community_add_user(TAD_community com, SO_USER user);
 
  /**
- * Adiciona uma tag ao tipo abstrato de dados.
+ * Adiciona uma tag à estrutura.
  * @param com Uma instância da estrutura.
  * @param id O id da tag.
  * @param tag O nome da tag.
  */
-void community_add_tag(TAD_community com, long id, xmlChar* tag);
+void community_add_tag(TAD_community com, long id, const xmlChar* tag);
 
  /**
  * Encontra o user com o id fornecido.
  * @param com Uma instância da estrutura.
  * @param id O id do user.
- * @returns O user.
+ * @returns Um user.
  */
 SO_USER community_get_user(TAD_community com, long id);
 
@@ -73,7 +73,7 @@ SO_USER community_get_user(TAD_community com, long id);
  * Encontra a questão com o id fornecido.
  * @param com Uma instância da estrutura.
  * @param id O id da questão.
- * @returns A questão.
+ * @returns Uma questão.
  */
 QUESTION community_get_question(TAD_community com, long id);
 
@@ -81,7 +81,7 @@ QUESTION community_get_question(TAD_community com, long id);
  * Encontra a resposta com o id fornecido.
  * @param com Uma instância da estrutura.
  * @param id O id da resposta.
- * @returns A resposta.
+ * @returns Uma resposta.
  */
 ANSWER community_get_answer(TAD_community com, long id);
 
@@ -118,7 +118,7 @@ typedef GSList* USERS;
  */
 USERS community_get_sorted_user_list(TAD_community com, ComCmpFunc cfunc, int N);
 
-/** Lista ligada de questões. */
+ /** Lista ligada de questões. */
 typedef GSList* QUESTIONS;
 
  /**
@@ -144,7 +144,7 @@ QUESTIONS community_get_sorted_question_list(TAD_community com, DATETIME from, D
  */
 QUESTIONS community_get_sorted_question_list_with_data(TAD_community com, DATETIME from, DATETIME to, ComGetValueFunc func, int N, void* compare_data);
 
-/** Lista ligada de respostas. */
+ /** Lista ligada de respostas. */
 typedef GSList* ANSWERS;
 
  /**
@@ -200,14 +200,36 @@ void community_iterate_answers(TAD_community com, DATETIME from, DATETIME to, vo
 
 /* ------------- PRINTING --------------------- */
 
+ /**
+ * Imprime os users de uma estrutura.
+ * @param com Uma instância da estrutura.
+ */
 void community_print_users(TAD_community com);
 
+ /**
+ * Imprime as questões de uma estrutura.
+ * @param com Uma instância da estrutura.
+ */
 void community_print_questions(TAD_community com);
 
+ /**
+ * Imprime as respostas de uma estrutura.
+ * @param com Uma instância da estrutura.
+ */
 void community_print_answers(TAD_community com);
 
+ /**
+ * Imprime o calendário de uma estrutura.
+ * @param com Uma instância da estrutura.
+ */
 void community_print_calendario(TAD_community com);
 
+ /**
+ * Imprime os ids das respostas e da questão da thread a que o post pertence,
+ * acompanhadas do id do autor.
+ * @param com Uma instância da estrutura.
+ * @param id Id de uma pergunta ou resposta.
+ */
 void community_print_thread(TAD_community com, long id);
 
 #endif /* __COMMUNITY_H__ */

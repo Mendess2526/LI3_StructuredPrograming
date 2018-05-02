@@ -6,7 +6,7 @@ EXE=program
 
 CC=gcc
 CFLAGS = -Wall -std=c11 `pkg-config --cflags libxml-2.0` `pkg-config --cflags glib-2.0` -I$(IDIR)
-WARNINGS= -Wextra -pedantic -Wno-unused-parameter
+WARNINGS= -Wextra -pedantic
 
 DEBUG= -g -O0 $(WARNINGS) $(CFLAGS)
 OPTIMUS= -march=native -O3 -pipe -D_GNU_SOURCE $(WARNINGS) $(CFLAGS)
