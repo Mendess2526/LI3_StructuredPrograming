@@ -14,7 +14,7 @@ struct _post{
   * @param id Id do user.
   * @returns 1 se é o autor, 0 caso contrário.
   */
-static int searchFromQuestion(QUESTION question, long id)
+static int searchFromQuestion(QUESTION question, long id);
 
 POST post_create(enum POST_TYPE type, void* c){
     POST p = (POST) malloc(sizeof(struct _post));
