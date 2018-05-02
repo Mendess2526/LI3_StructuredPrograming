@@ -4,7 +4,7 @@
 
 #include <string.h>
 
-/** Macro que converte um ano, no indice do array */
+/** Macro que converte um ano no índice do array. */
 #define ANO2INDEX(year) ((year)-2008 > cal->nYears-1 ? cal->nYears-1 : ((year)-2008 < 0 ? 0 : (year)-2008))
 
 
@@ -54,12 +54,12 @@ static HOUR hour_create();
 
  /**
  * Cria um dia, que é constituido por 24 HOURS.
- * @returns Instância de DIA.
+ * @returns Instância de DAY.
  */
 static DAY day_create();
 
  /**
- * Cria um mês, que é constituido por nDays dias.
+ * Cria um mês, que é constituido por nDays DAYS.
  * @param nDays O número de dias do mês.
  * @retuns Instância de MONTH.
  */
@@ -121,7 +121,7 @@ static inline int hour_iterate_forward(HOUR hour, void *data, CalFunc calFunc);
 
  /**
  * Itera sobre os posts de um dia por ordem cronológica.
- * @param day Dia onde iterar
+ * @param day Dia onde iterar.
  * @param data Informação do utilizador passada a calFunc.
  * @param calFunc Função que será aplicada a todos os elementos.
  * @returns 1 se a iteração deve continuar, 0 caso contrário.
@@ -156,7 +156,7 @@ static inline int year_iterate_forward(YEAR year, DATETIME from, DATETIME to, in
 
  /**
  * Itera sobre os posts de um calendário por ordem cronológica.
- * @param hour Hora onde iterar.
+ * @param cal Calendário onde iterar.
  * @param from Data de onde a iteração começa.
  * @param to Data até onde a iteração continua.
  * @param data Informação do utilizador passada a calFunc.
@@ -211,7 +211,7 @@ static inline int year_iterate_backwards(YEAR year, DATETIME from, DATETIME to, 
 
  /**
  * Itera sobre os posts de um calendário por ordem cronológica inversa.
- * @param hour Hora onde iterar.
+ * @param cal Calendário onde iterar.
  * @param from Data de onde a iteração começa.
  * @param to Data até onde a iteração continua.
  * @param data Informação do utilizador passada a calFunc.
@@ -247,6 +247,34 @@ static void month_destroy(MONTH m, CalFreeFunc freeFunc);
  * @param freeFunc Função que liberta os elementos da estrutura.
  */
 static void year_destroy(YEAR y, CalFreeFunc freeFunc);
+
+/**
+ * Imprime uma hora.
+ * @param hour A hora a imprimir.
+ * @printFunction Função que imprime um elemento.
+ */
+static void printHora(HOUR hour, CalPrintFunc printFuncion);
+
+/**
+ * Imprime um dia.
+ * @param day O dia a imprimir.
+ * @printFunction Função que imprime um elemento.
+ */
+static void printDia(DAY day, CalPrintFunc printFuncion);
+
+/**
+ * Imprime um mês.
+ * @param cal O mês a imprimir.
+ * @printFunction Função que imprime um elemento.
+ */
+static void printMes(MONTH month, CalPrintFunc printFuncion);
+
+/**
+ * Imprime um ano.
+ * @param cal O ano a imprimir.
+ * @printFunction Função que imprime um elemento.
+ */
+static void printAno(YEAR year, CalPrintFunc printFuncion);
 
 static int nrDays (int m){
     if(m == 3 || m == 5 || m == 8 || m == 10) return 30;
