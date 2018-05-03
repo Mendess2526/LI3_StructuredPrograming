@@ -106,7 +106,7 @@ static void start_post_element(void *user_data, const xmlChar *name, const xmlCh
     for(;postType < 3 && numAttr > 0 && attrs!=NULL && attrs[0]!=NULL;attrs += 2){
         Post_attr atrType = postStrcmp(attrs[0]);
         switch(atrType){
-            case USER_ID:
+            case POST_ID:
                     id = strtol((char *) attrs[1],NULL,10);
                     numAttr--;
                     break;

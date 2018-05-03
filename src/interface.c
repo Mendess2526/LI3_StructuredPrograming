@@ -109,7 +109,7 @@ USER get_user_info(TAD_community com, long id){
 // query 6
 LONG_list most_voted_answers(TAD_community com, int N, Date begin, Date end){
     DATETIME from = dateTime_create(get_year(begin), get_month(begin), get_day(begin), 0, 0, 0, 0);
-    DATETIME to = dateTime_create(get_year(end), get_month(end), get_day(end), 0, 0, 0, 0);
+    DATETIME to = dateTime_create(get_year(end), get_month(end), get_day(end), 23, 59, 59, 999);
 
     ANSWERS as = community_get_sorted_answer_list(com, from, to, answer_score_cmp, N);
 
