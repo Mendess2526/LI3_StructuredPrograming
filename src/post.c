@@ -8,7 +8,7 @@ struct _post{
     void* c;
 };
 
- /**
+/**
   * Verifica se um user é autor da questão ou alguma das respostas desta.
   * @param question Uma questão.
   * @param id Id do user.
@@ -93,8 +93,8 @@ long post_get_owner_id(POST post){
     return id;
 }
 
-xmlChar *post_get_owner_name(POST post){
-    xmlChar *owner_name = NULL;
+xmlChar* post_get_owner_name(POST post){
+    xmlChar* owner_name = NULL;
     if(post_is_question(post)){
         QUESTION question = post_get_question(post);
         owner_name = question_get_owner_name(question);

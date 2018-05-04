@@ -7,13 +7,16 @@ struct _so_user{
     int reputation;
     int nrPosts;
     long id;
-    xmlChar *name;
-    xmlChar *bio;
+    xmlChar* name;
+    xmlChar* bio;
     POSTS posts;
 };
 
-SO_USER so_user_create(long id, int reputation, const xmlChar *name, const xmlChar *bio){
-    SO_USER user = malloc (sizeof(struct _so_user));
+SO_USER so_user_create(long id,
+                       int reputation,
+                       const xmlChar* name,
+                       const xmlChar* bio){
+    SO_USER user = malloc(sizeof(struct _so_user));
     user->id = id;
     user->reputation = reputation;
     user->nrPosts = 0;
@@ -32,11 +35,11 @@ int so_user_get_reputation(SO_USER user){
     return user->reputation;
 }
 
-xmlChar *so_user_get_name(SO_USER user){
+xmlChar* so_user_get_name(SO_USER user){
     return user->name;
 }
 
-xmlChar *so_user_get_bio(SO_USER user){
+xmlChar* so_user_get_bio(SO_USER user){
     return user->bio;
 }
 
@@ -68,6 +71,6 @@ int so_user_post_count_cmp(const void* a, const void* b){
     return ((SO_USER) a)->nrPosts - ((SO_USER) b)->nrPosts;
 }
 
-int so_user_reputation_cmp(const void* a, const void*b){
+int so_user_reputation_cmp(const void* a, const void* b){
     return ((SO_USER) a)->reputation - ((SO_USER) b)->reputation;
 }

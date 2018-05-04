@@ -9,10 +9,16 @@ struct _answer{
     long owner_id;
     DATETIME date;
     QUESTION parent_ptr;
-    xmlChar *owner_name;
+    xmlChar* owner_name;
 };
 
-ANSWER answer_create(long id, DATETIME date, int score, long ownerId, long parentId, const xmlChar *ownerName, int comment_count){
+ANSWER answer_create(long id,
+                     DATETIME date,
+                     int score,
+                     long ownerId,
+                     long parentId,
+                     const xmlChar* ownerName,
+                     int comment_count){
     ANSWER answer = (ANSWER) malloc(sizeof(struct _answer));
     answer->id = id;
     answer->date = date;
@@ -45,7 +51,7 @@ int answer_get_comment_count(ANSWER answer){
     return answer->comment_count;
 }
 
-xmlChar *answer_get_owner_name(ANSWER answer){
+xmlChar* answer_get_owner_name(ANSWER answer){
     return answer->owner_name;
 }
 
@@ -62,7 +68,7 @@ void answer_set_parent_ptr(ANSWER answer, QUESTION question){
 }
 
 void answer_destroy(ANSWER answer){
-    dateTime_destroy (answer->date);
+    dateTime_destroy(answer->date);
     xmlFree(answer->owner_name);
     free(answer);
 }

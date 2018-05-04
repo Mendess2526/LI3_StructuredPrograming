@@ -9,7 +9,8 @@ struct _dateTime_interval{
 };
 
 DATETIME_INTERVAL dateTime_interval_create(DATETIME from, DATETIME to){
-    DATETIME_INTERVAL dti = (DATETIME_INTERVAL) malloc(sizeof(struct _dateTime_interval));
+    DATETIME_INTERVAL dti = (DATETIME_INTERVAL) malloc(
+            sizeof(struct _dateTime_interval));
     dti->from = from;
     dti->to = to;
     return dti;

@@ -1,7 +1,7 @@
 #ifndef __CALENDARIO_H__
 #define __CALENDARIO_H__
 
- /**
+/**
  * @file
  * \brief Módulo que define o calendário. Este é uma estrutura que permite guardar
  *        valores arbitrários associados a uma data.
@@ -12,15 +12,17 @@
 
 #include <glib.h>
 
- /**
+/**
  * Cria um calendário.
  * @param nYears Número de anos que o calendário tem.
  * @param compareFunc Função que compara datas dos elementos inseridos.
  * @param freeFunc Função que liberta a memória ocupada pelos elementos inseridos.
  */
-CALENDARIO calendario_create(int nYears, CalCmpFunc compareFunc, CalFreeFunc freeFunc);
+CALENDARIO calendario_create(int nYears,
+                             CalCmpFunc compareFunc,
+                             CalFreeFunc freeFunc);
 
- /**
+/**
  * Adiciona um post no calendário.
  * @param cal Um calendário.
  * @param post O post a adicionar.
@@ -28,7 +30,7 @@ CALENDARIO calendario_create(int nYears, CalCmpFunc compareFunc, CalFreeFunc fre
  */
 void calendario_add_post(CALENDARIO cal, void* post, DATETIME d);
 
- /**
+/**
  * Itera o calendário.
  * @param cal Um calendário.
  * @param from A data do inicio.
@@ -36,9 +38,13 @@ void calendario_add_post(CALENDARIO cal, void* post, DATETIME d);
  * @param data Informação passada a calFunc.
  * @param calFunc Função chamada para cada elemento entre as datas.
  */
-void calendario_iterate(CALENDARIO cal, DATETIME from, DATETIME to, void* data, CalFunc calFunc);
+void calendario_iterate(CALENDARIO cal,
+                        DATETIME from,
+                        DATETIME to,
+                        void* data,
+                        CalFunc calFunc);
 
- /**
+/**
  * Liberta a memória ocupada pelo calendário.
  * @param cal Um calendário.
  */

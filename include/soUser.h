@@ -1,7 +1,7 @@
 #ifndef __SO_USER_H__
 #define __SO_USER_H__
 
- /**
+/**
  * @file
  * \brief Módulo que define um user.
  */
@@ -11,10 +11,10 @@
 #include <glib.h>
 #include <libxml/parserInternals.h>
 
- /** Lista ligada de posts. */
-typedef GSList * POSTS;
+/** Lista ligada de posts. */
+typedef GSList* POSTS;
 
- /**
+/**
  * Cria um user.
  * @param id O id do user.
  * @param reputation A reputação do user.
@@ -23,66 +23,66 @@ typedef GSList * POSTS;
  * @returns Um user.
  */
 SO_USER so_user_create(long id,
-                        int reputation,
-                        const xmlChar *name,
-                        const xmlChar *bio);
+                       int reputation,
+                       const xmlChar* name,
+                       const xmlChar* bio);
 
- /**
+/**
  * Retorna o id do user.
  * @param user Um user.
  * @returns O id do user.
  */
 long so_user_get_id(SO_USER user);
 
- /**
+/**
  * Retorna a reputação do user.
  * @param user Um user.
  * @returns A reputação do user.
  */
 int so_user_get_reputation(SO_USER user);
 
- /**
+/**
  * Retorna o nome do user.
  * @param user Um user.
  * @returns O nome do user.
  */
-xmlChar *so_user_get_name(SO_USER user);
+xmlChar* so_user_get_name(SO_USER user);
 
- /**
+/**
  * Retorna a biografia do user.
  * @param user Um user.
  * @returns A biografia do user.
  */
-xmlChar *so_user_get_bio(SO_USER user);
+xmlChar* so_user_get_bio(SO_USER user);
 
- /**
+/**
  * Adiciona um post na lista de posts do user.
  * @param user Um user.
  * @param post O post a adicionar.
  */
 void so_user_add_post(SO_USER user, POST post);
 
- /**
+/**
  * Retorna o número de posts de um user.
  * @param user Um user.
  * @returns O número de posts.
  */
 int so_user_get_post_count(SO_USER user);
 
- /**
+/**
  * Retorna a lista de posts de um user.
  * @param user Um user.
  * @returns A lista de posts.
  */
 POSTS so_user_get_posts(SO_USER user);
 
- /**
+/**
  * Liberta a memória ocupada pelo user.
  * @param user Um user.
  */
 void so_user_destroy(SO_USER user);
 
- /**
+/**
  * Liberta a memória ocupada pelo user.
  * @param user Um user.
  */
