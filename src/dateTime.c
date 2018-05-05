@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 /** Macro para compara dois inteiros positivos. */
-#define INT_CMP(a,b) (((a) > (b)) - ((a) < (b)))
+#define INT_CMP(a, b) (((a) > (b)) - ((a) < (b)))
 
 struct _dateTime{
     int year;
@@ -15,8 +15,14 @@ struct _dateTime{
     int milisseconds;
 };
 
-DATETIME dateTime_create(int year, int month, int day, int hours, int minutes, int seconds, int milisseconds){
-    DATETIME d = (DATETIME) malloc (sizeof (struct _dateTime));
+DATETIME dateTime_create(int year,
+                         int month,
+                         int day,
+                         int hours,
+                         int minutes,
+                         int seconds,
+                         int milisseconds){
+    DATETIME d = (DATETIME) malloc(sizeof(struct _dateTime));
     d->year = year;
     d->month = month;
     d->day = day;

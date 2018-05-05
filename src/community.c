@@ -6,16 +6,16 @@
 
 #include <stdlib.h>
 
- /** Hashtable de questões. */
+/** Hashtable de questões. */
 typedef GHashTable* QUESTIONS_HTABLE;
- /** Hashtable de respostas. */
+/** Hashtable de respostas. */
 typedef GHashTable* ANSWERS_HTABLE;
- /** Hashtable de users. */
+/** Hashtable de users. */
 typedef GHashTable* SO_USERS_HTABLE;
- /** Hashtable de tags. */
+/** Hashtable de tags. */
 typedef GHashTable* TAGS_HTABLE;
 
- /** Tipo concreto de dados para guardar questões, respostas, users e tags. */
+/** Tipo concreto de dados para guardar questões, respostas, users e tags. */
 struct TCD_community{
     QUESTIONS_HTABLE questions;     /**< Hashtable de questões. */
     ANSWERS_HTABLE answers;         /**< Hashtable de respostas. */
@@ -25,29 +25,31 @@ struct TCD_community{
     CALENDARIO calendarioAnswers;   /**< Calendário para guardar respostas. */
 };
 
- /**
+/**
  * Aloca um id.
  * @param val O valor a alocar.
  * @returns Um id alocado.
  */
-static inline gint64 *newId(long val);
+static inline gint64* newId(long val);
 
- /**
+/**
  * Atualiza os posts de um user.
  * @param users Os users.
  * @param ownerId O user que vais atualizar.
  * @param post O post do user.
  */
-static inline void updateUserPosts(SO_USERS_HTABLE users, long ownerId, POST post);
+static inline void updateUserPosts(SO_USERS_HTABLE users,
+                                   long ownerId,
+                                   POST post);
 
- /**
+/**
  * Atualiza as respostas da questão.
  * @param com Uma instância da estrutura.
  * @param answer A resposta a adicionar.
  */
 static inline void updateQuestionAnswers(TAD_community com, ANSWER answer);
 
- /**
+/**
  * Coleciona ordenadamente elementos da TCD.
  * @param value Elemento da TCD.
  * @param user_data Informação do utilizador.
@@ -55,7 +57,7 @@ static inline void updateQuestionAnswers(TAD_community com, ANSWER answer);
  */
 static int collect(void* value, void* user_data);
 
- /**
+/**
  * Coleciona ordenadamente elementos da TCD.
  * @param value Elemento da TCD.
  * @param user_data Informação do utilizador.
@@ -63,7 +65,7 @@ static int collect(void* value, void* user_data);
  */
 static int collect_with_data(void* value, void* user_data);
 
- /**
+/**
  * Chama a função de coleção de elementos ignorando a key.
  * @param key Chave do elemento (ignorado).
  * @param value Elemento da TCD.
@@ -71,7 +73,7 @@ static int collect_with_data(void* value, void* user_data);
  */
 static void collect_key_value(gpointer key, gpointer value, gpointer user_data);
 
- /**
+/**
  * Filtra elementos da TCD.
  * @param value Elemento da TCD.
  * @param user_data Informação do utilizador.
@@ -79,21 +81,24 @@ static void collect_key_value(gpointer key, gpointer value, gpointer user_data);
  */
 static int filter(gpointer elem, gpointer user_data);
 
-static inline gint64 *newId(long val){
-    gint64 *id = g_new(gint64, 1);
+static inline gint64* newId(long val){
+    gint64* id = g_new(gint64, 1);
     *id = val;
     return id;
 }
 
-static inline void updateUserPosts(SO_USERS_HTABLE users, long ownerId, POST post){
+static inline void updateUserPosts(SO_USERS_HTABLE users,
+                                   long ownerId,
+                                   POST post){
     SO_USER user = g_hash_table_lookup(users, &ownerId);
-    if(user) so_user_add_post(user,post);
+    if(user) so_user_add_post(user, post);
 }
 
 static inline void updateQuestionAnswers(TAD_community com, ANSWER answer){
     long parentId = answer_get_parent_id(answer);
-    QUESTION question = g_hash_table_lookup(com->questions, (gconstpointer) &parentId);
-    if(question) question_add_answer(question,answer);
+    QUESTION question = g_hash_table_lookup(com->questions,
+            (gconstpointer) &parentId);
+    if(question) question_add_answer(question, answer);
 }
 
 TAD_community init(){
@@ -102,18 +107,18 @@ TAD_community init(){
 
 TAD_community community_create(){
     TAD_community com = (TAD_community) malloc(sizeof(struct TCD_community));
-    com->questions  = g_hash_table_new_full(
+    com->questions = g_hash_table_new_full(
             g_int64_hash, g_int64_equal, g_free, question_destroy_generic);
 
-    com->answers    = g_hash_table_new_full(
+    com->answers = g_hash_table_new_full(
             g_int64_hash, g_int64_equal, g_free, answer_destroy_generic);
 
-    com->users      = g_hash_table_new_full(
+    com->users = g_hash_table_new_full(
             g_int64_hash, g_int64_equal, g_free, so_user_destroy_generic);
     com->tags = g_hash_table_new_full(
             g_str_hash, g_str_equal, g_free, g_free);
     com->calendarioQuestions = calendario_create(11, question_date_cmp, NULL);
-    com->calendarioAnswers   = calendario_create(11, answer_date_cmp, NULL);
+    com->calendarioAnswers = calendario_create(11, answer_date_cmp, NULL);
     return com;
 }
 
@@ -128,28 +133,32 @@ void community_destroy(TAD_community com){
 }
 
 void community_add_question(TAD_community com, QUESTION question){
-    gint64 *id = newId(question_get_id(question));
+    gint64* id = newId(question_get_id(question));
 
     g_hash_table_insert(com->questions, (gpointer) id, question);
 
-    calendario_add_post(com->calendarioQuestions, question, question_get_date(question));
+    calendario_add_post(com->calendarioQuestions, question,
+            question_get_date(question));
 
-    updateUserPosts(com->users, question_get_owner_id(question), post_create(QUESTION_T, question));
+    updateUserPosts(com->users, question_get_owner_id(question),
+            post_create(QUESTION_T, question));
 }
 
 void community_add_answer(TAD_community com, ANSWER answer){
-    gint64 *id = newId(answer_get_id(answer));
+    gint64* id = newId(answer_get_id(answer));
 
     g_hash_table_insert(com->answers, (gpointer) id, answer);
 
-    calendario_add_post(com->calendarioAnswers, answer, answer_get_date(answer));
+    calendario_add_post(com->calendarioAnswers, answer,
+            answer_get_date(answer));
 
-    updateQuestionAnswers(com,answer);
-    updateUserPosts(com->users, answer_get_owner_id(answer), post_create(ANSWER_T, answer));
+    updateQuestionAnswers(com, answer);
+    updateUserPosts(com->users, answer_get_owner_id(answer),
+            post_create(ANSWER_T, answer));
 }
 
 void community_add_user(TAD_community com, SO_USER user){
-    gint64 *id = newId(so_user_get_id(user));
+    gint64* id = newId(so_user_get_id(user));
 
     g_hash_table_insert(com->users, (gpointer) id, user);
 }
@@ -169,7 +178,7 @@ ANSWER community_get_answer(TAD_community com, long id){
 }
 
 SO_USER community_get_user(TAD_community com, long id){
-    return g_hash_table_lookup(com->users,(gconstpointer) &id);
+    return g_hash_table_lookup(com->users, (gconstpointer) &id);
 }
 
 long community_get_user_count(TAD_community com){
@@ -184,12 +193,12 @@ long community_get_answer_count(TAD_community com){
     return g_hash_table_size(com->answers);
 }
 
- /** Estrutura usada para colecionar elementos da TCD durante iterações. */
+/** Estrutura usada para colecionar elementos da TCD durante iterações. */
 typedef struct _collector{
     GSList* list;    /**< Lista de elementos. */
     ComCmpFunc func; /**< Função para ordenar os elementos na lista. */
     int maxSize;     /**< Tamanho maximo da lista. */
-}*COLLECTOR;
+}* COLLECTOR;
 
 static int collect(void* value, void* user_data){
     COLLECTOR col = (COLLECTOR) user_data;
@@ -197,17 +206,18 @@ static int collect(void* value, void* user_data){
         col->list = g_slist_prepend(col->list, value);
     }else{
         int i = 0;
-        for(GSList* cur = col->list; cur && i < col->maxSize; cur = cur->next, ++i){
+        for(GSList* cur = col->list;
+            cur && i < col->maxSize; cur = cur->next, ++i){
             if(!cur->next || (*col->func)(cur->next->data, value) < 0){
-                    cur->next = g_slist_prepend(cur->next, value);
-                    i = col->maxSize;
+                cur->next = g_slist_prepend(cur->next, value);
+                i = col->maxSize;
             }
         }
     }
     return 1;
 }
 
- /**
+/**
  * Estrutura usada para colecionar elementos da TCD durante iterações, guardando
  * informação extra, que é passada à função de comparação.
  */
@@ -216,12 +226,12 @@ typedef struct _collector_with_data{
     ComGetValueFunc func; /**< Função para determinar a posição na lista. */
     void* data;           /**< Informação extra passada à função de comparação. */
     int maxSize;          /**< Tamanho máximo da lista. */
-}*COLLECTOR_WITH_DATA;
+}* COLLECTOR_WITH_DATA;
 
 typedef struct _col_pair{
     int value;
     void* elem;
-}*COLLECTOR_PAIR;
+}* COLLECTOR_PAIR;
 
 COLLECTOR_PAIR col_pair_create(int value, void* elem){
     COLLECTOR_PAIR clp = malloc(sizeof(struct _col_pair));
@@ -235,14 +245,17 @@ static int collect_with_data(void* value, void* user_data){
     int cmpValue = (*col->func)(value, col->data);
     COLLECTOR_PAIR pair = (COLLECTOR_PAIR) col->list->data;
     if(col->list == NULL || pair->value < cmpValue){
-        col->list = g_slist_prepend(col->list, col_pair_create(cmpValue, value));
+        col->list = g_slist_prepend(col->list,
+                col_pair_create(cmpValue, value));
     }else{
         int i = 0;
-        for(GSList* cur = col->list; cur && i < col->maxSize; cur = cur->next, ++i){
+        for(GSList* cur = col->list;
+            cur && i < col->maxSize; cur = cur->next, ++i){
             pair = (COLLECTOR_PAIR) cur->next->data;
             if(!cur->next || pair->value < cmpValue){
-                    cur->next = g_slist_prepend(cur->next, col_pair_create(cmpValue, value));
-                    i = col->maxSize;
+                cur->next = g_slist_prepend(cur->next,
+                        col_pair_create(cmpValue, value));
+                i = col->maxSize;
             }
         }
     }
@@ -265,8 +278,11 @@ USERS community_get_sorted_user_list(TAD_community com, ComCmpFunc func, int N){
     return r;
 }
 
-QUESTIONS community_get_sorted_question_list(TAD_community com, DATETIME from,
-                                    DATETIME to, ComCmpFunc func, int N){
+QUESTIONS community_get_sorted_question_list(TAD_community com,
+                                             DATETIME from,
+                                             DATETIME to,
+                                             ComCmpFunc func,
+                                             int N){
     COLLECTOR col = malloc(sizeof(struct _collector));
     col->func = func;
     col->list = NULL;
@@ -277,14 +293,19 @@ QUESTIONS community_get_sorted_question_list(TAD_community com, DATETIME from,
     return r;
 }
 
-QUESTIONS community_get_sorted_question_list_with_data(TAD_community com, DATETIME from,
-                                    DATETIME to, ComGetValueFunc func, int N, void* compare_data){
+QUESTIONS community_get_sorted_question_list_with_data(TAD_community com,
+                                                       DATETIME from,
+                                                       DATETIME to,
+                                                       ComGetValueFunc func,
+                                                       int N,
+                                                       void* compare_data){
     COLLECTOR_WITH_DATA col = malloc(sizeof(struct _collector_with_data));
     col->func = func;
     col->list = NULL;
     col->data = compare_data;
     col->maxSize = N;
-    calendario_iterate(com->calendarioQuestions, from, to, col, collect_with_data);
+    calendario_iterate(com->calendarioQuestions, from, to, col,
+            collect_with_data);
     for(GSList* cur = col->list; cur; cur = cur->next){
         COLLECTOR_PAIR p = cur->data;
         cur->data = p->elem;
@@ -296,7 +317,7 @@ QUESTIONS community_get_sorted_question_list_with_data(TAD_community com, DATETI
 }
 
 ANSWERS community_get_sorted_answer_list(TAD_community com, DATETIME from,
-                                        DATETIME to, ComCmpFunc func, int N){
+                                         DATETIME to, ComCmpFunc func, int N){
     COLLECTOR col = malloc(sizeof(struct _collector));
     col->func = func;
     col->list = NULL;
@@ -307,7 +328,7 @@ ANSWERS community_get_sorted_answer_list(TAD_community com, DATETIME from,
     return r;
 }
 
- /** Estrutura para colecionar elementos que cumprem uma certa condição. */
+/** Estrutura para colecionar elementos que cumprem uma certa condição. */
 typedef struct _filter{
     int maxSize;        /**< Tamanho máximo da lista. */
     int load;           /**< Tamanho atual da lista. */
@@ -315,7 +336,7 @@ typedef struct _filter{
     ComFilterFunc func; /**< Função de filtragem. */
     GSList* last;       /**< Último elemento da lista. */
     GSList* list;       /**< Lista de elementos filtrados. */
-}*FILTER;
+}* FILTER;
 
 static int filter(gpointer elem, gpointer user_data){
     FILTER filt = (FILTER) user_data;
@@ -334,9 +355,12 @@ static int filter(gpointer elem, gpointer user_data){
     return 1;
 }
 
-QUESTIONS community_get_filtered_questions(TAD_community com, DATETIME from,
-                                        DATETIME to, int N, ComFilterFunc func,
-                                        void* filter_data){
+QUESTIONS community_get_filtered_questions(TAD_community com,
+                                           DATETIME from,
+                                           DATETIME to,
+                                           int N,
+                                           ComFilterFunc func,
+                                           void* filter_data){
     FILTER f = (FILTER) malloc(sizeof(struct _filter));
     f->maxSize = N;
     f->load = 0;
@@ -359,18 +383,18 @@ long community_get_tag_id(TAD_community com, xmlChar* tag){
 }
 
 void community_iterate_questions(TAD_community com, DATETIME from,
-                                DATETIME to, void* data, CalFunc calFunc){
+                                 DATETIME to, void* data, CalFunc calFunc){
     calendario_iterate(com->calendarioQuestions, from, to, data, calFunc);
 }
 
 void community_iterate_answers(TAD_community com, DATETIME from, DATETIME to,
-                                void* data, CalFunc calFunc){
+                               void* data, CalFunc calFunc){
     calendario_iterate(com->calendarioAnswers, from, to, data, calFunc);
 }
 
 /* --------------- PRINTING ------------------- */
 
- /**
+/**
  * Função que é passada à hashtable de users para imprimir um user.
  * @param key Chave do valor na hashtable.
  * @param value Um User.
@@ -378,7 +402,7 @@ void community_iterate_answers(TAD_community com, DATETIME from, DATETIME to,
  */
 static void printUser(gpointer key, gpointer value, gpointer user_data);
 
- /**
+/**
  * Função que é passada à hashtable de questões para imprimir uma questão.
  * @param key Chave do valor na hashtable.
  * @param value Uma questão.
@@ -386,7 +410,7 @@ static void printUser(gpointer key, gpointer value, gpointer user_data);
  */
 static void printQuestion(gpointer key, gpointer value, gpointer user_data);
 
- /**
+/**
  * Função que é passada à hashtable de repostas para imprimir uma reposta.
  * @param key Chave do valor na hashtable.
  * @param value Uma reposta.
@@ -394,13 +418,13 @@ static void printQuestion(gpointer key, gpointer value, gpointer user_data);
  */
 static void printAnswer(gpointer key, gpointer value, gpointer user_data);
 
- /**
+/**
  * Função que é passada ao calendário para imprimir o id de uma questão.
  * @param question Questão à qual será extraído o id.
  */
 static void cPrintQuestion(void* question);
 
- /**
+/**
  * Função que é passada ao calendário para imprimir o id de uma resposta.
  * @param answer Resposta à qual será extraído o id.
  */
@@ -428,6 +452,7 @@ void community_print_calendario(TAD_community com){
 
 #define COLOR(idn) ((idn) == id ? "\033[32m" : "\033[31m")
 #define RESET "\033[0m"
+
 void community_print_thread(TAD_community com, long id){
     QUESTION q = g_hash_table_lookup(com->questions, &id);
     if(!q){
@@ -439,11 +464,13 @@ void community_print_thread(TAD_community com, long id){
         q = answer_get_parent_ptr(a);
     }else{
         long idn = question_get_id(q);
-        printf("Id: %s%8ld"RESET", OwnerId: %8ld\n", COLOR(idn), question_get_id(q), question_get_owner_id(q));
+        printf("Id: %s%8ld"RESET", OwnerId: %8ld\n", COLOR(idn),
+                question_get_id(q), question_get_owner_id(q));
         for(ANSWERS as = question_get_answers(q); as; as = as->next){
             idn = answer_get_id((ANSWER) as->data);
-            printf("Id: %s%8ld"RESET", OwnerId: %8ld\n", COLOR(idn), answer_get_id((ANSWER) as->data),
-                                                answer_get_owner_id((ANSWER) as->data));
+            printf("Id: %s%8ld"RESET", OwnerId: %8ld\n", COLOR(idn),
+                    answer_get_id((ANSWER) as->data),
+                    answer_get_owner_id((ANSWER) as->data));
         }
     }
 }
@@ -451,33 +478,41 @@ void community_print_thread(TAD_community com, long id){
 static void printUser(gpointer key, gpointer value, gpointer user_data){
     long id = so_user_get_id((SO_USER) value);
     int reputation = so_user_get_reputation((SO_USER) value);
-    xmlChar *name = so_user_get_name((SO_USER) value);
-    xmlChar *bio = so_user_get_bio((SO_USER) value);
-    printf((char *)user_data, *((gint64 *)key), id, reputation, name, bio);
+    xmlChar* name = so_user_get_name((SO_USER) value);
+    xmlChar* bio = so_user_get_bio((SO_USER) value);
+    printf((char*) user_data, *((gint64*) key), id, reputation, name, bio);
 }
 
 static void printQuestion(gpointer key, gpointer value, gpointer user_data){
     QUESTION question = (QUESTION) value;
-    if(question == NULL){ printf("NULL VALUE: Key:%ld\n",*((gint64 *) key)); return;}
+    if(question == NULL){
+        printf("NULL VALUE: Key:%ld\n", *((gint64*) key));
+        return;
+    }
     long id = question_get_id(question);
     DATETIME date = question_get_date(question);
-    xmlChar *title = question_get_title(question);
+    xmlChar* title = question_get_title(question);
     int score = question_get_score(question);
     int answerCount = question_get_answer_count(question);
     long ownerId = question_get_owner_id(question);
     char dateStr[11];
     if(date)
         sprintf(dateStr, "%02d:%02d:%4d",
-            dateTime_get_day(date), dateTime_get_month(date), dateTime_get_year(date));
+                dateTime_get_day(date), dateTime_get_month(date),
+                dateTime_get_year(date));
     else
-        sprintf(dateStr,"(null)");
-    printf((char *) user_data,
-            *((long *) key), id, dateStr, title, score, answerCount, ownerId, NULL);
+        sprintf(dateStr, "(null)");
+    printf((char*) user_data,
+            *((long*) key), id, dateStr, title, score, answerCount, ownerId,
+            NULL);
 }
 
 static void printAnswer(gpointer key, gpointer value, gpointer user_data){
     ANSWER answer = (ANSWER) value;
-    if(answer == NULL){ printf("NULL VALUE: Key:%ld\n",*((gint64 *) key)); return;}
+    if(answer == NULL){
+        printf("NULL VALUE: Key:%ld\n", *((gint64*) key));
+        return;
+    }
     long id = answer_get_id(answer);
     DATETIME date = answer_get_date(answer);
     int score = answer_get_score(answer);
@@ -486,11 +521,12 @@ static void printAnswer(gpointer key, gpointer value, gpointer user_data){
     long parentId = answer_get_parent_id(answer);
     if(date)
         sprintf(dateStr, "%02d:%02d:%04d",
-            dateTime_get_day(date), dateTime_get_month(date), dateTime_get_year(date));
+                dateTime_get_day(date), dateTime_get_month(date),
+                dateTime_get_year(date));
     else
-        sprintf(dateStr,"(null)");
-    printf((char *) user_data,
-            *((long *) key), id, dateStr, score, parentId, ownerId, NULL);
+        sprintf(dateStr, "(null)");
+    printf((char*) user_data,
+            *((long*) key), id, dateStr, score, parentId, ownerId, NULL);
 }
 
 static void cPrintQuestion(void* question){
@@ -498,5 +534,5 @@ static void cPrintQuestion(void* question){
 }
 
 static void cPrintAnswer(void* answer){
-    printf("\t\t\t\tPost: %ld\n",answer_get_id((ANSWER) answer));
+    printf("\t\t\t\tPost: %ld\n", answer_get_id((ANSWER) answer));
 }
