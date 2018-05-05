@@ -457,16 +457,15 @@ void community_print_thread(TAD_community com, long id){
             return;
         }
         q = answer_get_parent_ptr(a);
-    }else{
-        long idn = question_get_id(q);
+    }
+    long idn = question_get_id(q);
+    printf("Id: %s%8ld"RESET", OwnerId: %8ld\n", COLOR(idn),
+            question_get_id(q), question_get_owner_id(q));
+    for(ANSWERS as = question_get_answers(q); as; as = as->next){
+        idn = answer_get_id((ANSWER) as->data);
         printf("Id: %s%8ld"RESET", OwnerId: %8ld\n", COLOR(idn),
-                question_get_id(q), question_get_owner_id(q));
-        for(ANSWERS as = question_get_answers(q); as; as = as->next){
-            idn = answer_get_id((ANSWER) as->data);
-            printf("Id: %s%8ld"RESET", OwnerId: %8ld\n", COLOR(idn),
-                    answer_get_id((ANSWER) as->data),
-                    answer_get_owner_id((ANSWER) as->data));
-        }
+                answer_get_id((ANSWER) as->data),
+                answer_get_owner_id((ANSWER) as->data));
     }
 }
 
