@@ -1,10 +1,5 @@
 #include "community.h"
-#include "question.h"
-#include "answer.h"
 #include "calendario.h"
-#include "dateTime.h"
-
-#include <stdlib.h>
 
 /** Hashtable de questões. */
 typedef GHashTable* QUESTIONS_HTABLE;
@@ -244,7 +239,7 @@ static int collect_with_data(void* value, void* user_data){
     COLLECTOR_WITH_DATA col = (COLLECTOR_WITH_DATA) user_data;
     int cmpValue = (*col->func)(value, col->data);
     if(col->list == NULL
-        || ((COLLECTOR_PAIR) col->list->data)->value < cmpValue){
+       || ((COLLECTOR_PAIR) col->list->data)->value < cmpValue){
         col->list = g_slist_prepend(col->list,
                 col_pair_create(cmpValue, value));
     }else{
@@ -252,7 +247,7 @@ static int collect_with_data(void* value, void* user_data){
         for(GSList* cur = col->list;
             cur && i < col->maxSize; cur = cur->next, ++i){
             if(!cur->next
-                || ((COLLECTOR_PAIR) cur->next->data)->value < cmpValue){
+               || ((COLLECTOR_PAIR) cur->next->data)->value < cmpValue){
                 cur->next = g_slist_prepend(cur->next,
                         col_pair_create(cmpValue, value));
                 i = col->maxSize;
