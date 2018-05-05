@@ -6,12 +6,25 @@
  * \brief Módulo que define um dateTime. Esta estrutura representa uma data e hora.
  */
 #include "types.h"
+#include "date.h"
 
 /** Macro para obter a data mais antiga representável. */
 #define dateTime_get_epoch() (dateTime_create(1901,11,1,20,45,52,0))
 
 /** Macro para obter a data mais futura representável. */
 #define dateTime_get_year2038() (dateTime_create(2038,0,18,3,14,7,0))
+
+/**
+ * Macro para converter uma Date num DateTime com as horas, minutos, segundos
+ * e milissegundo a zero.
+ */
+#define date2dateTime_start_of_day(date) (dateTime_create(get_year(date), get_month(date) - 1, get_day(date) - 1, 0, 0, 0, 0))
+
+/**
+ * Macro para converter uma Date num DateTime com as horas, minutos, segundos
+ * e milissegundos nos valores maximos que podem tomar
+ */
+#define date2dateTime_end_of_day(date) (dateTime_create(get_year(date), get_month(date) - 1, get_day(date) - 1, 23, 59, 59, 999))
 
 /**
  * Cria uma data.

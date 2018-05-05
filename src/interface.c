@@ -56,8 +56,8 @@ static int calFun(void* elem, void* user_data){
 LONG_pair total_posts(TAD_community com, Date begin, Date end){
     long nrQuestions = 0;
     long nrAnswers = 0;
-    DATETIME from = dateTime_create(get_year(begin), get_month(begin), get_day(begin),0,0,0,0);
-    DATETIME to = dateTime_create(get_year(end), get_month(end), get_day(end),23,59,59,999);
+    DATETIME from = date2dateTime_start_of_day(begin);
+    DATETIME to = date2dateTime_end_of_day(end);
 
     community_iterate_answers(com, from, to, &nrAnswers, calFun);
     community_iterate_questions(com, from, to, &nrQuestions, calFun);
@@ -74,8 +74,8 @@ static int generic_question_has_tag(void* elem, void* filter_data){
 }
 
 LONG_list questions_with_tag(TAD_community com, char* tag, Date begin, Date end){
-    DATETIME from = dateTime_create(get_year(end), get_month(end), get_day(end), 23, 59, 59, 999);
-    DATETIME to = dateTime_create(get_year(begin), get_month(begin), get_day(begin), 0, 0, 0, 0);
+    DATETIME from = date2dateTime_end_of_day(end);
+    DATETIME to = date2dateTime_start_of_day(begin);
 
     QUESTIONS qs = community_get_filtered_questions(com, from, to, INT_MAX, generic_question_has_tag, tag);
 
@@ -108,8 +108,8 @@ USER get_user_info(TAD_community com, long id){
 
 // query 6
 LONG_list most_voted_answers(TAD_community com, int N, Date begin, Date end){
-    DATETIME from = dateTime_create(get_year(begin), get_month(begin), get_day(begin), 0, 0, 0, 0);
-    DATETIME to = dateTime_create(get_year(end), get_month(end), get_day(end), 23, 59, 59, 999);
+    DATETIME from = date2dateTime_start_of_day(begin);
+    DATETIME to = date2dateTime_end_of_day(end);
 
     ANSWERS as = community_get_sorted_answer_list(com, from, to, answer_score_cmp, N);
 
@@ -124,8 +124,8 @@ LONG_list most_voted_answers(TAD_community com, int N, Date begin, Date end){
 
 // query 7
 LONG_list most_answered_questions(TAD_community com, int N, Date begin, Date end){
-    DATETIME from = dateTime_create(get_year(begin), get_month(begin), get_day(begin), 0, 0, 0, 0);
-    DATETIME to = dateTime_create(get_year(end), get_month(end), get_day(end), 23, 59, 59, 999);
+    DATETIME from = date2dateTime_start_of_day(begin);
+    DATETIME to = date2dateTime_end_of_day(end);
     DATETIME_INTERVAL dti = dateTime_interval_create(from, to);
 
     QUESTIONS qs = community_get_sorted_question_list_with_data(com, from, to, (ComGetValueFunc) question_get_answer_count_between_dates, N, dti);
@@ -264,9 +264,9 @@ static void gather_tags(SO_USER usr, STR_ROSE_TREE rt, DATETIME from, DATETIME t
 LONG_list most_used_best_rep(TAD_community com, int N, Date begin, Date end){
     USERS users = community_get_sorted_user_list(com, so_user_reputation_cmp, N);
 
-    DATETIME from = dateTime_create(get_year(begin), get_month(begin), get_day(begin), 0, 0, 0, 0);
-    DATETIME to = dateTime_create(get_year(end), get_month(end), get_day(end), 23, 59, 59, 999);
-
+    DATETIME from = date2dateTime_start_of_day(begin);
+    DATETIME to = date2dateTime_end_of_day(end);
+    
     STR_ROSE_TREE rt = str_rtree_create();
     int n = 0;
     for(USERS cur = users; n++<N && cur; cur = cur->next){

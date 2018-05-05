@@ -144,14 +144,14 @@ int main(int argc, const char** argv){
 
     printf("%sQUERY  3:%s Total Posts\n", BLUE, RESET);
     printf("\t%sParams [1/7/2016, 31/07/2016]%s\n", GREEN, RESET);
-    begin = createDate(0, 6, 2016);
-    end = createDate(30, 6, 2016);
+    begin = createDate(1, 7, 2016);
+    end = createDate(31, 7, 2016);
     printAndDestroyLongPair(total_posts(com, begin, end));
     free_date(begin);
     free_date(end);
     printf("\t%sParams [1/1/2014, 30/12/2014]%s\n", GREEN, RESET);
-    begin = createDate(0, 0, 2014);
-    end = createDate(30, 11, 2014);
+    begin = createDate(1, 1, 2014);
+    end = createDate(30, 12, 2014);
     printAndDestroyLongPair(total_posts(com, begin, end));
     free_date(begin);
     free_date(end);
@@ -159,15 +159,15 @@ int main(int argc, const char** argv){
     printf("%sQUERY  4:%s Questions with tag\n", BLUE, RESET);
     printf("\t%sParams [package-management, 1/3/2013, 31/3/2013]%s\n", GREEN,
             RESET);
-    begin = createDate(0, 2, 2013);
-    end = createDate(30, 2, 2013);
+    begin = createDate(1, 3, 2013);
+    end = createDate(31, 3, 2013);
     printAndDestroyLongList(
             questions_with_tag(com, "package-management", begin, end));
     free_date(begin);
     free_date(end);
     printf("\t%sParams [nautilus, 1/1/2014, 31/1/2014]%s\n", GREEN, RESET);
-    begin = createDate(0, 0, 2014);
-    end = createDate(30, 0, 2014);
+    begin = createDate(1, 1, 2014);
+    end = createDate(31, 1, 2014);
     printAndDestroyLongList(questions_with_tag(com, "nautilus", begin, end));
     free_date(begin);
     free_date(end);
@@ -180,28 +180,28 @@ int main(int argc, const char** argv){
 
     printf("%sQUERY  6:%s Most voted answer", BLUE, RESET);
     printf("\t%sParams [5, 1/11/2015, 30/11/2015]%s\n", GREEN, RESET);
-    begin = createDate(0, 10, 2015);
-    end = createDate(29, 10, 2015);
+    begin = createDate(1, 11, 2015);
+    end = createDate(30, 11, 2015);
     printAndDestroyLongList(most_voted_answers(com, 5, begin, end));
     free_date(begin);
     free_date(end);
     printf("\t%sParams [50, 1/5/2013, 6/5/2013]%s\n", GREEN, RESET);
-    begin = createDate(0, 4, 2013);
-    end = createDate(5, 4, 2013);
+    begin = createDate(1, 5, 2013);
+    end = createDate(6, 5, 2013);
     printAndDestroyLongList(most_voted_answers(com, 50, begin, end));
     free_date(begin);
     free_date(end);
 
     printf("%sQUERY  7:%s Most answered questions\n", BLUE, RESET);
     printf("\t%sParams [10, 1/8/2014, 11/8/2014]%s\n", GREEN, RESET);
-    begin = createDate(0, 7, 2014);
-    end = createDate(10, 7, 2014);
+    begin = createDate(1, 8, 2014);
+    end = createDate(11, 8, 2014);
     printAndDestroyLongList(most_answered_questions(com, 10, begin, end));
     free_date(begin);
     free_date(end);
     printf("\t%sParams [100, 1/1/2012, 31/12/2012]%s\n", GREEN, RESET);
-    begin = createDate(0, 0, 2012);
-    end = createDate(30, 11, 2012);
+    begin = createDate(1, 1, 2012);
+    end = createDate(31, 12, 2012);
     printAndDestroyLongList(most_answered_questions(com, 100, begin, end));
     free_date(begin);
     free_date(end);
@@ -226,14 +226,14 @@ int main(int argc, const char** argv){
 
     printf("%sQUERY 11:%s Most used best rep\n", BLUE, RESET);
     printf("\t%sParams [5, 1/11/2013, 30/11/2013]%s\n", GREEN, RESET);
-    begin = createDate(0, 10, 2013);
-    end = createDate(29, 10, 2013);
+    begin = createDate(1, 11, 2013);
+    end = createDate(30, 11, 2013);
     printAndDestroyLongList(most_used_best_rep(com, 5, begin, end));
     free_date(begin);
     free_date(end);
     printf("\t%sParams [10, 1/1/2014, 31/12/2014]%s\n", GREEN, RESET);
-    begin = createDate(0, 0, 2014);
-    end = createDate(30, 11, 2014);
+    begin = createDate(1, 1, 2014);
+    end = createDate(31, 12, 2014);
     printAndDestroyLongList(most_used_best_rep(com, 10, begin, end));
     free_date(begin);
     free_date(end);
