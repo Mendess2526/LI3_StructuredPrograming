@@ -243,16 +243,16 @@ COLLECTOR_PAIR col_pair_create(int value, void* elem){
 static int collect_with_data(void* value, void* user_data){
     COLLECTOR_WITH_DATA col = (COLLECTOR_WITH_DATA) user_data;
     int cmpValue = (*col->func)(value, col->data);
-    COLLECTOR_PAIR pair = (COLLECTOR_PAIR) col->list->data;
-    if(col->list == NULL || pair->value < cmpValue){
+    if(col->list == NULL
+        || ((COLLECTOR_PAIR) col->list->data)->value < cmpValue){
         col->list = g_slist_prepend(col->list,
                 col_pair_create(cmpValue, value));
     }else{
         int i = 0;
         for(GSList* cur = col->list;
             cur && i < col->maxSize; cur = cur->next, ++i){
-            pair = (COLLECTOR_PAIR) cur->next->data;
-            if(!cur->next || pair->value < cmpValue){
+            if(!cur->next
+                || ((COLLECTOR_PAIR) cur->next->data)->value < cmpValue){
                 cur->next = g_slist_prepend(cur->next,
                         col_pair_create(cmpValue, value));
                 i = col->maxSize;
