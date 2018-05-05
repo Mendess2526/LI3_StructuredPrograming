@@ -55,7 +55,7 @@ void calendario_destroy(CALENDARIO cal);
 /**
  * Imprime o calendário.
  * @param cal Um calendário.
- * @printFunction Função que imprime um elemento.
+ * @param printFunction Função que imprime um elemento.
  */
 void printCalendario(CALENDARIO cal, CalPrintFunc printFunction);
 

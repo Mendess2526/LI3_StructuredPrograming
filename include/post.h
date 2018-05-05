@@ -13,11 +13,11 @@
 #include <glib.h>
 #include <libxml/parserInternals.h>
 
-
-enum POST_TYPE{
-    QUESTION_T,
-    ANSWER_T
-};
+/** Enum que define os tipos de post que existem */
+typedef enum _post_type{
+    QUESTION_T, /**< Questão */
+    ANSWER_T    /**< Pergunta */
+}POST_type;
 
 /**
  * Cria um post.
@@ -25,7 +25,7 @@ enum POST_TYPE{
  * @param c Uma questão ou resposta.
  * @returns Um post.
  */
-POST post_create(enum POST_TYPE type, void* c);
+POST post_create(POST_type type, void* c);
 
 /**
  * Verifica se um post é uma questão.

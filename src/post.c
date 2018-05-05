@@ -4,7 +4,7 @@
 #include <limits.h>
 
 struct _post{
-    enum POST_TYPE type;
+    POST_type type;
     void* c;
 };
 
@@ -16,7 +16,7 @@ struct _post{
   */
 static int searchFromQuestion(QUESTION question, long id);
 
-POST post_create(enum POST_TYPE type, void* c){
+POST post_create(POST_type type, void* c){
     POST p = (POST) malloc(sizeof(struct _post));
     p->type = type;
     p->c = c;

@@ -34,7 +34,7 @@ DATETIME dateTime_interval_to(DATETIME_INTERVAL dti);
  * Verifica se uma data pertence a um intervalo de tempo.
  * @param dti Um intervalo de tempo.
  * @param d Uma data.
- * @retuns 1 se pertence ao intervalo, 0 caso contrário. 
+ * @returns 1 se pertence ao intervalo, 0 caso contrário. 
  */
 int dateTime_interval_is_between(DATETIME_INTERVAL dti, DATETIME d);
 
