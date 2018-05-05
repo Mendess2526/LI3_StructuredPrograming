@@ -155,10 +155,13 @@ struct TCD_community{
         tags e para responder à query 11 é necessário obter os ids das mesmas.
 
     \subsection{Calendário}
-        Foi pensada a utilização de árvores binárias ordenadas por data,
+        Para ser possivel manter as questões e respostas ordenadas por data
+        foi pensada a utilização de árvores binárias ordenadas por data,
         mas isto foi considerado ineficiente quando comparada à solução
-        escolhida. Foi então concebida uma estrutura à qual lhe foi dada o nome
-        de \textbf{Calendário}.
+        escolhida. Foi então concebida uma estrutura à qual demos o nome
+        de \textbf{Calendário} que permite acessos em tempo constante $O(1)$
+        a todos os elementos associados a uma determinada data. Guardamos assim
+        duas instâncias desta na TCD, uma para perguntas e outra para respostas.
 
         Esta estrutura permite:
         \begin{itemize}
@@ -169,7 +172,8 @@ struct TCD_community{
                       ordem dos argumentos.
         \end{itemize}
 
-        A estrutura em si consiste numa árvore n-ària (rose tree) especializada.
+        A estrutura em si consiste numa matriz de quatro dimensões com um lista
+        ligada em cada célula desta.
 
         No primeiro nível temos uma lista de \textbf{anos}. Cada um destes,
         é constituído por uma lista de \textbf{meses} que são constituídos por
