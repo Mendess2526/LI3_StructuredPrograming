@@ -29,8 +29,8 @@ public class PostHandler extends DefaultHandler {
         if(pt == PostType.NEITHER) return;
         long id = Long.parseLong(attributes.getValue("Id"));
         long ownerId = Long.parseLong(attributes.getValue("OwnerUserId"));
-        int score = Integer.parseInt("Score");
-        int commentCount = Integer.parseInt("CommentCount");
+        int score = Integer.parseInt(attributes.getValue("Score"));
+        int commentCount = Integer.parseInt(attributes.getValue("CommentCount"));
         LocalDateTime date = LocalDateTime.parse(attributes.getValue("CreationDate"));
         String ownerName = attributes.getValue("OwnerDisplayName");
 
