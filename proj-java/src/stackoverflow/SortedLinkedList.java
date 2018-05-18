@@ -89,4 +89,8 @@ public class SortedLinkedList<T> extends LinkedList<T>{
         }
         if(!inserted) it.add(o);
     }
+
+    public void add(T o, Comparator<T> c, int max){
+        add(o,c);
+    }
 }
