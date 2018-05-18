@@ -52,4 +52,13 @@ class Calendario<T> {
     public Calendario(){
         this.years = new HashMap<>();
     }
+
+    public void addElem(Chronological c){
+        Year y = this.years.get(c.getDate().getYear());
+        if(y == null){
+            y = new Year();
+            this.years.put(c.getDate().getYear(), y);
+        }
+        //TODO add to y
+    }
 }
