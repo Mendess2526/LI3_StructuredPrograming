@@ -27,8 +27,8 @@ public class Answer extends Post{
         return this.parentPtr;
     }
 
-    public void setParentPtr(Answer answer, Question question){
-        answer.parentPtr = question;
+    public void setParentPtr(Question question){
+        this.parentPtr = question;
     }
 
 }
