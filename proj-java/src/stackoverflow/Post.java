@@ -2,7 +2,7 @@ package stackoverflow;
 
 import java.time.LocalDateTime;
 
-public abstract class Post {
+public abstract class Post implements Chronological{
 
     private long id;
     private LocalDateTime date;
