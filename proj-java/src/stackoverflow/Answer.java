@@ -8,11 +8,11 @@ public class Answer extends Post{
     private long parentId;
     private Question parentPtr;
 
-    public Answer(int score, int commentCount, long id, long parentId, long ownerId, LocalDateTime date, Question parentPtr, String ownerName){
+    public Answer(int score, int commentCount, long id, long parentId, long ownerId, LocalDateTime date, String ownerName){
         super(score, id, ownerId, date, ownerName);
         this.commentCount = commentCount;
         this.parentId = parentId;
-        this.parentPtr = parentPtr;
+        this.parentPtr = null;
     }
 
     public int getCommentCount(){
