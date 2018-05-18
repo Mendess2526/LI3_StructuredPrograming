@@ -4,6 +4,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import stackoverflow.Community;
+import stackoverflow.User;
 
 public class UserHandler extends DefaultHandler {
 
@@ -22,9 +23,6 @@ public class UserHandler extends DefaultHandler {
         int reputation = Integer.parseInt(attributes.getValue("Reputation"));
         String displayName = attributes.getValue("DisplayName");
         String bio = attributes.getValue("AboutMe");
-        assert userId != -1;
-        assert reputation != -1;
-        assert displayName != null;
-        assert bio != null;
+        this.com.addUser(new User(reputation, userId, displayName, bio));
     }
 }
