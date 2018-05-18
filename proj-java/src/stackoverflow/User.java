@@ -5,7 +5,6 @@ import java.util.LinkedList;
 public class User {
 
     private int reputation;
-    private int nrPosts;
     private long id;
     private String name;
     private String bio;
@@ -16,7 +15,6 @@ public class User {
         this.id = id;
         this.name = name;
         this.bio = bio;
-        this.nrPosts = 0;
         this.posts = new SortedLinkedList<>();
     }
 
@@ -25,7 +23,7 @@ public class User {
     }
 
     public int getNrPosts(){
-        return this.nrPosts;
+        return this.posts.size();
     }
 
     public long getId(){
@@ -44,9 +42,7 @@ public class User {
         return this.posts;
     }
 
-    //TODO
-    public void addPost(User user, Post post){
-        posts.add(post);
-        nrPosts += 1;
+    public void addPost(Post post){
+        posts.add(post, new PostDateComparator());
     }
 }
