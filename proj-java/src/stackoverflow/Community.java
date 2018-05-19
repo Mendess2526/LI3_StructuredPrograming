@@ -1,11 +1,14 @@
 package stackoverflow;
 
+import stackoverflow.calendario.Calendario;
+
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("WeakerAccess")
 public class Community {
 
     private Map<Long,Question> questions;

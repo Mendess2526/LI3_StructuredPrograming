@@ -1,8 +1,10 @@
 package stackoverflow;
 
+import stackoverflow.calendario.Chronological;
+
 import java.time.LocalDateTime;
 
-public abstract class Post implements Chronological{
+public abstract class Post extends Chronological {
 
     private long id;
     private LocalDateTime date;
