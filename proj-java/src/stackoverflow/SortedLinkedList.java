@@ -12,7 +12,7 @@ public class SortedLinkedList<T> extends LinkedList<T>{
      * @param t the element to add
      */
     @Override
-    public void addFirst(T t){
+    public void addFirst(T t) throws UnsupportedOperationException{
         throw new UnsupportedOperationException();
     }
 
@@ -23,7 +23,7 @@ public class SortedLinkedList<T> extends LinkedList<T>{
      * @param t the element to add
      */
     @Override
-    public void addLast(T t){
+    public void addLast(T t) throws UnsupportedOperationException{
         throw new UnsupportedOperationException();
     }
 
@@ -48,6 +48,22 @@ public class SortedLinkedList<T> extends LinkedList<T>{
             }
         }
         if(!inserted) it.add(o);
+    }
+
+    public void addLast(T o, Comparator<T> c, int max){
+        if(this.size() == 0) this.add(o);
+        ListIterator<T> it = this.listIterator(this.size() - 1);
+        it.next();
+        while(max > 0 && it.hasPrevious()){
+            T t = it.previous();
+            if(c.compare(o,t) < 0){
+                it.next();
+                it.add(o);
+                max = 0;
+            }else{
+                max--;
+            }
+        }
     }
 
     /**
@@ -75,7 +91,7 @@ public class SortedLinkedList<T> extends LinkedList<T>{
         throw new UnsupportedOperationException();
     }
 
-    public void add(T o, Comparator<T> c){
+    public void addFirst(T o, Comparator<T> c){
         if(this.size() == 0) super.add(o);
         boolean inserted = false;
         ListIterator<T> it = this.listIterator();
@@ -90,7 +106,18 @@ public class SortedLinkedList<T> extends LinkedList<T>{
         if(!inserted) it.add(o);
     }
 
-    public void add(T o, Comparator<T> c, int max){
-        add(o,c);
+    public void addFirst(T o, Comparator<T> c, int max){
+        if(this.size() == 0) super.add(o);
+        ListIterator<T> it = this.listIterator();
+        while(max > 0 && it.hasNext()){
+            T t = it.next();
+            if(c.compare(o,t) < 0){
+                it.previous();
+                it.add(o);
+                max = 0;
+            }else{
+                max--;
+            }
+        }
     }
 }

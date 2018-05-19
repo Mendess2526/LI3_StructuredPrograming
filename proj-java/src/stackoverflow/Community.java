@@ -87,7 +87,7 @@ public class Community {
     public List<User> getSortedUserList(Comparator<User> userComparator, int N){
         SortedLinkedList<User> users = new SortedLinkedList<>();
         for(User user : this.users.values()){
-            users.add(user, userComparator,N);
+            users.addFirst(user, userComparator, N);
         }
         return users;
     }
