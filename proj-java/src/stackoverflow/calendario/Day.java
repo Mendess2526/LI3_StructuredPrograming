@@ -20,4 +20,12 @@ class Day {
         }
         return r;
     }
+
+    boolean iterateBackwards(CalendarioPredicate<? extends Chronological> predicate){
+        boolean r = true;
+        for(int i = 23; r && i >= 0 ; i--){
+            if(this.hours[i] != null) r = this.hours[i].iterateBackwards(predicate);
+        }
+        return r;
+    }
 }
