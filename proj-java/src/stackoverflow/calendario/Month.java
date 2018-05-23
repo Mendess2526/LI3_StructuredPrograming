@@ -49,4 +49,33 @@ class Month {
         }
         return r;
     }
+
+    boolean iterateBackwards(LocalDate from, LocalDate to, IterPoint ip, CalendarioPredicate<? extends Chronological> predicate){
+        boolean r = true;
+        int fromD;
+        int toD;
+        switch(ip){
+            case IS_BOTH:
+                fromD = from.getDayOfMonth() - 1;
+                toD = to.getDayOfMonth() - 1;
+                break;
+            case IS_START:
+                fromD = from.getDayOfMonth() - 1;
+                toD = 0;
+                break;
+            case IS_END:
+                fromD = this.days.length - 1;
+                toD = to.getDayOfMonth() - 1;
+                break;
+            case IS_NEITHER:
+                fromD = this.days.length - 1;
+                toD = 0;
+                break;
+            default: assert false; return false;
+        }
+        for(int i = fromD; r && i > toD; i--){
+            if(this.days[i] != null) r = this.days[i].iterateBackwards(predicate);
+        }
+        return r;
+    }
 }
