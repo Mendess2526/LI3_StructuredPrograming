@@ -56,4 +56,54 @@ class Year<T extends Chronological> {
         }
         return r;
     }
+
+
+
+    boolean iterateBackwards(LocalDate from, LocalDate to, IterPoint ip, CalendarioPredicate<? extends Chronological> predicate){
+        boolean r = true;
+        int fromM;
+        int toM;
+        switch(ip){
+            case IS_BOTH:
+                fromM = from.getMonthValue() - 1;
+                toM = to.getMonthValue() - 1;
+                break;
+            case IS_START:
+                fromM = from.getMonthValue() - 1;
+                toM = 0;
+                break;
+            case IS_END:
+                fromM = 11;
+                toM = to.getMonthValue() - 1;
+                break;
+            case IS_NEITHER:
+                fromM = 11;
+                toM = 0;
+                break;
+            default: assert false; return false;
+        }
+        if(ip == IterPoint.IS_START && fromM >= toM){
+            if(!this.months[fromM--].iterateBackwards(
+                    from,
+                    to,
+                    IterPoint.make(true,ip.isEnd && fromM == toM),
+                    predicate))
+                return false;
+        }
+        while(r && fromM >= toM){
+            if(this.months[fromM] != null)
+                r = this.months[fromM--].iterateBackwards(
+                        from,
+                        to,
+                        IterPoint.make(false,ip.isEnd && fromM == toM),
+                        predicate);
+        }
+        return r;
+    }
+
+
+
+
+
+
 }
