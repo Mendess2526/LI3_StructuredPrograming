@@ -24,7 +24,7 @@ public class Calendario<T extends Chronological> {
     public void iterate(LocalDate from, LocalDate to, CalendarioPredicate<? extends Chronological> predicate){
         if(from.isBefore(to))
             iterateForward(from, to, predicate);
-        //TODO else iterateBackwards
+        else iterateBackwards(from, to, predicate);
     }
 
     private void iterateForward(LocalDate from, LocalDate to, CalendarioPredicate<? extends Chronological> predicate){
@@ -40,6 +40,23 @@ public class Calendario<T extends Chronological> {
             Year<T> y = this.years.get(fromY);
             if(y!=null
                && !y.iterateForward(from, to, IterPoint.make(false, fromY == toY), predicate))
+                return;
+        }
+    }
+
+    private void iterateBackwards(LocalDate from, LocalDate to, CalendarioPredicate<? extends Chronological> predicate){
+        int fromY = from.getYear();
+        int toY = to.getYear();
+        if(fromY >= toY){
+            Year<T> y = this.years.get(fromY);
+            if(y!=null
+                    && !y.iterateBackwards(from, to, IterPoint.make(true, fromY == toY),predicate))
+                return;
+        }
+        while(fromY >= toY){
+            Year<T> y = this.years.get(fromY);
+            if(y!=null
+                    && !y.iterateBackwards(from, to, IterPoint.make(false, fromY == toY), predicate))
                 return;
         }
     }
