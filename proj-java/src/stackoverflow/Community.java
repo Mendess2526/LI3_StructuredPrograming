@@ -1,7 +1,10 @@
 package stackoverflow;
 
 import stackoverflow.calendario.Calendario;
+import stackoverflow.calendario.CalendarioPredicate;
+import stackoverflow.calendario.Chronological;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -92,11 +95,31 @@ public class Community {
         return users;
     }
 
-    public List<Question> getSortedQuestionList(LocalDateTime from, LocalDateTime to, Comparator<User> userComparatorint, int N){
-        return null;
+    private class SortedQuestions implements CalendarioPredicate<Question> {
+
+        private SortedLinkedList<Question> list;
+        private Comparator<Question> comparator;
+        private int max;
+
+        SortedQuestions(Comparator<Question> comparator, int max){
+            this.comparator = comparator;
+            this.max = max;
+            this.list = new SortedLinkedList<>();
+        }
+        @Override
+        public boolean test(Question question){
+            this.list.addFirst(question, this.comparator, this.max);
+            return true;
+        }
     }
 
+    public List<Question> getSortedQuestionList(LocalDate from, LocalDate to, Comparator<Question> questionComparator, int N){
+        SortedQuestions sortedQuestions = new SortedQuestions(questionComparator, N);
+        this.calendarioQuestions.iterate(from, to, sortedQuestions);
+        return sortedQuestions.list;
+    }
     //TODO
+
     public List<Question> getSortedQuestionListWithData(LocalDateTime from, LocalDateTime to){
         return null;
     }
@@ -111,5 +134,4 @@ public class Community {
             return id;
         } return -2;
     }
-
 }
