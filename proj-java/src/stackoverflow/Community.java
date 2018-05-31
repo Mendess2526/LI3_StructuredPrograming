@@ -2,14 +2,10 @@ package stackoverflow;
 
 import stackoverflow.calendario.Calendario;
 import stackoverflow.calendario.CalendarioPredicate;
-import stackoverflow.calendario.Chronological;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Predicate;
 
 @SuppressWarnings("WeakerAccess")
 public class Community {
@@ -147,8 +143,27 @@ public class Community {
         return sortedAnswers.list;
     }
 
-    public List<Question> getFilteredQuestions(LocalDate from, LocalDate to, int N, ComFilterFunc func){
+    private class FilteredQuestions implements CalendarioPredicate<Question> {
+        private ArrayList<Question> list;
+        private Predicate<Question> f;
+        private int max;
 
+        private FilteredQuestions(Predicate<Question> f, int max){
+            this.list = new ArrayList<>(this.max);
+            this.f = f;
+            this.max = max;
+        }
+        @Override
+        public boolean test(Question question){
+            if(this.list.size() >= max) return false;
+            if(this.f.test(question)) this.list.add(question);
+            return true;
+        }
+    }
+    public List<Question> getFilteredQuestions(LocalDate from, LocalDate to, int N, Predicate<Question> f){
+        FilteredQuestions filteredQuestions = new FilteredQuestions(f, N);
+        this.calendarioQuestions.iterate(from, to, filteredQuestions);
+        return filteredQuestions.list;
     }
 
     public long getTagId(String tag){
