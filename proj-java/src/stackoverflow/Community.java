@@ -95,6 +95,7 @@ public class Community {
         return users;
     }
 
+
     private class SortedQuestions implements CalendarioPredicate<Question> {
 
         private SortedLinkedList<Question> list;
@@ -111,6 +112,7 @@ public class Community {
             this.list.addFirst(question, this.comparator, this.max);
             return true;
         }
+
     }
 
     public List<Question> getSortedQuestionList(LocalDate from, LocalDate to, Comparator<Question> questionComparator, int N){
@@ -118,14 +120,35 @@ public class Community {
         this.calendarioQuestions.iterate(from, to, sortedQuestions);
         return sortedQuestions.list;
     }
-    //TODO
 
-    public List<Question> getSortedQuestionListWithData(LocalDateTime from, LocalDateTime to){
-        return null;
+    private class SortedAnswers implements CalendarioPredicate<Answer> {
+
+        private SortedLinkedList<Answer> list;
+        private Comparator<Answer> comparator;
+        private int max;
+
+        SortedAnswers(Comparator<Answer> comparator, int max){
+            this.comparator = comparator;
+            this.max = max;
+            this.list = new SortedLinkedList<>();
+        }
+
+        @Override
+        public boolean test(Answer answer){
+            this.list.addFirst(answer, this.comparator, this.max);
+            return true;
+        }
+
     }
 
-    public List<Answer> getSortedAnswerList(LocalDateTime from, LocalDateTime to, Comparator<User> userComparatorint, int N){
-        return null;
+    public List<Answer> getSortedAnswerList(LocalDate from, LocalDate to, Comparator<Answer> answerComparator, int N){
+        SortedAnswers sortedAnswers = new SortedAnswers(answerComparator, N);
+        this.calendarioAnswers.iterate(from, to, sortedAnswers);
+        return sortedAnswers.list;
+    }
+
+    public List<Question> getFilteredQuestions(LocalDate from, LocalDate to, int N, ComFilterFunc func){
+
     }
 
     public long getTagId(String tag){
@@ -134,4 +157,5 @@ public class Community {
             return id;
         } return -2;
     }
+
 }
