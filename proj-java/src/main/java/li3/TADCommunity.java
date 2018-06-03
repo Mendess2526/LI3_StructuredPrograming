@@ -1,8 +1,8 @@
-package li3;
+package main.java.li3;
 
 import java.time.LocalDate;
 import java.util.List;
-import common.Pair;
+import main.java.common.Pair;
 
 public interface TADCommunity {
     public void load(String dumpPath);

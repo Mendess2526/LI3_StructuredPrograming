@@ -1,8 +1,8 @@
-package engine;
+package main.java.engine;
 
-import common.MyLog;
-import common.Pair;
-import li3.TADCommunity;
+//import common.MyLog;
+import main.java.common.Pair;
+import main.java.li3.TADCommunity;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -17,7 +17,7 @@ import java.util.List;
 
 public class TCDExample implements TADCommunity {
 
-    private MyLog qelog;
+    //private MyLog qelog;
 
     /*
     public void init() {

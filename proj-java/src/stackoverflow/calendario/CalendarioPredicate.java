@@ -1,5 +1,6 @@
 package stackoverflow.calendario;
 
-interface CalendarioPredicate<T> {
-    boolean apply(Chronological elem);
+import java.util.function.Predicate;
+
+public interface CalendarioPredicate<T> extends Predicate<T>{
 }
