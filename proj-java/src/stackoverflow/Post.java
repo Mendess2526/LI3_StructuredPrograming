@@ -25,6 +25,7 @@ public abstract class Post extends Chronological {
         return this.id;
     }
 
+    @Override
     public LocalDateTime getDate(){
         return this.date;
     }

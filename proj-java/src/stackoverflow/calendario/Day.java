@@ -1,30 +1,30 @@
 package stackoverflow.calendario;
 
-class Day {
-    private Hour[] hours;
+class Day<T extends Chronological> {
+    private FixedSizeList<Hour<T>> hours;
 
     Day(){
-        this.hours = new Hour[24];
+        this.hours = new FixedSizeList<>(24);
     }
 
-    void addElem(Chronological c){
+    void addElem(T c){
         int hour = c.getDate().getHour();
-        if(this.hours[hour] == null) this.hours[hour] = new Hour();
-        this.hours[hour].addElem(c);
+        if(this.hours.get(hour) == null) this.hours.set(hour, new Hour<>());
+        this.hours.get(hour).addElem(c);
     }
 
-    boolean iterateForward(CalendarioPredicate<? extends Chronological> predicate){
+    boolean iterateForward(CalendarioPredicate<T> predicate){
         boolean r = true;
         for(int i = 0; r && i < 24; i++){
-            if(this.hours[i] != null) r = this.hours[i].iterateForward(predicate);
+            if(this.hours.get(i) != null) r = this.hours.get(i).iterateForward(predicate);
         }
         return r;
     }
 
-    boolean iterateBackwards(CalendarioPredicate<? extends Chronological> predicate){
+    boolean iterateBackwards(CalendarioPredicate<T> predicate){
         boolean r = true;
         for(int i = 23; r && i >= 0 ; i--){
-            if(this.hours[i] != null) r = this.hours[i].iterateBackwards(predicate);
+            if(this.hours.get(i) != null) r = this.hours.get(i).iterateBackwards(predicate);
         }
         return r;
     }

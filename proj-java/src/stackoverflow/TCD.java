@@ -1,6 +1,5 @@
 package stackoverflow;
 
-<<<<<<< HEAD
 import main.java.common.Pair;
 import main.java.li3.TADCommunity;
 
@@ -72,7 +71,4 @@ public class TCD implements TADCommunity{
     public void clear(){
 
     }
-=======
-public class TCD implements TCDComm{
->>>>>>> d33a0d213ef88e0e9d6af6e593957feeb940b153
 }

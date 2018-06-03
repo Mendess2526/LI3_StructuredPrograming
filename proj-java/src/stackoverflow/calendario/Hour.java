@@ -5,28 +5,28 @@ import stackoverflow.SortedLinkedList;
 import java.util.Comparator;
 import java.util.Iterator;
 
-class Hour {
+class Hour<T extends Chronological> {
     private int count;
-    private SortedLinkedList<Chronological> elems;
+    private SortedLinkedList<T> elems;
 
     Hour(){
         this.count = 0;
         this.elems = new SortedLinkedList<>();
     }
 
-    void addElem(Chronological c){
+    void addElem(T c){
         this.elems.addLast(c , Comparator.comparing(Chronological::getDate));
     }
 
-    boolean iterateForward(CalendarioPredicate<? extends Chronological> predicate){
-        for(Chronological elem : this.elems) if(predicate.apply(elem)) return false;
+    boolean iterateForward(CalendarioPredicate<T> predicate){
+        for(T elem : this.elems) if(predicate.test(elem)) return false;
         return true;
     }
 
-    boolean iterateBackwards(CalendarioPredicate<? extends Chronological> predicate){
+    boolean iterateBackwards(CalendarioPredicate<T> predicate){
         boolean r = true;
-        Iterator<Chronological> it = this.elems.descendingIterator();
-        while(r && it.hasNext()) r = predicate.apply(it.next());
+        Iterator<T> it = this.elems.descendingIterator();
+        while(r && it.hasNext()) r = predicate.test(it.next());
         return r;
     }
 

@@ -21,13 +21,13 @@ public class Calendario<T extends Chronological> {
         y.addElem(c);
     }
 
-    public void iterate(LocalDate from, LocalDate to, CalendarioPredicate<? extends Chronological> predicate){
+    public void iterate(LocalDate from, LocalDate to, CalendarioPredicate<T> predicate){
         if(from.isBefore(to))
             iterateForward(from, to, predicate);
         else iterateBackwards(from, to, predicate);
     }
 
-    private void iterateForward(LocalDate from, LocalDate to, CalendarioPredicate<? extends Chronological> predicate){
+    private void iterateForward(LocalDate from, LocalDate to, CalendarioPredicate<T> predicate){
         int fromY = from.getYear();
         int toY = to.getYear();
         if(fromY <= toY){
@@ -44,7 +44,7 @@ public class Calendario<T extends Chronological> {
         }
     }
 
-    private void iterateBackwards(LocalDate from, LocalDate to, CalendarioPredicate<? extends Chronological> predicate){
+    private void iterateBackwards(LocalDate from, LocalDate to, CalendarioPredicate<T> predicate){
         int fromY = from.getYear();
         int toY = to.getYear();
         if(fromY >= toY){

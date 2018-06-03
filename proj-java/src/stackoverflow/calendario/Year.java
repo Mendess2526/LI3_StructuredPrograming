@@ -3,19 +3,19 @@ package stackoverflow.calendario;
 import java.time.LocalDate;
 
 class Year<T extends Chronological> {
-    private Month[] months;
+    private FixedSizeList<Month<T>> months;
 
     Year(){
-        this.months = new Month[12];
+        this.months = new FixedSizeList<>(12);
     }
 
     void addElem(T c){
         int month = c.getDate().getMonthValue() - 1;
-        if(this.months[month] == null) this.months[month] = new Month(month);
-        this.months[month].addElem(c);
+        if(this.months.get(month) == null) this.months.set(month, new Month<>(month));
+        this.months.get(month).addElem(c);
     }
 
-    boolean iterateForward(LocalDate from, LocalDate to, IterPoint ip, CalendarioPredicate<? extends Chronological> predicate){
+    boolean iterateForward(LocalDate from, LocalDate to, IterPoint ip, CalendarioPredicate<T> predicate){
         boolean r = true;
         int fromM;
         int toM;
@@ -39,7 +39,7 @@ class Year<T extends Chronological> {
             default: assert false; return false;
         }
         if(ip == IterPoint.IS_START && fromM <= toM){
-            if(!this.months[fromM++].iterateForward(
+            if(!this.months.get(fromM++).iterateForward(
                     from,
                     to,
                     IterPoint.make(true,ip.isEnd && fromM == toM),
@@ -47,19 +47,20 @@ class Year<T extends Chronological> {
                 return false;
         }
         while(r && fromM <= toM){
-            if(this.months[fromM] != null)
-                r = this.months[fromM++].iterateForward(
+            Month<T> m = this.months.get(fromM);
+            if(m != null)
+                r = m.iterateForward(
                         from,
                         to,
                         IterPoint.make(false,ip.isEnd && fromM == toM),
                         predicate);
+            fromM++;
         }
         return r;
     }
 
 
-
-    boolean iterateBackwards(LocalDate from, LocalDate to, IterPoint ip, CalendarioPredicate<? extends Chronological> predicate){
+    boolean iterateBackwards(LocalDate from, LocalDate to, IterPoint ip, CalendarioPredicate<T> predicate){
         boolean r = true;
         int fromM;
         int toM;
@@ -83,7 +84,7 @@ class Year<T extends Chronological> {
             default: assert false; return false;
         }
         if(ip == IterPoint.IS_START && fromM >= toM){
-            if(!this.months[fromM--].iterateBackwards(
+            if(!this.months.get(fromM--).iterateBackwards(
                     from,
                     to,
                     IterPoint.make(true,ip.isEnd && fromM == toM),
@@ -91,12 +92,14 @@ class Year<T extends Chronological> {
                 return false;
         }
         while(r && fromM >= toM){
-            if(this.months[fromM] != null)
-                r = this.months[fromM--].iterateBackwards(
+            Month<T> m = this.months.get(fromM);
+            if(m != null)
+                r = m.iterateBackwards(
                         from,
                         to,
                         IterPoint.make(false,ip.isEnd && fromM == toM),
                         predicate);
+            fromM--;
         }
         return r;
     }

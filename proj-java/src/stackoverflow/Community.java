@@ -2,8 +2,10 @@ package stackoverflow;
 
 import stackoverflow.calendario.Calendario;
 import stackoverflow.calendario.CalendarioPredicate;
+import stackoverflow.calendario.Chronological;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -71,6 +73,13 @@ public class Community {
         return this.users.get(id);
     }
 
+    public long getTagId(String tag){
+        Long id = tags.get(tag);
+        if(id!=null){
+            return id;
+        } return -2;
+    }
+
     public long getUserCount(){
         return users.size();
     }
@@ -90,7 +99,6 @@ public class Community {
         }
         return users;
     }
-
 
     private class SortedQuestions implements CalendarioPredicate<Question> {
 
@@ -134,7 +142,6 @@ public class Community {
             this.list.addFirst(answer, this.comparator, this.max);
             return true;
         }
-
     }
 
     public List<Answer> getSortedAnswerList(LocalDate from, LocalDate to, Comparator<Answer> answerComparator, int N){
@@ -160,17 +167,11 @@ public class Community {
             return true;
         }
     }
+
     public List<Question> getFilteredQuestions(LocalDate from, LocalDate to, int N, Predicate<Question> f){
         FilteredQuestions filteredQuestions = new FilteredQuestions(f, N);
         this.calendarioQuestions.iterate(from, to, filteredQuestions);
         return filteredQuestions.list;
-    }
-
-    public long getTagId(String tag){
-        Long id = tags.get(tag);
-        if(id!=null){
-            return id;
-        } return -2;
     }
 
 }

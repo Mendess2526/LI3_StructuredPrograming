@@ -2,11 +2,11 @@ package stackoverflow.calendario;
 
 import java.time.LocalDate;
 
-class Month {
-    private Day[] days;
+class Month<T extends Chronological> {
+    private FixedSizeList<Day<T>> days;
 
     Month(int month){
-        this.days = new Day[nrDays(month)];
+        this.days = new FixedSizeList<>(nrDays(month));
     }
 
     private int nrDays(int m){
@@ -15,13 +15,13 @@ class Month {
         return 31;
     }
 
-    void addElem(Chronological c){
+    void addElem(T c){
         int day = c.getDate().getDayOfMonth() - 1;
-        if(this.days[day] == null) this.days[day] = new Day();
-        this.days[day].addElem(c);
+        if(this.days.get(day) == null) this.days.set(day, new Day<>());
+        this.days.get(day).addElem(c);
     }
 
-    boolean iterateForward(LocalDate from, LocalDate to, IterPoint ip, CalendarioPredicate<? extends Chronological> predicate){
+    boolean iterateForward(LocalDate from, LocalDate to, IterPoint ip, CalendarioPredicate<T> predicate){
         boolean r = true;
         int fromD;
         int toD;
@@ -32,7 +32,7 @@ class Month {
                 break;
             case IS_START:
                 fromD = from.getDayOfMonth() - 1;
-                toD = this.days.length - 1;
+                toD = nrDays(to.getMonthValue()) - 1;
                 break;
             case IS_END:
                 fromD = 0;
@@ -40,17 +40,17 @@ class Month {
                 break;
             case IS_NEITHER:
                 fromD = 0;
-                toD = this.days.length - 1;
+                toD = nrDays(to.getMonthValue()) - 1;
                 break;
             default: assert false; return false;
         }
         for(int i = fromD; r && i < toD; i++){
-            if(this.days[i] != null) r = this.days[i].iterateForward(predicate);
+            if(this.days.get(i) != null) r = this.days.get(i).iterateForward(predicate);
         }
         return r;
     }
 
-    boolean iterateBackwards(LocalDate from, LocalDate to, IterPoint ip, CalendarioPredicate<? extends Chronological> predicate){
+    boolean iterateBackwards(LocalDate from, LocalDate to, IterPoint ip, CalendarioPredicate<T> predicate){
         boolean r = true;
         int fromD;
         int toD;
@@ -64,17 +64,17 @@ class Month {
                 toD = 0;
                 break;
             case IS_END:
-                fromD = this.days.length - 1;
+                fromD = nrDays(to.getMonthValue()) - 1;
                 toD = to.getDayOfMonth() - 1;
                 break;
             case IS_NEITHER:
-                fromD = this.days.length - 1;
+                fromD = nrDays(to.getMonthValue()) - 1;
                 toD = 0;
                 break;
             default: assert false; return false;
         }
         for(int i = fromD; r && i > toD; i--){
-            if(this.days[i] != null) r = this.days[i].iterateBackwards(predicate);
+            if(this.days.get(i) != null) r = this.days.get(i).iterateBackwards(predicate);
         }
         return r;
     }
