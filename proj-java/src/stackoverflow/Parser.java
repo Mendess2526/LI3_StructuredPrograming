@@ -20,10 +20,10 @@ public class Parser {
         try{
             SAXParser saxParser = spf.newSAXParser();
             XMLReader xmlReader = saxParser.getXMLReader();
-            xmlReader.setContentHandler(new PostHandler(com));
-            xmlReader.parse(convertToFileURL(path + "Posts.xml"));
             xmlReader.setContentHandler(new UserHandler(com));
             xmlReader.parse(convertToFileURL(path + "Users.xml"));
+            xmlReader.setContentHandler(new PostHandler(com));
+            xmlReader.parse(convertToFileURL(path + "Posts.xml"));
             xmlReader.setContentHandler(new TagsHandler(com));
             xmlReader.parse(convertToFileURL(path + "Tags.xml"));
         }catch(ParserConfigurationException | SAXException | IOException e){

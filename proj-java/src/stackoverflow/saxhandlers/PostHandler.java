@@ -27,7 +27,7 @@ public class PostHandler extends DefaultHandler {
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException{
         super.startElement(uri, localName, qName, attributes);
-        PostType pt = postTypeFromString(attributes.getValue("PostType"));
+        PostType pt = postTypeFromString(attributes.getValue("PostTypeId"));
         if(pt == PostType.NEITHER) return;
         long id = Long.parseLong(attributes.getValue("Id"));
         long ownerId = Long.parseLong(attributes.getValue("OwnerUserId"));
