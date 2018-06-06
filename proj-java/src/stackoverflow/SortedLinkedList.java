@@ -8,26 +8,6 @@ import java.util.Collection;
 public class SortedLinkedList<T> extends LinkedList<T>{
 
     /**
-     * Inserts the specified element at the beginning of this list.
-     * @param t the element to add
-     */
-    @Override
-    public void addFirst(T t) throws UnsupportedOperationException{
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Appends the specified element to the end of this list.
-     *
-     * <p>This method is equivalent to {@link #add}.
-     * @param t the element to add
-     */
-    @Override
-    public void addLast(T t) throws UnsupportedOperationException{
-        throw new UnsupportedOperationException();
-    }
-
-    /**
      * Appends the specified element to the end of this list.
      *
      * <p>This method is equivalent to {@link #add}.
@@ -35,7 +15,10 @@ public class SortedLinkedList<T> extends LinkedList<T>{
      * @param c the comparator to insert sorted
      */
     public void addLast(T o, Comparator<T> c){
-        if(this.size() == 0) this.add(o);
+        if(this.size() == 0){
+            super.addFirst(o);
+            return;
+        }
         boolean inserted = false;
         ListIterator<T> it = this.listIterator(this.size() - 1);
         it.next();
@@ -51,7 +34,10 @@ public class SortedLinkedList<T> extends LinkedList<T>{
     }
 
     public void addLast(T o, Comparator<T> c, int max){
-        if(this.size() == 0) this.add(o);
+        if(this.size() == 0){
+            this.add(o);
+            return;
+        }
         ListIterator<T> it = this.listIterator(this.size() - 1);
         it.next();
         while(max > 0 && it.hasPrevious()){
@@ -64,35 +50,14 @@ public class SortedLinkedList<T> extends LinkedList<T>{
                 max--;
             }
         }
-    }
-
-    /**
-     * Appends the specified element to the end of this list.
-     *
-     * <p>This method is equivalent to {@link #addLast}.
-     * @param t element to be appended to this list
-     * @return {@code true} (as specified by {@link Collection#add})
-     */
-    @Override
-    public boolean add(T t) throws UnsupportedOperationException{
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Inserts the specified element at the specified position in this list.
-     * Shifts the element currently at that position (if any) and any
-     * subsequent elements to the right (adds one to their indices).
-     * @param index   index at which the specified element is to be inserted
-     * @param element element to be inserted
-     * @throws UnsupportedOperationException This operation is not supported
-     */
-    @Override
-    public void add(int index, T element) throws UnsupportedOperationException{
-        throw new UnsupportedOperationException();
+        if(max > 0) it.add(o);
     }
 
     public void addFirst(T o, Comparator<T> c){
-        if(this.size() == 0) super.add(o);
+        if(this.size() == 0){
+            super.add(o);
+            return;
+        }
         boolean inserted = false;
         ListIterator<T> it = this.listIterator();
         while(!inserted && it.hasNext()){
@@ -107,7 +72,10 @@ public class SortedLinkedList<T> extends LinkedList<T>{
     }
 
     public void addFirst(T o, Comparator<T> c, int max){
-        if(this.size() == 0) super.add(o);
+        if(this.size() == 0){
+            super.add(o);
+            return;
+        }
         ListIterator<T> it = this.listIterator();
         while(max > 0 && it.hasNext()){
             T t = it.next();
@@ -119,5 +87,6 @@ public class SortedLinkedList<T> extends LinkedList<T>{
                 max--;
             }
         }
+        if(max > 0) it.add(o);
     }
 }
