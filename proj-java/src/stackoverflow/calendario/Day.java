@@ -28,4 +28,12 @@ class Day<T extends Chronological> {
         }
         return r;
     }
+
+    long countElements(){
+        long count = 0;
+        for(int i = 0; i < 24; i++)
+            if(this.hours.get(i) != null)
+                count += this.hours.get(i).getCount();
+        return count;
+    }
 }

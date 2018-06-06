@@ -16,10 +16,11 @@ class Hour<T extends Chronological> {
 
     void addElem(T c){
         this.elems.addLast(c , Comparator.comparing(Chronological::getDate));
+        this.count++;
     }
 
     boolean iterateForward(CalendarioPredicate<T> predicate){
-        for(T elem : this.elems) if(predicate.test(elem)) return false;
+        for(T elem : this.elems) if(!predicate.test(elem)) return false;
         return true;
     }
 

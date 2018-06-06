@@ -78,4 +78,33 @@ class Month<T extends Chronological> {
         }
         return r;
     }
+
+    long countElements(LocalDate from, LocalDate to, IterPoint ip){
+        int fromD;
+        int toD;
+        switch(ip){
+            case IS_BOTH:
+                fromD = from.getDayOfMonth() - 1;
+                toD = to.getDayOfMonth() - 1;
+                break;
+            case IS_START:
+                fromD = from.getDayOfMonth() - 1;
+                toD = nrDays(to.getMonthValue()) - 1;
+                break;
+            case IS_END:
+                fromD = 0;
+                toD = to.getDayOfMonth() - 1;
+                break;
+            case IS_NEITHER:
+                fromD = 0;
+                toD = nrDays(to.getMonthValue()) - 1;
+                break;
+            default: assert false; return Long.MIN_VALUE;
+        }
+        long count = 0;
+        for(int i = fromD; i < toD; i++){
+            if(this.days.get(i) != null) count += this.days.get(i).countElements();
+        }
+        return count;
+    }
 }
