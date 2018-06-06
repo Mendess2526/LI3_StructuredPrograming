@@ -174,4 +174,11 @@ public class Community {
         return filteredQuestions.list;
     }
 
+    public long countQuestions(LocalDate from, LocalDate to){
+        return this.calendarioQuestions.countElements(from, to);
+    }
+
+    public long countAnswers(LocalDate from, LocalDate to){
+        return this.calendarioAnswers.countElements(from, to);
+    }
 }

@@ -13,7 +13,7 @@ public abstract class Post extends Chronological {
     private String ownerName;
 
 
-    public Post(int score, long id, long ownerId, LocalDateTime date, String ownerName){
+    Post(int score, long id, long ownerId, LocalDateTime date, String ownerName){
         this.id = id;
         this.score = score;
         this.ownerId = ownerId;
@@ -52,4 +52,6 @@ public abstract class Post extends Chronological {
                 ", ownerName='" + ownerName + '\'' +
                 '}';
     }
+
+    public abstract Question searchUserInThread(long id);
 }

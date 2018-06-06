@@ -1,6 +1,6 @@
 package stackoverflow;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 public class User {
 
@@ -38,11 +38,11 @@ public class User {
         return this.bio;
     }
 
-    public LinkedList<Post> getPosts(){
-        return this.posts;
+    public ArrayList<Post> getPosts(){
+        return new ArrayList<>(this.posts);
     }
 
     public void addPost(Post post){
-        posts.addFirst(post, new PostDateComparator());
+        posts.addFirst(post, new PostDateComparator().reversed());
     }
 }
