@@ -152,6 +152,13 @@ public class TCD implements TADCommunity{
 
     @Override
     public List<Long> mostUsedBestRep(int N, LocalDate begin, LocalDate end){
+        List<User> users = this.com.getSortedUserList(Comparator.comparingInt(User::getReputation),N);
+        Map<String, Long> counts = users.stream()
+                .flatMap(u -> u.getPosts().stream())
+                .filter(q -> q.isBetweenDates(begin, end))
+                .flatMap(q -> Arrays.stream(q.getTags()))
+                .filter(Objects::nonNull)
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
         return null;
     }
 

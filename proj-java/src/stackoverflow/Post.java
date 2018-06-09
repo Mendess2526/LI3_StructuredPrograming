@@ -2,7 +2,9 @@ package stackoverflow;
 
 import stackoverflow.calendario.Chronological;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public abstract class Post extends Chronological {
 
@@ -54,4 +56,12 @@ public abstract class Post extends Chronological {
     }
 
     public abstract Question searchUserInThread(long id);
+
+    public boolean isBetweenDates(LocalDate from, LocalDate to){
+        return this.date.isAfter(from.atStartOfDay()) && this.date.isAfter(to.atTime(LocalTime.MAX));
+    }
+
+    public String[] getTags(){
+        return new String[0];
+    }
 }

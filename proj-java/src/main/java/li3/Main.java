@@ -34,6 +34,7 @@ public class Main {
             //logtime.writeLog("LOAD -> "+(after-before)+" ms");
         }catch(IndexOutOfBoundsException e){
             System.out.println("Deve passar o caminho do dump como argumento.");
+            return;
         }
 
         /*
@@ -134,10 +135,11 @@ public class Main {
             Query 11
         */
         before = System.currentTimeMillis();
-        List<Long> q11 = qe.mostUsedBestRep(5, LocalDate.of(2013, Month.NOVEMBER, 01),
-                                            LocalDate.of(2013, Month.NOVEMBER, 30));
+        //List<Long> q11 = qe.mostUsedBestRep(5, LocalDate.of(2013, Month.NOVEMBER, 1),
+        //                                    LocalDate.of(2013, Month.NOVEMBER, 30));
+        List<Long> q11 = qe.mostUsedBestRep(5, LocalDate.MIN, LocalDate.MAX);
         after = System.currentTimeMillis();
-//        logtime.writeLog("Query 11 -> "+(after-before)+" ms");
+        System.out.println("Query 11 -> "+(after-before)+" ms");
         System.out.println("Query 11 -> " + q11);
 
         /*
