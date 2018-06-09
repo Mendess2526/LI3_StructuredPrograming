@@ -22,46 +22,39 @@ public class Calendario<T extends Chronological> {
     }
 
     public void iterate(LocalDate from, LocalDate to, CalendarioPredicate<T> predicate){
-        if(from.isBefore(to))
-            iterateForward(from, to, predicate);
+        if(from.isBefore(to)) iterateForward(from, to, predicate);
         else iterateBackwards(from, to, predicate);
     }
 
     private void iterateForward(LocalDate from, LocalDate to, CalendarioPredicate<T> predicate){
         int fromY = from.getYear();
         int toY = to.getYear();
+        boolean keepGoing = true;
         if(fromY <= toY){
-            Year<T> y = this.years.get(fromY);
-            if(y!=null
-               && !y.iterateForward(from, to, IterPoint.make(true, fromY == toY),predicate))
-                return;
-            fromY++;
+            IterPoint ip = IterPoint.make(true, fromY == toY);
+            Year<T> y = this.years.get(fromY++);
+            if(y!=null) keepGoing = y.iterateForward(from, to, ip, predicate);
         }
-        while(fromY <= toY){
-            Year<T> y = this.years.get(fromY);
-            if(y!=null
-               && !y.iterateForward(from, to, IterPoint.make(false, fromY == toY), predicate))
-                return;
-            fromY++;
+        while(keepGoing && fromY <= toY){
+            IterPoint ip = IterPoint.make(false, fromY == toY);
+            Year<T> y = this.years.get(fromY++);
+            if(y!=null) keepGoing = y.iterateForward(from, to, ip, predicate);
         }
     }
 
     private void iterateBackwards(LocalDate from, LocalDate to, CalendarioPredicate<T> predicate){
         int fromY = from.getYear();
         int toY = to.getYear();
+        boolean keepGoing = true;
         if(fromY >= toY){
-            Year<T> y = this.years.get(fromY);
-            if(y!=null
-                    && !y.iterateBackwards(from, to, IterPoint.make(true, fromY == toY),predicate))
-                return;
-            fromY--;
+            IterPoint ip = IterPoint.make(true, fromY == toY);
+            Year<T> y = this.years.get(fromY--);
+            if(y!=null) keepGoing = y.iterateBackwards(from, to, ip, predicate);
         }
-        while(fromY >= toY){
-            Year<T> y = this.years.get(fromY);
-            if(y!=null
-                    && !y.iterateBackwards(from, to, IterPoint.make(false, fromY == toY), predicate))
-                return;
-            fromY--;
+        while(keepGoing && fromY >= toY){
+            IterPoint ip = IterPoint.make(false, fromY == toY);
+            Year<T> y = this.years.get(fromY--);
+            if(y!=null) keepGoing = y.iterateBackwards(from, to, ip, predicate);
         }
     }
 
@@ -75,16 +68,14 @@ public class Calendario<T extends Chronological> {
         int toY = to.getYear();
         long count = 0;
         if(fromY <= toY){
-            Year<T> y = this.years.get(fromY);
-            if(y != null)
-                count = y.countElements(from, to, IterPoint.make(true, fromY == toY));
-            fromY++;
+            IterPoint ip = IterPoint.make(true, fromY == toY);
+            Year<T> y = this.years.get(fromY++);
+            if(y != null) count = y.countElements(from, to, ip);
         }
         while(fromY <= toY){
-            Year<T> y = this.years.get(fromY);
-            if(y!=null)
-               count += y.countElements(from, to, IterPoint.make(false, fromY == toY));
-            fromY++;
+            IterPoint ip = IterPoint.make(false, fromY == toY);
+            Year<T> y = this.years.get(fromY++);
+            if(y!=null) count += y.countElements(from, to, ip);
         }
         return count;
     }

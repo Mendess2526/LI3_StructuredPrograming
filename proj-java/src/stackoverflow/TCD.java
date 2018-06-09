@@ -5,6 +5,8 @@ import main.java.li3.TADCommunity;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class TCD implements TADCommunity{
 
@@ -65,7 +67,7 @@ public class TCD implements TADCommunity{
     @Override
     public List<Long> questionsWithTag(String tag, LocalDate begin, LocalDate end){
         List<Question> questions = this.com.getFilteredQuestions(
-                begin, end, Integer.MAX_VALUE, f -> f.hasTag(tag));
+                end, begin, Integer.MAX_VALUE, f -> f.hasTag(tag));
         return idsFromPosts(questions, -1);
     }
 

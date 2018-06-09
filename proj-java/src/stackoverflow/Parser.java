@@ -13,19 +13,19 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
 import java.io.IOException;
 
-public class Parser {
-    public static void parse(Community com, String path){
+class Parser {
+    static void parse(Community com, String path){
         SAXParserFactory spf = SAXParserFactory.newInstance();
         spf.setNamespaceAware(true);
         try{
             SAXParser saxParser = spf.newSAXParser();
             XMLReader xmlReader = saxParser.getXMLReader();
             xmlReader.setContentHandler(new UserHandler(com));
-            xmlReader.parse(convertToFileURL(path + "Users.xml"));
+            xmlReader.parse(convertToFileURL(path + "/Users.xml"));
             xmlReader.setContentHandler(new PostHandler(com));
-            xmlReader.parse(convertToFileURL(path + "Posts.xml"));
+            xmlReader.parse(convertToFileURL(path + "/Posts.xml"));
             xmlReader.setContentHandler(new TagsHandler(com));
-            xmlReader.parse(convertToFileURL(path + "Tags.xml"));
+            xmlReader.parse(convertToFileURL(path + "/Tags.xml"));
         }catch(ParserConfigurationException | SAXException | IOException e){
             e.printStackTrace();
         }

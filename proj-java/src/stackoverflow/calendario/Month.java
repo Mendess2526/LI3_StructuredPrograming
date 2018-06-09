@@ -2,6 +2,7 @@ package stackoverflow.calendario;
 
 import java.time.LocalDate;
 
+@SuppressWarnings("Duplicates")
 class Month<T extends Chronological> {
     private FixedSizeList<Day<T>> days;
 
@@ -22,88 +23,73 @@ class Month<T extends Chronological> {
     }
 
     boolean iterateForward(LocalDate from, LocalDate to, IterPoint ip, CalendarioPredicate<T> predicate){
-        boolean r = true;
         int fromD;
         int toD;
-        switch(ip){
-            case IS_BOTH:
-                fromD = from.getDayOfMonth() - 1;
-                toD = to.getDayOfMonth() - 1;
-                break;
-            case IS_START:
-                fromD = from.getDayOfMonth() - 1;
-                toD = nrDays(to.getMonthValue()) - 1;
-                break;
-            case IS_END:
-                fromD = 0;
-                toD = to.getDayOfMonth() - 1;
-                break;
-            case IS_NEITHER:
-                fromD = 0;
-                toD = nrDays(to.getMonthValue()) - 1;
-                break;
-            default: assert false; return false;
+        if(ip == IterPoint.IS_BOTH){
+            fromD = from.getDayOfMonth() - 1;
+            toD = to.getDayOfMonth() - 1;
+        }else if(ip == IterPoint.IS_START){
+            fromD = from.getDayOfMonth() - 1;
+            toD = nrDays(to.getMonthValue()) - 1;
+        }else if(ip == IterPoint.IS_END){
+            fromD = 0;
+            toD = to.getDayOfMonth() - 1;
+        }else{
+            fromD = 0;
+            toD = nrDays(to.getMonthValue()) - 1;
         }
-        for(int i = fromD; r && i < toD; i++){
-            if(this.days.get(i) != null) r = this.days.get(i).iterateForward(predicate);
+        boolean keepGoing = true;
+        for(int i = fromD; keepGoing && i <= toD; i++){
+            Day<T> d = this.days.get(i);
+            if(d != null) keepGoing = d.iterateForward(predicate);
         }
-        return r;
+        return keepGoing;
     }
 
     boolean iterateBackwards(LocalDate from, LocalDate to, IterPoint ip, CalendarioPredicate<T> predicate){
-        boolean r = true;
         int fromD;
         int toD;
-        switch(ip){
-            case IS_BOTH:
-                fromD = from.getDayOfMonth() - 1;
-                toD = to.getDayOfMonth() - 1;
-                break;
-            case IS_START:
-                fromD = from.getDayOfMonth() - 1;
-                toD = 0;
-                break;
-            case IS_END:
-                fromD = nrDays(to.getMonthValue()) - 1;
-                toD = to.getDayOfMonth() - 1;
-                break;
-            case IS_NEITHER:
-                fromD = nrDays(to.getMonthValue()) - 1;
-                toD = 0;
-                break;
-            default: assert false; return false;
+        if(ip == IterPoint.IS_BOTH){
+            fromD = from.getDayOfMonth() - 1;
+            toD = to.getDayOfMonth() - 1;
+        }else if(ip == IterPoint.IS_START){
+            fromD = from.getDayOfMonth() - 1;
+            toD = 0;
+        }else if(ip == IterPoint.IS_END){
+            fromD = nrDays(to.getMonthValue()) - 1;
+            toD = to.getDayOfMonth() - 1;
+        }else{
+            fromD = nrDays(to.getMonthValue()) - 1;
+            toD = 0;
         }
-        for(int i = fromD; r && i > toD; i--){
-            if(this.days.get(i) != null) r = this.days.get(i).iterateBackwards(predicate);
+        boolean keepGoing = true;
+        for(int i = fromD; keepGoing && i >= toD; i--){
+            Day<T> d = this.days.get(i);
+            if(d != null) keepGoing = d.iterateBackwards(predicate);
         }
-        return r;
+        return keepGoing;
     }
 
     long countElements(LocalDate from, LocalDate to, IterPoint ip){
         int fromD;
         int toD;
-        switch(ip){
-            case IS_BOTH:
-                fromD = from.getDayOfMonth() - 1;
-                toD = to.getDayOfMonth() - 1;
-                break;
-            case IS_START:
-                fromD = from.getDayOfMonth() - 1;
-                toD = nrDays(to.getMonthValue()) - 1;
-                break;
-            case IS_END:
-                fromD = 0;
-                toD = to.getDayOfMonth() - 1;
-                break;
-            case IS_NEITHER:
-                fromD = 0;
-                toD = nrDays(to.getMonthValue()) - 1;
-                break;
-            default: assert false; return Long.MIN_VALUE;
+        if(ip == IterPoint.IS_BOTH){
+            fromD = from.getDayOfMonth() - 1;
+            toD = to.getDayOfMonth() - 1;
+        }else if(ip == IterPoint.IS_START){
+            fromD = from.getDayOfMonth() - 1;
+            toD = nrDays(to.getMonthValue()) - 1;
+        }else if(ip == IterPoint.IS_END){
+            fromD = 0;
+            toD = to.getDayOfMonth() - 1;
+        }else{
+            fromD = 0;
+            toD = nrDays(to.getMonthValue()) - 1;
         }
         long count = 0;
-        for(int i = fromD; i < toD; i++){
-            if(this.days.get(i) != null) count += this.days.get(i).countElements();
+        for(int i = fromD; i <= toD; i++){
+            Day<T> d = this.days.get(i);
+            if(d != null) count += d.countElements();
         }
         return count;
     }

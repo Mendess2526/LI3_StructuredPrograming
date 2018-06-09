@@ -1,8 +1,9 @@
 package stackoverflow.calendario;
 
 import java.time.LocalDate;
+import java.util.Iterator;
 
-@SuppressWarnings("BooleanMethodIsAlwaysInverted")
+@SuppressWarnings({"BooleanMethodIsAlwaysInverted", "Duplicates"})
 class Year<T extends Chronological> {
     private FixedSizeList<Month<T>> months;
 
@@ -17,133 +18,91 @@ class Year<T extends Chronological> {
     }
 
     boolean iterateForward(LocalDate from, LocalDate to, IterPoint ip, CalendarioPredicate<T> predicate){
-        boolean r = true;
         int fromM;
         int toM;
-        switch(ip){
-            case IS_BOTH:
-                fromM = from.getMonthValue() - 1;
-                toM = to.getMonthValue() - 1;
-                break;
-            case IS_START:
-                fromM = from.getMonthValue() - 1;
-                toM = 11;
-                break;
-            case IS_END:
-                fromM = 0;
-                toM = to.getMonthValue() - 1;
-                break;
-            case IS_NEITHER:
-                fromM = 0;
-                toM = 0;
-                break;
-            default: assert false; return false;
+        if(ip == IterPoint.IS_BOTH){
+            fromM = from.getMonthValue() - 1;
+            toM = to.getMonthValue() - 1;
+        }else if(ip == IterPoint.IS_START){
+            fromM = from.getMonthValue() - 1;
+            toM = 11;
+        }else if(ip == IterPoint.IS_END){
+            fromM = 0;
+            toM = to.getMonthValue() - 1;
+        }else{
+            fromM = 0;
+            toM = 0;
         }
-        if(ip == IterPoint.IS_START && fromM <= toM){
-            Month<T> m = this.months.get(fromM);
-            if(m != null && !m.iterateForward(
-                    from,
-                    to,
-                    IterPoint.make(true,ip.isEnd && fromM == toM),
-                    predicate))
-                return false;
-            fromM++;
+        boolean keepGoing = true;
+        if(ip.isStart && fromM <= toM){
+            IterPoint newIp = IterPoint.make(true,ip.isEnd && fromM == toM);
+            Month<T> m = this.months.get(fromM++);
+            if(m != null) keepGoing = m.iterateForward(from, to, newIp, predicate);
         }
-        while(r && fromM <= toM){
-            Month<T> m = this.months.get(fromM);
-            if(m != null)
-                r = m.iterateForward(
-                        from,
-                        to,
-                        IterPoint.make(false,ip.isEnd && fromM == toM),
-                        predicate);
-            fromM++;
+        while(keepGoing && fromM <= toM){
+            IterPoint newIP = IterPoint.make(false,ip.isEnd && fromM == toM);
+            Month<T> m = this.months.get(fromM++);
+            if(m != null) keepGoing = m.iterateForward(from, to, newIP, predicate);
         }
-        return r;
+        return keepGoing;
     }
 
     boolean iterateBackwards(LocalDate from, LocalDate to, IterPoint ip, CalendarioPredicate<T> predicate){
-        boolean r = true;
         int fromM;
         int toM;
-        switch(ip){
-            case IS_BOTH:
-                fromM = from.getMonthValue() - 1;
-                toM = to.getMonthValue() - 1;
-                break;
-            case IS_START:
-                fromM = from.getMonthValue() - 1;
-                toM = 0;
-                break;
-            case IS_END:
-                fromM = 11;
-                toM = to.getMonthValue() - 1;
-                break;
-            case IS_NEITHER:
-                fromM = 11;
-                toM = 0;
-                break;
-            default: assert false; return false;
+        if(ip == IterPoint.IS_BOTH){
+            fromM = from.getMonthValue() - 1;
+            toM = to.getMonthValue() - 1;
+        }else if(ip == IterPoint.IS_START){
+            fromM = from.getMonthValue() - 1;
+            toM = 0;
+        }else if(ip == IterPoint.IS_END){
+            fromM = 11;
+            toM = to.getMonthValue() - 1;
+        }else{
+            fromM = 11;
+            toM = 0;
         }
-        if(ip == IterPoint.IS_START && fromM >= toM){
-            Month<T> m = this.months.get(fromM);
-            if(m != null && !m.iterateBackwards(
-                    from,
-                    to,
-                    IterPoint.make(true,ip.isEnd && fromM == toM),
-                    predicate))
-                return false;
-            fromM--;
+        boolean keepGoing = true;
+        if(ip.isStart && fromM >= toM){
+            IterPoint newIp = IterPoint.make(true,ip.isEnd && fromM == toM);
+            Month<T> m = this.months.get(fromM--);
+            if(m != null) keepGoing = m.iterateBackwards(from, to, newIp, predicate);
         }
-        while(r && fromM >= toM){
-            Month<T> m = this.months.get(fromM);
-            if(m != null)
-                r = m.iterateBackwards(
-                        from,
-                        to,
-                        IterPoint.make(false,ip.isEnd && fromM == toM),
-                        predicate);
-            fromM--;
+        while(keepGoing && fromM >= toM){
+            IterPoint newIp = IterPoint.make(false,ip.isEnd && fromM == toM);
+            Month<T> m = this.months.get(fromM--);
+            if(m != null) keepGoing = m.iterateBackwards(from, to, newIp, predicate);
         }
-        return r;
+        return keepGoing;
     }
 
     public long countElements(LocalDate from, LocalDate to, IterPoint ip){
         int fromM;
         int toM;
-        switch(ip){
-            case IS_BOTH:
-                fromM = from.getMonthValue() - 1;
-                toM = to.getMonthValue() - 1;
-                break;
-            case IS_START:
-                fromM = from.getMonthValue() - 1;
-                toM = 11;
-                break;
-            case IS_END:
-                fromM = 0;
-                toM = to.getMonthValue() - 1;
-                break;
-            case IS_NEITHER:
-                fromM = 0;
-                toM = 0;
-                break;
-            default: assert false; return Long.MIN_VALUE;
+        if(ip == IterPoint.IS_BOTH){
+            fromM = from.getMonthValue() - 1;
+            toM = to.getMonthValue() - 1;
+        }else if(ip == IterPoint.IS_START){
+            fromM = from.getMonthValue() - 1;
+            toM = 11;
+        }else if(ip == IterPoint.IS_END){
+            fromM = 0;
+            toM = to.getMonthValue() - 1;
+        }else{
+            fromM = 0;
+            toM = 0;
         }
         long count = 0;
-        if(ip == IterPoint.IS_START && fromM <= toM){
-            count += this.months.get(fromM++).countElements(
-                    from,
-                    to,
-                    IterPoint.make(true,ip.isEnd && fromM == toM));
+        if(ip.isStart && fromM <= toM){
+            IterPoint newIp = IterPoint.make(true,ip.isEnd && fromM == toM);
+            Month<T> m = this.months.get(fromM++);
+            if(m != null) count += m.countElements(from, to, newIp);
         }
         while(fromM <= toM){
+            IterPoint newIp = IterPoint.make(false,ip.isEnd && fromM == toM);
             Month<T> m = this.months.get(fromM++);
-            if(m != null)
-                count += m.countElements(
-                        from,
-                        to,
-                        IterPoint.make(false,ip.isEnd && fromM == toM));
+            if(m != null) count += m.countElements(from, to, newIp);
             fromM++;
         }
         return count;
