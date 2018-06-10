@@ -1,0 +1,326 @@
+\documentclass[10pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{indentfirst}
+\usepackage{enumerate}
+\usepackage{float}
+\usepackage{array}
+\usepackage{tikz}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{geometry}
+\usepackage{wrapfig}
+\usepackage[cache=false]{minted}
+\usepackage{pdflscape}
+\usepackage[titletoc]{appendix}
+\usepackage[hidelinks]{hyperref}
+\geometry{
+ a4paper,
+ top=2cm,
+ bottom=2cm,
+ left=3cm,
+ right=3cm
+}
+\addto\captionsportuguese{
+      \renewcommand{\contentsname}
+          {Índice}
+}
+\titleformat{\chapter}{\normalfont\huge}{\thechapter.}{18pt}{\bf\huge}
+
+\begin{document}
+\begin{titlepage}
+    \center
+    {\huge {\bf Universidade do Minho}}\\[0.4cm]
+    \vspace{3.0cm}
+    \textsc{\huge{Processamento de xml}}\\[0.5cm]
+    \vspace{3.0cm}
+    \textsc{\huge{Mestrado Integrado em Engenharia Informática}}\\[0.5cm]
+    \vspace{2.0cm}
+    \textsc{Laboratórios de Informática 3}\\[0.5cm]
+    \textsc{(2º Ano, 2º Semestre, 2017/2018)}\\[0.5cm]
+    \vspace{1.5cm}
+    \begin{flushleft}
+        A79003 \,\,\,Pedro Mendes Félix da Costa
+        \vspace{0.2cm}
+
+        A80453 \,\,\,Bárbara Andreia Cardoso Ferreira
+    \end{flushleft}
+        \vspace{1cm}
+    \begin{flushright}
+        Braga
+
+        Junho 2018
+    \end{flushright}
+
+\end{titlepage}
+
+\tableofcontents
+\clearpage
+
+\chapter{Introdução}
+    Este trabalho foi feito no âmbito da unidade curricular laboratórios de
+    informática 3 e tem como objetivo o processamento de qualquer \textit{dump}
+    da base de dados do site \href{www.stackoverflow.com}{StackOverflow} para
+    responder a queries de forma eficiente, aplicando conhecimentos de
+    algoritemia e programação orientada a objectos.
+
+\chapter{Resolução inicial do Problema}
+    Fazendo uma análise às queries, decidimos que seria necessário representar
+    as seguintes entidades:
+
+    \section{Posts}
+        Para representar um \textbf{Post} criamos a classe abstrata
+        do mesmo nome. Esta guarda os dados e representa o comportamento comum a
+        todos os posts. Depois para cada tipo de post considerado, questão ou
+        resposta, foi criada uma classe que extende \textbf{Post}, adicionando
+        os dados unicos a este tipo.
+        \paragraph{Post}
+            \begin{multicols}{3}
+            \begin{itemize}
+                \item Id
+                \item Score
+                \item Data
+                \item Id do autor
+                \item Nome do autor
+            \end{itemize}
+        \paragraph{Questão}
+            \begin{itemize}
+                \item Título da questão
+                \item Número de respostas
+                \item Lista das respostas
+                \item Tags
+            \end{itemize}
+
+        \paragraph{Resposta}
+            \begin{itemize}
+                \item Número de comentários
+                \item Id da questão a que responde
+                \item Referência da questão a que responde
+            \end{itemize}
+            \end{multicols}
+
+    Além dos dados fornecidos diretamente pelos ficheiros xml, decidimos também
+    guardar na \textbf{questão} a lista das \textbf{respostas} de cada questão,
+    bem como uma contagem destas. Na \textbf{resposta}, inversamente, guardamos
+    uma referência para a pergunta a que esta responde. Com estas informações
+    extra as pesquisas que envolvem relacionar estas duas entidades tornam-se
+    muito mais eficientes.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.71\textwidth]{./images/PostHierarchy.png}
+        \caption{Hierarquia formada pelos posts}
+    \end{figure}
+
+    \section{Utilizadores}
+
+    \begin{wrapfigure}{r}{0.4\textwidth}
+        \includegraphics[width=0.4\textwidth]{./images/User.png}
+        \caption{Hierarquia formada pelos posts}
+    \end{wrapfigure}
+
+    Para representar os \textbf{utilizadores} guardamos os seguintes atributos:
+    \begin{multicols}{2}
+    \begin{itemize}
+        \item Id
+        \item Biografia
+        \item Nome
+        \item Reputação
+        \item Número de posts
+        \item Lista dos posts
+    \end{itemize}
+    \end{multicols}
+    Mais uma vez foram guardadas mais informações para além das disponibilizadas
+    diretamente pelo xml. Foi guardado o número de \textbf{posts} do utilizador
+    (para determinar os utilizadores mais ativos de forma mais rápida) e a lista
+    destes para permitir pesquisas mais rápidas.
+
+    Esta lista de posts faz uso de uma das \ref{sec:collections}{duas colleções}
+    concebidas para resolver os problemas prostos. Neste caso em particular uma
+    lista ligada ordenada por data. Devido à forma quase ordenada em que os posts
+    surgem no xml esta ordenação é facilmente mantida.
+
+
+\chapter{Estruturas de Dados}
+    \section{Hashtables}
+        Todas as entidades são armazenadas numa tabela de hash pois para todas
+        são necessárias pesquisas por id (ou nome no caso das tags).
+
+        \subsection{Tags}
+        A tabela de hash das \textit{tags} serve para criar uma associação
+        $Nome \to Id$ visto que as questões guardam uma lista com os nomes das
+        tags e para responder à query 11 é necessário obter os ids das mesmas.
+
+    \section{Calendário}
+        Para ser possivel manter as questões e respostas ordenadas por data
+        concebida uma estrutura à qual demos o nome de \textbf{Calendário} que
+        permite acessos em tempo constante $O(1)$ a todos os elementos associados
+        a uma determinada data. Mantemos assim duas instâncias desta na
+        \textbf{Community}, uma para perguntas e outra para respostas.
+
+        Para que esta estrutura fosse generica criamos também uma interface
+        \textbf{Chronological} que tem de ser implementada pelos elementos
+        que são adicionandos à estrutura. Esta interface obriga à implementação
+        do metodo \mintinline{java}{LocalDateTime getDate()} para estes possam
+        ser guardados no lugar correto.
+
+        Assim esta estrutura permite:
+        \begin{itemize}
+                \item Guardar qualquer objeto desde que seja
+                      passada uma data associada ao mesmo.
+                \item Iterar sobre os objetos, dado um intervalo de tempo,
+                      por ordem cronológica normal ou inversa, conforme a
+                      ordem dos argumentos.
+        \end{itemize}
+
+        Para utilizar os metodos de iteração é necessário, para além do intervalo
+        de tempo, passar um \textit{Predicate} que é uma classe que
+        implemente a interface funcional do mesmo nome. Esta define um metodo que
+        será aplicado a todos os elementos do \textbf{Calendario} por ordem
+        cronologica, inversa ou não dependendo da ordem em que as datas são
+        passadas para definir o intervalo.
+        % TODO rever
+        A estrutura em si consiste numa matriz de quatro dimensões com um lista
+        ligada em cada célula desta.
+
+        No primeiro nível temos um \textit{Map} de \textbf{anos} em que cada ano
+        está associado ao respetivo numero. Cada um destes, é constituído por uma
+        lista de \textbf{meses} que são constituídos por uma lista de
+        \textbf{dias}, cujo tamanho varia entre 29 e 31. Cada \textbf{dia} é
+        constituido por 24 \textbf{horas}, e cada uma destas é constituida por
+        uma lista ligada de elementos ordenada por data.
+
+        Todas as listas acima referenciadas no paragrafo anterior, tirando a lista
+        ligada de elementos, são listas de tamanho fixo desenvolvidas por nos %TODO rever
+        para que, ao contrario das implementações de \textit{List} disponibilizadas
+        por defeito, permite espaços vazios. Isto é importante porque, por exemplo,
+        há horas em que não há posts e não temos assim de gastar memoria a criar
+        uma instância de \mintinline{java}{Hour} se esta vai estar vazia.
+
+        A utilização de uma lista ligada para guardar os elementos de uma hora é
+        mais eficiente, pois é necessário fazer inserções ordenadas, que são, em
+        quase todos os casos, feitas à cabeça devido aos posts serem inseridos
+        quase cronologicamente.
+
+        Para melhor visualizar esta estrutura, ver Figura \ref{fig:calendario}.
+
+    \section{Community}
+    Para armazenar as entidades descritas acima foi implementada uma classe
+    chamada \textbf{Community} que as armazena de forma a mais tarde facilitar
+    as queries que terão de ser feitas sobre estas.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.7\textwidth]{./images/Community.png}
+        \caption{Community}
+    \end{figure}
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=\textwidth]{./images/Calendario.png}
+        \caption{Hierarquia formada pelos posts}
+        \label{fig:calendario}
+    \end{figure}
+
+    \section{Colections}
+    Foi necessário desenvolver dois novos tipos de lista para satisfazer as
+    necessidades de algumas estruturas.
+
+        \subsection{\textit{FixedSizeList}}
+        Esta lista serve como um wraper para a implementação predefinida
+        \mintinline{java}{ArrayList} para que permita adicionar elementos
+        em qualquer indice da lista desde que dentro do tamanho maximo definido
+        quando uma instância é criada.
+
+        \subsection{\textit{SortedLinkedList}}
+        Esta lista extende \mintinline{java}{LinkedList} adicionando a noção de
+        ordem. Para que seja eficiente esta deve ser usada quando a maior parte
+        das inserções forem feitas à cabeça ou cauda da lista. Opcionalmente esta
+        pode também ter um tamanho máximo.
+
+    \section{Arquitetura}
+    Todas estas classes formam a nossa arquitetura que pode ser vista de forma
+    esquematizada na Figura \ref{fig:fulldiagram}.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=\textwidth]{./images/FullDiagram.png}
+        \caption{Diagrama de Classes do Engine}
+        \label{fig:fulldiagram}
+    \end{figure}
+
+
+\chapter{Encapsulamento}
+    Devido ao uso de packages todas as classes que seja publicas para fora da
+    package não tem metodos publicos que permitam alterar o seu estado interno.
+    Desta forma todos os objectos aparecem imutaveis para o exterior.
+
+\chapter{Modularização Funcional e Resolução das queries}
+    Para aceder aos dados da estrutura principal foi definida uma API
+    simples que permite:
+    \begin{enumerate}[1.]
+        \item Pesquisas por id de \textbf{questões}, \textbf{respostas} e
+        \textbf{utilizadores}.
+        \item Pesquisas de ids de \textbf{tags} dada a designação.
+        \item Pesquisa de listas, ordenadas por qualquer critério, de
+        \textbf{utilizadores}, \textbf{questões} e \textbf{respostas}.
+        \item Pesquisas de \textbf{questões} filtradas por qualquer critério.
+        \item Pesquisas genéricas de \textbf{questões}/\textbf{respostas}
+        num determinado intervalo de tempo.
+    \end{enumerate}
+
+    Com estas funções a resolução da maioria das queries mostrou-se
+    trivial.
+
+    Para as queries que necessitam de pesquisas por id (queries: 1, 5, 9 e 10)
+    são resolvidas por \textbf{1}.
+
+    Para as queries que necessitam de pesquisas de utilizadores ordenados
+    (queries: 2 e 11) são conseguidas através de \textbf{3}, sendo que assim
+    basta fornecer uma função de comparação para definir o critério de ordenação.
+
+    Para as queries que necessitam de pesquisas de
+    \textbf{perguntas}/\textbf{respostas} num intervalo de tempo ordenadas
+    (queries: 6 e 7) são também resolvidas através de \textbf{3}. No caso de não
+    ser necessária a filtragem do intervalo de tempo, simplesmente passamos as
+    datas máximas disponibilizadas: \mintinline{java}{LocalDate.MAX}
+    \mintinline{java}{LocalDate.MIN}.
+
+    Para as queries que necessitam de listas de questões que obedeçam a um
+    determinado critério (queries: 4 e 8), são conseguidas através de \textbf{4}.
+
+    Nos casos em que estes métodos especializados não são necessários (query: 3)
+    fizemos uso de uma iteração genérica através de \textbf{5}.
+
+    A resolução da query 11 tem quatro fases. A primera consiste em obter o top N
+    utilizadores (baseado na reputação destes) para para obter os posts destes.
+    Depois, usando um \mintinline{java}{Map} conta-se a occurencia de cada
+    \textbf{Tag} nos posts dos utilizadores obtidos. Na terceira fase do problema
+    colocam-se as tags numa \textit{PriorityQueue} que para que a remoção destas
+    seja ordenada por occurencia, que é a ultima fase, para cada uma das
+    \textbf{Tag} removida é adicionando o id desta à lista que será retornada.
+
+\chapter{Comparação com a versão em C}
+    Em termos de eficiencia uma linguagem nativa como C é muito mais rapida a
+    executar as queries. Isto notou-se, especialmente, na query 8 na qual era
+    necessário filtrar \textbf{questões} que continham uma dada palavra.
+    %TODO meter aqui tempos para comparar
+
+    Em termos de facilidade de debug e desenvolvimento do código Java é muito mais
+    simples apesar de não ser uma comparação justa visto que, tendo o trabalho
+    feito em C de forma estruturada muitos dos possiveis erros já foram evitados.
+
+\chapter{Conclusões e Trabalho Futuro}
+    Em suma, o grupo considera que o trabalho foi realizado na sua
+    totalidade de forma eficiente e correta, respondendo a todas as queries.
+
+    Um aspeto que poderia ser melhorado é a ordenação de utilizadores. Estes,
+    foram guardados apenas numa tabela de hash e quando é necessária um lista
+    ordenada dos mesmos, esta, tem de ser percorrida na sua totalidade. Esta
+    decisão, centrou-se no facto de que nenhuma única ordenação se apresenta
+    particularmente vantajosa, face às demais.
+
+
+\end{document}
