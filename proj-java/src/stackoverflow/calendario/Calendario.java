@@ -3,6 +3,7 @@ package stackoverflow.calendario;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class Calendario<T extends Chronological> {
 
@@ -16,12 +17,12 @@ public class Calendario<T extends Chronological> {
         this.years.computeIfAbsent(c.getDate().getYear(), k->new Year<>()).addElem(c);
     }
 
-    public void iterate(LocalDate from, LocalDate to, CalendarioPredicate<T> predicate){
+    public void iterate(LocalDate from, LocalDate to, Predicate<T> predicate){
         if(from.isBefore(to)) iterateForward(from, to, predicate);
         else iterateBackwards(from, to, predicate);
     }
 
-    private void iterateForward(LocalDate from, LocalDate to, CalendarioPredicate<T> predicate){
+    private void iterateForward(LocalDate from, LocalDate to, Predicate<T> predicate){
         int fromY = from.getYear();
         int toY = to.getYear();
         boolean keepGoing = true;
@@ -37,7 +38,7 @@ public class Calendario<T extends Chronological> {
         }
     }
 
-    private void iterateBackwards(LocalDate from, LocalDate to, CalendarioPredicate<T> predicate){
+    private void iterateBackwards(LocalDate from, LocalDate to, Predicate<T> predicate){
         int fromY = from.getYear();
         int toY = to.getYear();
         boolean keepGoing = true;

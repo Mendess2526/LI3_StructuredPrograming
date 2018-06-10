@@ -4,6 +4,7 @@ import stackoverflow.collections.SortedLinkedList;
 
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.function.Predicate;
 
 class Hour<T extends Chronological> {
     private int count;
@@ -19,12 +20,12 @@ class Hour<T extends Chronological> {
         this.count++;
     }
 
-    boolean iterateForward(CalendarioPredicate<T> predicate){
+    boolean iterateForward(Predicate<T> predicate){
         for(T elem : this.elems) if(!predicate.test(elem)) return false;
         return true;
     }
 
-    boolean iterateBackwards(CalendarioPredicate<T> predicate){
+    boolean iterateBackwards(Predicate<T> predicate){
         boolean r = true;
         Iterator<T> it = this.elems.descendingIterator();
         while(r && it.hasNext()) r = predicate.test(it.next());

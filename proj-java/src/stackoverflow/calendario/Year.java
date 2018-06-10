@@ -3,6 +3,7 @@ package stackoverflow.calendario;
 import stackoverflow.collections.FixedSizeList;
 
 import java.time.LocalDate;
+import java.util.function.Predicate;
 
 @SuppressWarnings({"BooleanMethodIsAlwaysInverted", "Duplicates"})
 class Year<T extends Chronological> {
@@ -18,7 +19,7 @@ class Year<T extends Chronological> {
         this.months.get(month).addElem(c);
     }
 
-    boolean iterateForward(LocalDate from, LocalDate to, IterPoint ip, CalendarioPredicate<T> predicate){
+    boolean iterateForward(LocalDate from, LocalDate to, IterPoint ip, Predicate<T> predicate){
         int fromM;
         int toM;
         if(ip == IterPoint.IS_BOTH){
@@ -48,7 +49,7 @@ class Year<T extends Chronological> {
         return keepGoing;
     }
 
-    boolean iterateBackwards(LocalDate from, LocalDate to, IterPoint ip, CalendarioPredicate<T> predicate){
+    boolean iterateBackwards(LocalDate from, LocalDate to, IterPoint ip, Predicate<T> predicate){
         int fromM;
         int toM;
         if(ip == IterPoint.IS_BOTH){

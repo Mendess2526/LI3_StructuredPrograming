@@ -1,7 +1,6 @@
 package stackoverflow;
 
 import stackoverflow.calendario.Calendario;
-import stackoverflow.calendario.CalendarioPredicate;
 import stackoverflow.collections.SortedLinkedList;
 
 import java.time.LocalDate;
@@ -97,7 +96,7 @@ public class Community {
         return users;
     }
 
-    private class SortedQuestions implements CalendarioPredicate<Question> {
+    private class SortedQuestions implements Predicate<Question> {
 
         private SortedLinkedList<Question> list;
 
@@ -118,7 +117,7 @@ public class Community {
         return sortedQuestions.list;
     }
 
-    private class SortedAnswers implements CalendarioPredicate<Answer> {
+    private class SortedAnswers implements Predicate<Answer> {
 
         private SortedLinkedList<Answer> list;
 
@@ -139,7 +138,7 @@ public class Community {
         return sortedAnswers.list;
     }
 
-    private class FilteredQuestions implements CalendarioPredicate<Question> {
+    private class FilteredQuestions implements Predicate<Question> {
         private ArrayList<Question> list;
         private Predicate<Question> f;
         private int max;

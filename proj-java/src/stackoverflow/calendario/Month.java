@@ -3,6 +3,7 @@ package stackoverflow.calendario;
 import stackoverflow.collections.FixedSizeList;
 
 import java.time.LocalDate;
+import java.util.function.Predicate;
 
 @SuppressWarnings("Duplicates")
 class Month<T extends Chronological> {
@@ -24,7 +25,7 @@ class Month<T extends Chronological> {
         this.days.get(day).addElem(c);
     }
 
-    boolean iterateForward(LocalDate from, LocalDate to, IterPoint ip, CalendarioPredicate<T> predicate){
+    boolean iterateForward(LocalDate from, LocalDate to, IterPoint ip, Predicate<T> predicate){
         int fromD;
         int toD;
         if(ip == IterPoint.IS_BOTH){
@@ -48,7 +49,7 @@ class Month<T extends Chronological> {
         return keepGoing;
     }
 
-    boolean iterateBackwards(LocalDate from, LocalDate to, IterPoint ip, CalendarioPredicate<T> predicate){
+    boolean iterateBackwards(LocalDate from, LocalDate to, IterPoint ip, Predicate<T> predicate){
         int fromD;
         int toD;
         if(ip == IterPoint.IS_BOTH){

@@ -2,6 +2,8 @@ package stackoverflow.calendario;
 
 import stackoverflow.collections.FixedSizeList;
 
+import java.util.function.Predicate;
+
 class Day<T extends Chronological> {
     private FixedSizeList<Hour<T>> hours;
 
@@ -15,7 +17,7 @@ class Day<T extends Chronological> {
         this.hours.get(hour).addElem(c);
     }
 
-    boolean iterateForward(CalendarioPredicate<T> predicate){
+    boolean iterateForward(Predicate<T> predicate){
         boolean r = true;
         for(int i = 0; r && i < 24; i++){
             Hour<T> h = this.hours.get(i);
@@ -24,7 +26,7 @@ class Day<T extends Chronological> {
         return r;
     }
 
-    boolean iterateBackwards(CalendarioPredicate<T> predicate){
+    boolean iterateBackwards(Predicate<T> predicate){
         boolean r = true;
         for(int i = 23; r && i >= 0 ; i--){
             Hour<T> h = this.hours.get(i);
