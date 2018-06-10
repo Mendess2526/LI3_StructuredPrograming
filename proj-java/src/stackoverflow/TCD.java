@@ -25,7 +25,7 @@ public class TCD implements TADCommunity{
         else
             ids = new ArrayList<>(N);
         int i = 0;
-        for(Iterator<? extends Post> it = posts.iterator(); i < N && it.hasNext();){
+        for(Iterator<? extends Post> it = posts.iterator(); i++ < N && it.hasNext();){
             ids.add(it.next().getId());
         }
         return ids;
@@ -54,7 +54,7 @@ public class TCD implements TADCommunity{
 
     @Override
     public List<Long> topMostActive(int N){
-        List<User> users = this.com.getSortedUserList(Comparator.comparingInt(User::getNrPosts).reversed(),N);
+        List<User> users = this.com.getSortedUserList(new UserPostCountComparator().reversed(),N);
         List<Long> ids = new ArrayList<>(N);
         for(int i = 0; i < N && i < users.size(); i++)
             ids.add(users.get(i).getId());
@@ -89,7 +89,7 @@ public class TCD implements TADCommunity{
     @Override
     public List<Long> mostVotedAnswers(int N, LocalDate begin, LocalDate end){
         List<Answer> answers = this.com.getSortedAnswerList(
-                begin, end, Comparator.comparingInt(Answer::getScore).reversed(), N);
+                begin, end, new AnswerScoreComparator().reversed(), N);
         return idsFromPosts(answers, N);
     }
 
@@ -154,7 +154,7 @@ public class TCD implements TADCommunity{
 
     @Override
     public List<Long> mostUsedBestRep(int N, LocalDate begin, LocalDate end){
-        List<User> users = this.com.getSortedUserList(Comparator.comparingInt(User::getReputation).reversed(),N);
+        List<User> users = this.com.getSortedUserList(new UserReputationComparator().reversed(),N);
         Map<String,Long> counts = new HashMap<>();
         int i = 0;
         for(Iterator<User> iterator = users.iterator(); i++ < N && iterator.hasNext(); ){
