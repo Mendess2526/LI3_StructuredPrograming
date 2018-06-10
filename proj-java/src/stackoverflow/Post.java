@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public abstract class Post extends Chronological {
+public abstract class Post implements Chronological {
 
     private long id;
     private LocalDateTime date;
