@@ -6,6 +6,8 @@ import main.java.li3.TADCommunity;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.ToLongFunction;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class TCD implements TADCommunity{
@@ -152,14 +154,27 @@ public class TCD implements TADCommunity{
 
     @Override
     public List<Long> mostUsedBestRep(int N, LocalDate begin, LocalDate end){
-        List<User> users = this.com.getSortedUserList(Comparator.comparingInt(User::getReputation),N);
-        Map<String, Long> counts = users.stream()
-                .flatMap(u -> u.getPosts().stream())
-                .filter(q -> q.isBetweenDates(begin, end))
-                .flatMap(q -> Arrays.stream(q.getTags()))
-                .filter(Objects::nonNull)
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-        return null;
+        List<User> users = this.com.getSortedUserList(Comparator.comparingInt(User::getReputation).reversed(),N);
+        Map<String,Long> counts = new HashMap<>();
+        int i = 0;
+        for(Iterator<User> iterator = users.iterator(); i++ < N && iterator.hasNext(); ){
+            User u = iterator.next();
+            for(Post p : u.getPosts())
+                if(p instanceof Question && p.isBetweenDates(begin, end))
+                    for(String s : ((Question) p).getTags())
+                        if(s != null) counts.merge(s, 1L, Long::sum);
+        }
+        Queue<Pair<String, Long>> top;
+        Comparator<Pair<String,Long>> c = Comparator.comparingLong(Pair::getSnd);
+        if(N < counts.size() / 10) // if N <<< counts.size()
+            top = new SortedLinkedList<>(c.reversed(), N);
+        else
+            top = new PriorityQueue<>(N, c.reversed());
+        counts.forEach((key, value) -> top.add(new Pair<>(key, value)));
+        N = N < top.size() ? N : top.size();
+        List<Long> ids = new ArrayList<>(N);
+        for(i = 0; i < N; i++) ids.add(this.com.getTagId(top.poll().getFst()));
+        return ids;
     }
 
     @Override
