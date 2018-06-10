@@ -1,11 +1,10 @@
-package stackoverflow;
+package main.java.engine;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.DefaultHandler;
-import stackoverflow.saxhandlers.PostHandler;
-import stackoverflow.saxhandlers.TagsHandler;
-import stackoverflow.saxhandlers.UserHandler;
+import main.java.engine.saxhandlers.PostHandler;
+import main.java.engine.saxhandlers.TagsHandler;
+import main.java.engine.saxhandlers.UserHandler;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
