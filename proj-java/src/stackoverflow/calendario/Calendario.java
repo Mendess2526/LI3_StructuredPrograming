@@ -13,12 +13,7 @@ public class Calendario<T extends Chronological> {
     }
 
     public void addElem(T c){
-        Year<T> y = this.years.get(c.getDate().getYear());
-        if(y == null){
-            y = new Year<>();
-            this.years.put(c.getDate().getYear(), y);
-        }
-        y.addElem(c);
+        this.years.computeIfAbsent(c.getDate().getYear(), k->new Year<>()).addElem(c);
     }
 
     public void iterate(LocalDate from, LocalDate to, CalendarioPredicate<T> predicate){

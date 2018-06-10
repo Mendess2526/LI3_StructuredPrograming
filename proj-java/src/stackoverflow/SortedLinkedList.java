@@ -75,14 +75,6 @@ public class SortedLinkedList<T> extends LinkedList<T>{
         if(max > 0) it.add(o);
     }
 
-    public void trim(){
-        ListIterator<T> t = this.listIterator(this.size());
-        while(this.size() > this.maxSize){
-            t.previous();
-            t.remove();
-        }
-    }
-
     @Override
     public boolean addAll(Collection<? extends T> c){
         for(T t: c) this.add(t);

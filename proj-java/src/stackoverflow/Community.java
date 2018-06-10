@@ -93,7 +93,6 @@ public class Community {
     public List<User> getSortedUserList(Comparator<User> userComparator, int N){
         SortedLinkedList<User> users = new SortedLinkedList<>(userComparator, N);
         users.addAll(this.users.values());
-        //users.trim();
         return users;
     }
 
