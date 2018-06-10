@@ -7,6 +7,7 @@ import stackoverflow.TCD;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Arrays;
 import java.util.List;
 
 public class Main {
@@ -23,7 +24,8 @@ public class Main {
 
         long before, after;
         TADCommunity qe = new TCD();
-
+        long[] times = new long[13];
+        int i = 0;
         /*
             LOAD PHASE
          */
@@ -31,7 +33,7 @@ public class Main {
             before = System.currentTimeMillis();
             qe.load(args[0]);
             after = System.currentTimeMillis();
-            //logtime.writeLog("LOAD -> "+(after-before)+" ms");
+            times[i++] = after-before;
         }catch(IndexOutOfBoundsException e){
             System.out.println("Deve passar o caminho do dump como argumento.");
             return;
@@ -43,7 +45,7 @@ public class Main {
         before = System.currentTimeMillis();
         Pair<String,String> q1 = qe.infoFromPost(801049);
         after = System.currentTimeMillis();
-        //logtime.writeLog("Query 1: -> "+(after-before)+" ms");
+        times[i++] = after-before;
         System.out.println("Query 1 -> " + q1);
 
         /*
@@ -52,7 +54,7 @@ public class Main {
         before = System.currentTimeMillis();
         List<Long> q2 = qe.topMostActive(10);
         after = System.currentTimeMillis();
-        //logtime.writeLog("Query 2 -> "+(after-before)+" ms");
+        times[i++] = after-before;
         System.out.println("Query 2 -> " + q2);
 
         /*
@@ -62,7 +64,7 @@ public class Main {
         Pair<Long,Long> q3 = qe.totalPosts(LocalDate.of(2016, Month.JULY, 1),
                                            LocalDate.of(2016, Month.JULY, 31));
         after = System.currentTimeMillis();
-//        logtime.writeLog("Query 3 -> "+(after-before)+" ms");
+        times[i++] = after-before;
         System.out.println("Query 3 -> " + q3);
 
         /*
@@ -72,7 +74,7 @@ public class Main {
         List<Long> query4 = qe.questionsWithTag("package-management", LocalDate.of(2013, Month.MARCH, 1),
                                                 LocalDate.of(2013, Month.MARCH, 31));
         after = System.currentTimeMillis();
-//        logtime.writeLog("Query 4 -> " + (after - before) + " ms");
+        times[i++] = after-before;
         System.out.println("Query 4 -> " + query4);
 
         /*
@@ -81,7 +83,7 @@ public class Main {
         before = System.currentTimeMillis();
         Pair<String,List<Long>> q5 = qe.getUserInfo(15811);
         after = System.currentTimeMillis();
-//        logtime.writeLog("Query 5 -> "+(after-before)+" ms");
+        times[i++] = after-before;
         System.out.println("Query 5 -> " + q5);
 
         /*
@@ -91,7 +93,7 @@ public class Main {
         List<Long> q6 = qe.mostVotedAnswers(5, LocalDate.of(2015, Month.NOVEMBER, 1),
                                             LocalDate.of(2015, Month.NOVEMBER, 30));
         after = System.currentTimeMillis();
-//        logtime.writeLog("Query6 -> " + (after - before) + " ms");
+        times[i++] = after-before;
         System.out.println("Query 6 -> " + q6);
 
         /*
@@ -101,7 +103,7 @@ public class Main {
         List<Long> q7 = qe.mostAnsweredQuestions(10, LocalDate.of(2014, Month.AUGUST, 1),
                                                  LocalDate.of(2014, Month.AUGUST, 10));
         after = System.currentTimeMillis();
-//        logtime.writeLog("Query 7 -> "+(after-before)+" ms");
+        times[i++] = after-before;
         System.out.println("Query 7 -> " + q7);
 
         /*
@@ -110,7 +112,7 @@ public class Main {
         before = System.currentTimeMillis();
         List<Long> q8 = qe.containsWord(10, "kde");
         after = System.currentTimeMillis();
-//        logtime.writeLog("Query 8 -> " + (after - before) + " ms");
+        times[i++] = after-before;
         System.out.println("Query 8 -> " + q8);
 
         /*
@@ -119,7 +121,7 @@ public class Main {
         before = System.currentTimeMillis();
         List<Long> q9 = qe.bothParticipated(10, 87, 5691);
         after = System.currentTimeMillis();
-//        logtime.writeLog("Query9 -> " + (after - before) + " ms");
+        times[i++] = after-before;
         System.out.println("Query 9 -> " + q9);
 
         /*
@@ -128,18 +130,18 @@ public class Main {
         before = System.currentTimeMillis();
         long q10 = qe.betterAnswer(30334);
         after = System.currentTimeMillis();
-//        logtime.writeLog("Query 10 -> "+(after-before)+" ms");
+        times[i++] = after-before;
         System.out.println("Query 10 -> " + q10);
 
         /*
             Query 11
         */
         before = System.currentTimeMillis();
-        //List<Long> q11 = qe.mostUsedBestRep(5, LocalDate.of(2013, Month.NOVEMBER, 1),
-        //                                    LocalDate.of(2013, Month.NOVEMBER, 30));
-        List<Long> q11 = qe.mostUsedBestRep(5, LocalDate.MIN, LocalDate.MAX);
+        List<Long> q11 = qe.mostUsedBestRep(5, LocalDate.of(2013, Month.NOVEMBER, 1),
+                                            LocalDate.of(2013, Month.NOVEMBER, 30));
+//        List<Long> q11 = qe.mostUsedBestRep(5, LocalDate.MIN, LocalDate.MAX);
         after = System.currentTimeMillis();
-        System.out.println("Query 11 -> "+(after-before)+" ms");
+        times[i++] = after-before;
         System.out.println("Query 11 -> " + q11);
 
         /*
@@ -148,7 +150,12 @@ public class Main {
         before = System.currentTimeMillis();
         qe.clear();
         after = System.currentTimeMillis();
-//        logtime.writeLog("CLEAN -> "+(after-before)+" ms");
+        times[i] = after-before;
+
+        i = 0;
+        System.out.println("--------------------Times--------------------");
+        for(long time : times) System.out.println(String.format("Query %2d: %d ms", i++, time));
+        System.out.println("Total:    " + Arrays.stream(times).sum()+ " ms");
 
     }
 
