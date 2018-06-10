@@ -2,10 +2,8 @@ package stackoverflow;
 
 import stackoverflow.calendario.Calendario;
 import stackoverflow.calendario.CalendarioPredicate;
-import stackoverflow.calendario.Chronological;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -93,27 +91,22 @@ public class Community {
     }
 
     public List<User> getSortedUserList(Comparator<User> userComparator, int N){
-        SortedLinkedList<User> users = new SortedLinkedList<>();
-        for(User user : this.users.values()){
-            users.addFirst(user, userComparator, N);
-        }
+        SortedLinkedList<User> users = new SortedLinkedList<>(userComparator, N);
+        users.addAll(this.users.values());
+        //users.trim();
         return users;
     }
 
     private class SortedQuestions implements CalendarioPredicate<Question> {
 
         private SortedLinkedList<Question> list;
-        private Comparator<Question> comparator;
-        private int max;
 
         SortedQuestions(Comparator<Question> comparator, int max){
-            this.comparator = comparator;
-            this.max = max;
-            this.list = new SortedLinkedList<>();
+            this.list = new SortedLinkedList<>(comparator, max);
         }
         @Override
         public boolean test(Question question){
-            this.list.addFirst(question, this.comparator, this.max);
+            this.list.add(question);
             return true;
         }
 
@@ -128,18 +121,14 @@ public class Community {
     private class SortedAnswers implements CalendarioPredicate<Answer> {
 
         private SortedLinkedList<Answer> list;
-        private Comparator<Answer> comparator;
-        private int max;
 
         SortedAnswers(Comparator<Answer> comparator, int max){
-            this.comparator = comparator;
-            this.max = max;
-            this.list = new SortedLinkedList<>();
+            this.list = new SortedLinkedList<>(comparator, max);
         }
 
         @Override
         public boolean test(Answer answer){
-            this.list.addFirst(answer, this.comparator, this.max);
+            this.list.add(answer);
             return true;
         }
     }

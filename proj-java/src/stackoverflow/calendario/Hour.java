@@ -11,11 +11,11 @@ class Hour<T extends Chronological> {
 
     Hour(){
         this.count = 0;
-        this.elems = new SortedLinkedList<>();
+        this.elems = new SortedLinkedList<>(Comparator.comparing(Chronological::getDate));
     }
 
     void addElem(T c){
-        this.elems.addLast(c , Comparator.comparing(Chronological::getDate));
+        this.elems.addLast(c);
         this.count++;
     }
 
