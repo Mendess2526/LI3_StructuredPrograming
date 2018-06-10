@@ -58,10 +58,7 @@ public abstract class Post extends Chronological {
     public abstract Question searchUserInThread(long id);
 
     public boolean isBetweenDates(LocalDate from, LocalDate to){
-        return this.date.isAfter(from.atStartOfDay()) && this.date.isAfter(to.atTime(LocalTime.MAX));
+        return this.date.isAfter(from.atStartOfDay()) && this.date.isBefore(to.atTime(LocalTime.MAX));
     }
 
-    public String[] getTags(){
-        return new String[0];
-    }
 }

@@ -35,4 +35,12 @@ public class Answer extends Post{
         if(this.getOwnerId() == id) return this.parentPtr;
         return this.parentPtr.searchUserInThread(id);
     }
+
+    @Override
+    public String toString(){
+        return "Answer{" +
+                "commentCount=" + commentCount
+                + ", parentId=" + parentId
+                + "} " + super.toString();
+    }
 }

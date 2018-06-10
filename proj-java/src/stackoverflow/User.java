@@ -15,7 +15,7 @@ public class User {
         this.id = id;
         this.name = name;
         this.bio = bio;
-        this.posts = new SortedLinkedList<>();
+        this.posts = new SortedLinkedList<>(new PostDateComparator().reversed());
     }
 
     public int getReputation(){
@@ -43,6 +43,17 @@ public class User {
     }
 
     public void addPost(Post post){
-        posts.addFirst(post, new PostDateComparator().reversed());
+        posts.addLast(post);
+    }
+
+    @Override
+    public String toString(){
+        return "User{" +
+                "reputation=" + reputation
+                + ", id=" + id
+                + ", name='" + name + '\''
+                + ", bio='" + bio + '\''
+                + ", posts=" + posts
+                + '}';
     }
 }
