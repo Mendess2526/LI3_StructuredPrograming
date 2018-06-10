@@ -1,5 +1,7 @@
 package stackoverflow.calendario;
 
+import stackoverflow.collections.FixedSizeList;
+
 import java.time.LocalDate;
 
 @SuppressWarnings("Duplicates")

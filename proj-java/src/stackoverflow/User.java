@@ -1,5 +1,7 @@
 package stackoverflow;
 
+import stackoverflow.collections.SortedLinkedList;
+
 import java.util.ArrayList;
 
 public class User {

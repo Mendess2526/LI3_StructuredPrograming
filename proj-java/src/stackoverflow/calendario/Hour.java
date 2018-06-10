@@ -1,6 +1,6 @@
 package stackoverflow.calendario;
 
-import stackoverflow.SortedLinkedList;
+import stackoverflow.collections.SortedLinkedList;
 
 import java.util.Comparator;
 import java.util.Iterator;

@@ -1,7 +1,8 @@
 package stackoverflow.calendario;
 
+import stackoverflow.collections.FixedSizeList;
+
 import java.time.LocalDate;
-import java.util.Iterator;
 
 @SuppressWarnings({"BooleanMethodIsAlwaysInverted", "Duplicates"})
 class Year<T extends Chronological> {
@@ -77,7 +78,7 @@ class Year<T extends Chronological> {
         return keepGoing;
     }
 
-    public long countElements(LocalDate from, LocalDate to, IterPoint ip){
+    long countElements(LocalDate from, LocalDate to, IterPoint ip){
         int fromM;
         int toM;
         if(ip == IterPoint.IS_BOTH){

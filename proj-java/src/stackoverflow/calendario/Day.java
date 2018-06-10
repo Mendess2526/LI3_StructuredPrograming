@@ -1,5 +1,7 @@
 package stackoverflow.calendario;
 
+import stackoverflow.collections.FixedSizeList;
+
 class Day<T extends Chronological> {
     private FixedSizeList<Hour<T>> hours;
 

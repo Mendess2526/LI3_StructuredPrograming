@@ -1,14 +1,14 @@
-package stackoverflow.calendario;
+package stackoverflow.collections;
 
 import java.util.ArrayList;
 import java.util.List;
 
-class FixedSizeList<T> {
+public class FixedSizeList<T> {
 
     private final int maxSize;
     private final List<T> list;
 
-    FixedSizeList(int maxSize){
+    public FixedSizeList(int maxSize){
         this.maxSize = maxSize;
         this.list = new ArrayList<>(maxSize);
     }
@@ -24,13 +24,13 @@ class FixedSizeList<T> {
                 this.list.add(null);
     }
 
-    T get(int index){
+    public T get(int index){
         boundsCheck(index);
         if(index >= this.list.size()) return null;
         else return this.list.get(index);
     }
 
-    void set(int index, T element){
+    public void set(int index, T element){
         boundsCheck(index);
         nullFill(index);
         this.list.set(index, element);

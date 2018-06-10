@@ -2,13 +2,10 @@ package stackoverflow;
 
 import main.java.common.Pair;
 import main.java.li3.TADCommunity;
+import stackoverflow.collections.SortedLinkedList;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.function.Function;
-import java.util.function.ToLongFunction;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 public class TCD implements TADCommunity{
 

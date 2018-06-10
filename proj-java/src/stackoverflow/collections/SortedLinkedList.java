@@ -1,4 +1,4 @@
-package stackoverflow;
+package stackoverflow.collections;
 
 import java.util.Collection;
 import java.util.Comparator;
