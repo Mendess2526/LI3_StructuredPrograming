@@ -41,7 +41,7 @@ public class View {
     }
 
     private void makeMainMenu(){
-        this.mainMenu = new Menu("Main Menu", asList("Run all queries", "Pick one query"));
+        this.mainMenu = new Menu("Main", asList("Run all queries", "Pick one query"));
     }
 
     private void makePickQueryMenu(){
