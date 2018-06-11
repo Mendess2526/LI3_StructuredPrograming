@@ -1,7 +1,8 @@
-package main.java.engine;
+package engine;
 
-import main.java.engine.calendario.Calendario;
-import main.java.engine.collections.SortedLinkedList;
+
+import engine.calendario.Calendario;
+import engine.collections.SortedLinkedList;
 
 import java.time.LocalDate;
 import java.util.*;

@@ -1,7 +1,4 @@
-package main.java.engine.collections;
-
-import java.util.ArrayList;
-import java.util.List;
+package engine.collections;
 
 public class FixedSizeList<T> {
 

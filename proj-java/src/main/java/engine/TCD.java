@@ -1,17 +1,15 @@
-package main.java.engine;
+package engine;
 
-import main.java.common.Pair;
-import main.java.li3.TADCommunity;
-import main.java.engine.collections.SortedLinkedList;
+
+import common.Pair;
+import li3.TADCommunity;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static java.util.Comparator.*;
 
-public class TCD implements TADCommunity{
+public class TCD implements TADCommunity {
 
     private final Community com;
 
@@ -75,7 +73,7 @@ public class TCD implements TADCommunity{
     }
 
     @Override
-    public Pair<String, List<Long>> getUserInfo(long id){
+    public Pair<String,List<Long>> getUserInfo(long id){
         User user = this.com.getUser(id);
         if(user == null) return null;
         String bio = user.getBio();

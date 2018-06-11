@@ -1,4 +1,4 @@
-package main.java.engine;
+package engine;
 
 import java.util.Comparator;
 

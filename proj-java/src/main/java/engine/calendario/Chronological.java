@@ -1,7 +1,7 @@
-package main.java.engine.calendario;
+package engine.calendario;
 
 import java.time.LocalDateTime;
 
 public interface Chronological {
-    public abstract LocalDateTime getDate();
+    LocalDateTime getDate();
 }

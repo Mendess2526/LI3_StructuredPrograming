@@ -1,10 +1,10 @@
-package main.java.engine;
+package engine;
 
+import engine.saxhandlers.PostHandler;
+import engine.saxhandlers.TagsHandler;
+import engine.saxhandlers.UserHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import main.java.engine.saxhandlers.PostHandler;
-import main.java.engine.saxhandlers.TagsHandler;
-import main.java.engine.saxhandlers.UserHandler;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;

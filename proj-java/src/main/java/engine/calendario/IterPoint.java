@@ -1,4 +1,4 @@
-package main.java.engine.calendario;
+package engine.calendario;
 
 enum IterPoint {
     IS_START(true,false), IS_END(false,true), IS_BOTH(true,true), IS_NEITHER(false,false);

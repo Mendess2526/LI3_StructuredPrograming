@@ -1,4 +1,4 @@
-package main.java.engine.collections;
+package engine.collections;
 
 import java.util.Collection;
 import java.util.Comparator;

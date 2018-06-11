@@ -1,11 +1,11 @@
-package main.java.engine.saxhandlers;
+package engine.saxhandlers;
 
+import engine.Answer;
+import engine.Community;
+import engine.Question;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-import main.java.engine.Answer;
-import main.java.engine.Community;
-import main.java.engine.Question;
 
 import java.time.LocalDateTime;
 
@@ -42,7 +42,7 @@ public class PostHandler extends DefaultHandler {
                 String title = attributes.getValue("Title");
                 String tags = attributes.getValue("Tags");
                 int answerCount = Integer.parseInt(attributes.getValue("AnswerCount"));
-                com.addQuestion(new Question(id, date, score, ownerId, answerCount,ownerName, title, tags));
+                com.addQuestion(new Question(id, date, score, ownerId, answerCount, ownerName, title, tags));
                 break;
             case ANSWER:
                 // Answer attr

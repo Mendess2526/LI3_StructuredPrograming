@@ -1,10 +1,10 @@
-package main.java.engine.saxhandlers;
+package engine.saxhandlers;
 
+import engine.Community;
+import engine.User;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-import main.java.engine.Community;
-import main.java.engine.User;
 
 public class UserHandler extends DefaultHandler {
 

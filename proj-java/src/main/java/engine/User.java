@@ -1,6 +1,7 @@
-package main.java.engine;
+package engine;
 
-import main.java.engine.collections.SortedLinkedList;
+
+import engine.collections.SortedLinkedList;
 
 import java.util.ArrayList;
 

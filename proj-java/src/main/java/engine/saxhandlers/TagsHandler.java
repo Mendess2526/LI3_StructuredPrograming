@@ -1,9 +1,9 @@
-package main.java.engine.saxhandlers;
+package engine.saxhandlers;
 
+import engine.Community;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-import main.java.engine.Community;
 
 public class TagsHandler extends DefaultHandler {
 
