@@ -139,8 +139,8 @@
 
     Esta lista de posts faz uso de uma das \ref{sec:collections}{duas colleções}
     concebidas para resolver os problemas prostos. Neste caso em particular uma
-    lista ligada ordenada por data. Devido à forma quase ordenada em que os posts
-    surgem no xml esta ordenação é facilmente mantida.
+    lista ligada ordenada por data. Devido à forma quase ordenada em que os
+    posts surgem no xml esta ordenação é facilmente mantida.
 
 
 \chapter{Estruturas de Dados}
@@ -156,9 +156,9 @@
     \section{Calendário}
         Para ser possivel manter as questões e respostas ordenadas por data
         concebida uma estrutura à qual demos o nome de \textbf{Calendário} que
-        permite acessos em tempo constante $O(1)$ a todos os elementos associados
-        a uma determinada data. Mantemos assim duas instâncias desta na
-        \textbf{Community}, uma para perguntas e outra para respostas.
+        permite acessos em tempo constante $O(1)$ a todos os elementos
+        associados a uma determinada data. Mantemos assim duas instâncias desta
+        na \textbf{Community}, uma para perguntas e outra para respostas.
 
         Para que esta estrutura fosse generica criamos também uma interface
         \textbf{Chronological} que tem de ser implementada pelos elementos
@@ -175,10 +175,10 @@
                       ordem dos argumentos.
         \end{itemize}
 
-        Para utilizar os metodos de iteração é necessário, para além do intervalo
-        de tempo, passar um \textit{Predicate} que é uma classe que
-        implemente a interface funcional do mesmo nome. Esta define um metodo que
-        será aplicado a todos os elementos do \textbf{Calendario} por ordem
+        Para utilizar os metodos de iteração é necessário, para além do
+        intervalo de tempo, passar um \textit{Predicate} que é uma classe que
+        implemente a interface funcional do mesmo nome. Esta define um metodo
+        que será aplicado a todos os elementos do \textbf{Calendario} por ordem
         cronologica, inversa ou não dependendo da ordem em que as datas são
         passadas para definir o intervalo.
         % TODO rever
@@ -186,18 +186,20 @@
         ligada em cada célula desta.
 
         No primeiro nível temos um \textit{Map} de \textbf{anos} em que cada ano
-        está associado ao respetivo numero. Cada um destes, é constituído por uma
-        lista de \textbf{meses} que são constituídos por uma lista de
+        está associado ao respetivo numero. Cada um destes, é constituído por
+        uma lista de \textbf{meses} que são constituídos por uma lista de
         \textbf{dias}, cujo tamanho varia entre 29 e 31. Cada \textbf{dia} é
         constituido por 24 \textbf{horas}, e cada uma destas é constituida por
         uma lista ligada de elementos ordenada por data.
 
-        Todas as listas acima referenciadas no paragrafo anterior, tirando a lista
-        ligada de elementos, são listas de tamanho fixo desenvolvidas por nos %TODO rever
-        para que, ao contrario das implementações de \textit{List} disponibilizadas
-        por defeito, permite espaços vazios. Isto é importante porque, por exemplo,
-        há horas em que não há posts e não temos assim de gastar memoria a criar
-        uma instância de \mintinline{java}{Hour} se esta vai estar vazia.
+        Todas as listas acima referenciadas no paragrafo anterior, tirando a
+        lista ligada de elementos, são listas de tamanho fixo desenvolvidas por
+        nos %TODO rever
+        para que, ao contrario das implementações de \textit{List}
+        disponibilizadas por defeito, permite espaços vazios. Isto é importante
+        porque, por exemplo, há horas em que não há posts e não temos assim de
+        gastar memoria a criar uma instância de \mintinline{java}{Hour} se esta
+        vai estar vazia.
 
         A utilização de uma lista ligada para guardar os elementos de uma hora é
         mais eficiente, pois é necessário fazer inserções ordenadas, que são, em
@@ -237,8 +239,8 @@
         \subsection{\textit{SortedLinkedList}}
         Esta lista extende \mintinline{java}{LinkedList} adicionando a noção de
         ordem. Para que seja eficiente esta deve ser usada quando a maior parte
-        das inserções forem feitas à cabeça ou cauda da lista. Opcionalmente esta
-        pode também ter um tamanho máximo.
+        das inserções forem feitas à cabeça ou cauda da lista. Opcionalmente
+        esta pode também ter um tamanho máximo.
 
     \section{Arquitetura}
     Todas estas classes formam a nossa arquitetura que pode ser vista de forma
@@ -252,10 +254,25 @@
     \end{figure}
 
 
-\chapter{Encapsulamento}
+\chapter{Modelo MVC e Encapsulamento}
+    A arquitetura de packages desenvolvida é a seguinte:
+    \begin{itemize}
+        \item \textbf{common} Onde estão definidas as classes utilitarias.
+        \item \textbf{engine} Onde está definido o modelo.
+        \item \textbf{view} Onde está definida a view.
+        \item \textbf{li3} Onde está definido o controlador.
+    \end{itemize}
     Devido ao uso de packages todas as classes que seja publicas para fora da
     package não tem metodos publicos que permitam alterar o seu estado interno.
     Desta forma todos os objectos aparecem imutaveis para o exterior.
+
+    A \textbf{view} define os metodos para interagir com o utilzador.
+
+    O \textbf{engine} ou \textit{Modelo} define as operações que se podem
+    ser realizadas sobre os dados.
+    
+    A package \textbf{li3} tem o controlador que faz a comunicação entre os
+    pedidos do utilizador e as operações do modelo.
 
 \chapter{Modularização Funcional e Resolução das queries}
     Para aceder aos dados da estrutura principal foi definida uma API
@@ -279,7 +296,8 @@
 
     Para as queries que necessitam de pesquisas de utilizadores ordenados
     (queries: 2 e 11) são conseguidas através de \textbf{3}, sendo que assim
-    basta fornecer uma função de comparação para definir o critério de ordenação.
+    basta fornecer uma função de comparação para definir o critério de
+    ordenação.
 
     Para as queries que necessitam de pesquisas de
     \textbf{perguntas}/\textbf{respostas} num intervalo de tempo ordenadas
@@ -289,18 +307,21 @@
     \mintinline{java}{LocalDate.MIN}.
 
     Para as queries que necessitam de listas de questões que obedeçam a um
-    determinado critério (queries: 4 e 8), são conseguidas através de \textbf{4}.
+    determinado critério (queries: 4 e 8), são conseguidas através de
+    \textbf{4}.
 
     Nos casos em que estes métodos especializados não são necessários (query: 3)
     fizemos uso de uma iteração genérica através de \textbf{5}.
 
-    A resolução da query 11 tem quatro fases. A primera consiste em obter o top N
-    utilizadores (baseado na reputação destes) para para obter os posts destes.
+    A resolução da query 11 tem quatro fases. A primera consiste em obter o top
+    N utilizadores (baseado na reputação destes) para para obter os posts
+    destes.
     Depois, usando um \mintinline{java}{Map} conta-se a occurencia de cada
-    \textbf{Tag} nos posts dos utilizadores obtidos. Na terceira fase do problema
-    colocam-se as tags numa \textit{PriorityQueue} que para que a remoção destas
-    seja ordenada por occurencia, que é a ultima fase, para cada uma das
-    \textbf{Tag} removida é adicionando o id desta à lista que será retornada.
+    \textbf{Tag} nos posts dos utilizadores obtidos. Na terceira fase do
+    problema colocam-se as tags numa \textit{PriorityQueue} que para que a
+    remoção destas seja ordenada por occurencia, que é a ultima fase, para cada
+    uma das \textbf{Tag} removida é adicionando o id desta à lista que será
+    retornada.
 
 \chapter{Comparação com a versão em C}
     Em termos de eficiencia uma linguagem nativa como C é muito mais rapida a
@@ -308,9 +329,10 @@
     necessário filtrar \textbf{questões} que continham uma dada palavra.
     %TODO meter aqui tempos para comparar
 
-    Em termos de facilidade de debug e desenvolvimento do código Java é muito mais
-    simples apesar de não ser uma comparação justa visto que, tendo o trabalho
-    feito em C de forma estruturada muitos dos possiveis erros já foram evitados.
+    Em termos de facilidade de debug e desenvolvimento do código Java é muito
+    mais simples apesar de não ser uma comparação justa visto que, tendo o
+    trabalho feito em C de forma estruturada muitos dos possiveis erros já foram
+    evitados.
 
 \chapter{Conclusões e Trabalho Futuro}
     Em suma, o grupo considera que o trabalho foi realizado na sua
