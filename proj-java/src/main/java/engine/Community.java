@@ -97,10 +97,10 @@ public class Community {
 
     private class SortedQuestions implements Predicate<Question> {
 
-        private final SortedLinkedList<Question> list;
+        private final PriorityQueue<Question> list;
 
         private SortedQuestions(Comparator<Question> comparator, int max){
-            this.list = new SortedLinkedList<>(comparator, max);
+            this.list = new PriorityQueue<>(max, comparator);
         }
         @Override
         public boolean test(Question question){
@@ -113,15 +113,17 @@ public class Community {
     public List<Question> getSortedQuestionList(LocalDate from, LocalDate to, Comparator<Question> questionComparator, int N){
         SortedQuestions sortedQuestions = new SortedQuestions(questionComparator, N);
         this.calendarioQuestions.iterate(from, to, sortedQuestions);
-        return sortedQuestions.list;
+        List<Question> list = new ArrayList<>();
+        for(int i = 0; i < N; i++) list.add(sortedQuestions.list.remove());
+        return list;
     }
 
     private class SortedAnswers implements Predicate<Answer> {
 
-        private final SortedLinkedList<Answer> list;
+        private final PriorityQueue<Answer> list;
 
         private SortedAnswers(Comparator<Answer> comparator, int max){
-            this.list = new SortedLinkedList<>(comparator, max);
+            this.list = new PriorityQueue<>(max, comparator);
         }
 
         @Override
@@ -134,7 +136,9 @@ public class Community {
     public List<Answer> getSortedAnswerList(LocalDate from, LocalDate to, Comparator<Answer> answerComparator, int N){
         SortedAnswers sortedAnswers = new SortedAnswers(answerComparator, N);
         this.calendarioAnswers.iterate(from, to, sortedAnswers);
-        return sortedAnswers.list;
+        List<Answer> list = new ArrayList<>();
+        for(int i = 0; i < N; i++) list.add(sortedAnswers.list.remove());
+        return list;
     }
 
     private class FilteredQuestions implements Predicate<Question> {
