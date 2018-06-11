@@ -23,7 +23,8 @@ hs_err_pid*
 
 #intellij
 .idea/
-*.iml
 
 *Test.java
 out/
+!/pom.xml
+target/

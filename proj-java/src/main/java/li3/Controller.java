@@ -1,7 +1,7 @@
 package li3;
 
 import common.Pair;
-import engine.TCD;
+import view.View;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -11,25 +11,92 @@ public class Controller {
 
     private TADCommunity com;
     private View view;
+    private boolean loaded = false;
+    private String dumpPath;
 
-    public static void main(String[] args){
-        new Controller(new TCD(), new View()).run(args);
-    }
-
-    private Controller(TADCommunity com, View view){
+    Controller(TADCommunity com, View view){
         this.com = com;
         this.view = view;
     }
 
-    private void run(String[] args){
-
+    void run(String[] args){
+        boolean keepGoing = true;
+        while(keepGoing){
+            int i = this.view.runMainMenu();
+            switch(i){
+                case 1: // All queries
+                    getDumpPath(args);
+                    runAllQueries();
+                    break;
+                case 2:
+                    getDumpPath(args);
+                    pickQuery();
+                    break;
+                default:
+                    keepGoing = false;
+            }
+        }
     }
 
-    private long runQuery0(String path) throws NullPointerException{
-            long before = System.currentTimeMillis();
-            this.com.load(path);
-            long after = System.currentTimeMillis();
-            return after-before;
+    private void loadIfNeeded(){
+        if(!this.loaded){
+            this.view.notifyLoading();
+            queryHandler(0, runQuery0());
+            this.loaded = true;
+        }
+    }
+
+    private void pickQuery(){
+        int i = this.view.runPickQueryMenu();
+        if(i != 0) loadIfNeeded();
+        switch(i){
+            case 1: queryHandler(i, runQuery1()); break;
+            case 2: queryHandler(i, runQuery2()); break;
+            case 3: queryHandler(i, runQuery3()); break;
+            case 4: queryHandler(i, runQuery4()); break;
+            case 5: queryHandler(i, runQuery5()); break;
+            case 6: queryHandler(i, runQuery6()); break;
+            case 7: queryHandler(i, runQuery7()); break;
+            case 8: queryHandler(i, runQuery8()); break;
+            case 9: queryHandler(i, runQuery9()); break;
+            case 10: queryHandler(i, runQuery10()); break;
+            case 11: queryHandler(i, runQuery11()); break;
+        }
+    }
+
+    private void getDumpPath(String[] args){
+        if(args.length == 0){
+            this.dumpPath = this.view.requestDumpPath();
+        }else{
+            this.dumpPath = args[0];
+        }
+    }
+
+    private void runAllQueries(){
+        int i = 0;
+        loadIfNeeded();
+        queryHandler(i++, runQuery1());
+        queryHandler(i++, runQuery2());
+        queryHandler(i++, runQuery3());
+        queryHandler(i++, runQuery4());
+        queryHandler(i++, runQuery5());
+        queryHandler(i++, runQuery6());
+        queryHandler(i++, runQuery7());
+        queryHandler(i++, runQuery8());
+        queryHandler(i++, runQuery9());
+        queryHandler(i++, runQuery10());
+        queryHandler(i,   runQuery11());
+    }
+
+    private void queryHandler(int i , Pair<Long, ?> r){
+        this.view.showResults(i, r.getSnd(), r.getFst());
+    }
+
+    private Pair<Long , String> runQuery0() throws NullPointerException{
+        long before = System.currentTimeMillis();
+        this.com.load(this.dumpPath);
+        long after = System.currentTimeMillis();
+        return new Pair<>(after-before, "done");
     }
 
     private Pair<Long,Pair<String, String>> runQuery1(){
