@@ -143,7 +143,7 @@ public class Community {
     }
 
     private class FilteredQuestions implements Predicate<Question> {
-        private final ArrayList<Question> list;
+        private final List<Question> list;
         private final Predicate<Question> f;
         private int max;
 

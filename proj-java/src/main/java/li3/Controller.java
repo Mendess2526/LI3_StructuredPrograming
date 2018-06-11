@@ -1,6 +1,7 @@
 package li3;
 
 import common.Pair;
+import engine.TCD;
 import view.View;
 
 import java.time.LocalDate;
@@ -43,6 +44,8 @@ public class Controller {
             this.view.notifyLoading();
             queryHandler(0, runQuery0());
             this.loaded = true;
+            TCD com = (TCD) this.com;
+            this.view.showEntitiCounts(com.getUserCount(), com.getQuestionCount(), com.getAnswerCount());
         }
     }
 

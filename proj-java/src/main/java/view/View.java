@@ -65,6 +65,12 @@ public class View {
         System.out.println(BOLD(BLUE("Loading from xml...")));
     }
 
+    public void showEntitiCounts(long users, long questions, long answers){
+        System.out.println(BOLD("Users:    \t") + users);
+        System.out.println(BOLD("Questions:\t") + questions);
+        System.out.println(BOLD("Answers:  \t") + answers);
+    }
+
     private void makeMainMenu(){
         this.mainMenu = new Menu("Main", asList("Run all queries", "Pick one query"));
     }

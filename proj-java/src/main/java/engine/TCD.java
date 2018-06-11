@@ -175,4 +175,16 @@ public class TCD implements TADCommunity {
     public void clear(){
 
     }
+
+    public long getUserCount(){
+        return this.com.getUserCount();
+    }
+
+    public long getQuestionCount(){
+        return this.com.getQuestionCount();
+    }
+
+    public long getAnswerCount(){
+        return this.com.getAnswerCount();
+    }
 }
