@@ -44,8 +44,10 @@ public class Controller {
             this.view.notifyLoading();
             queryHandler(0, runQuery0());
             this.loaded = true;
-            TCD com = (TCD) this.com;
-            this.view.showEntitiCounts(com.getUserCount(), com.getQuestionCount(), com.getAnswerCount());
+            if(this.com instanceof TCD){
+                TCD com = (TCD) this.com;
+                this.view.showEntityCounts(com.getUserCount(), com.getQuestionCount(), com.getAnswerCount());
+            }
         }
     }
 
@@ -53,20 +55,24 @@ public class Controller {
         boolean keepGoing = true;
         while(keepGoing){
             int i = this.view.runPickQueryMenu();
-            if(i != 0) loadIfNeeded();
-            switch(i){
-                case 1: queryHandler(i, runQuery1()); break;
-                case 2: queryHandler(i, runQuery2()); break;
-                case 3: queryHandler(i, runQuery3()); break;
-                case 4: queryHandler(i, runQuery4()); break;
-                case 5: queryHandler(i, runQuery5()); break;
-                case 6: queryHandler(i, runQuery6()); break;
-                case 7: queryHandler(i, runQuery7()); break;
-                case 8: queryHandler(i, runQuery8()); break;
-                case 9: queryHandler(i, runQuery9()); break;
-                case 10: queryHandler(i, runQuery10()); break;
-                case 11: queryHandler(i, runQuery11()); break;
-                default: keepGoing = false;
+            if(i != 0){
+                loadIfNeeded();
+                switch(i){
+                    case 1: queryHandler(i, runQuery1()); break;
+                    case 2: queryHandler(i, runQuery2()); break;
+                    case 3: queryHandler(i, runQuery3()); break;
+                    case 4: queryHandler(i, runQuery4()); break;
+                    case 5: queryHandler(i, runQuery5()); break;
+                    case 6: queryHandler(i, runQuery6()); break;
+                    case 7: queryHandler(i, runQuery7()); break;
+                    case 8: queryHandler(i, runQuery8()); break;
+                    case 9: queryHandler(i, runQuery9()); break;
+                    case 10: queryHandler(i, runQuery10()); break;
+                    case 11: queryHandler(i, runQuery11()); break;
+                }
+                this.view.requestContinue();
+            }else{
+                keepGoing = false;
             }
         }
     }
@@ -93,6 +99,7 @@ public class Controller {
         queryHandler(i++, runQuery9());
         queryHandler(i++, runQuery10());
         queryHandler(i,   runQuery11());
+        this.view.requestContinue();
     }
 
     private void queryHandler(int i , Pair<Long, ?> r){

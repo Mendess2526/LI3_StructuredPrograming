@@ -1,5 +1,6 @@
 package view;
 
+import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -48,6 +49,7 @@ public class Menu implements Screen<Integer> {
      * Shows the menu
      */
     private void showMenu(){
+        clearScreen();
         System.out.println(UNDERLINE(RED("\n *** " + this.name + " Menu *** ")));
         for(int i = 0; i < this.options.size(); i++){
             System.out.print(BOLD(String.valueOf(i + 1)));
@@ -61,7 +63,14 @@ public class Menu implements Screen<Integer> {
      * Clears the screen
      */
     private void clearScreen(){
-        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        if(System.getProperty("os.name").equals("Linux")){
+            try{
+                Runtime.getRuntime().exec("clear");
+                Runtime.getRuntime().exec("clear");
+            }catch(IOException ignored){
+            }
+        }
+        //System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     }
 
     /**

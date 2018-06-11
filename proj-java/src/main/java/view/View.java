@@ -3,6 +3,7 @@ package view;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 
 import static java.util.Arrays.asList;
 
@@ -65,10 +66,15 @@ public class View {
         System.out.println(BOLD(BLUE("Loading from xml...")));
     }
 
-    public void showEntitiCounts(long users, long questions, long answers){
+    public void showEntityCounts(long users, long questions, long answers){
         System.out.println(BOLD("Users:    \t") + users);
         System.out.println(BOLD("Questions:\t") + questions);
         System.out.println(BOLD("Answers:  \t") + answers);
+    }
+
+    public void requestContinue(){
+        System.out.print("Press ENTER to continue: ");
+        new Scanner(System.in).nextLine();
     }
 
     private void makeMainMenu(){
