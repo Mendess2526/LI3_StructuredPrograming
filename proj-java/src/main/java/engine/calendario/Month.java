@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 
 @SuppressWarnings("Duplicates")
 class Month<T extends Chronological> {
-    private FixedSizeList<Day<T>> days;
+    private final FixedSizeList<Day<T>> days;
 
     Month(int month){
         this.days = new FixedSizeList<>(nrDays(month));

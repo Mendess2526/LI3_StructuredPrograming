@@ -7,16 +7,15 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Predicate;
 
-@SuppressWarnings("WeakerAccess")
 public class Community {
 
-    private Map<Long,Question> questions;
-    private Map<Long,Answer> answers;
-    private Map<Long,User> users;
-    private Map<String,Long> tags;
+    private final Map<Long,Question> questions;
+    private final Map<Long,Answer> answers;
+    private final Map<Long,User> users;
+    private final Map<String,Long> tags;
 
-    private Calendario<Question> calendarioQuestions;
-    private Calendario<Answer> calendarioAnswers;
+    private final Calendario<Question> calendarioQuestions;
+    private final Calendario<Answer> calendarioAnswers;
 
     public Community(){
         this.questions = new HashMap<>();
@@ -98,9 +97,9 @@ public class Community {
 
     private class SortedQuestions implements Predicate<Question> {
 
-        private SortedLinkedList<Question> list;
+        private final SortedLinkedList<Question> list;
 
-        SortedQuestions(Comparator<Question> comparator, int max){
+        private SortedQuestions(Comparator<Question> comparator, int max){
             this.list = new SortedLinkedList<>(comparator, max);
         }
         @Override
@@ -119,9 +118,9 @@ public class Community {
 
     private class SortedAnswers implements Predicate<Answer> {
 
-        private SortedLinkedList<Answer> list;
+        private final SortedLinkedList<Answer> list;
 
-        SortedAnswers(Comparator<Answer> comparator, int max){
+        private SortedAnswers(Comparator<Answer> comparator, int max){
             this.list = new SortedLinkedList<>(comparator, max);
         }
 
@@ -139,8 +138,8 @@ public class Community {
     }
 
     private class FilteredQuestions implements Predicate<Question> {
-        private ArrayList<Question> list;
-        private Predicate<Question> f;
+        private final ArrayList<Question> list;
+        private final Predicate<Question> f;
         private int max;
 
         private FilteredQuestions(Predicate<Question> f, int max){

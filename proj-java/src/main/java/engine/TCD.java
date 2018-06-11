@@ -6,10 +6,14 @@ import main.java.engine.collections.SortedLinkedList;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static java.util.Comparator.*;
 
 public class TCD implements TADCommunity{
 
-    private Community com;
+    private final Community com;
 
     public TCD(){
         this.com = new Community();
@@ -94,7 +98,7 @@ public class TCD implements TADCommunity{
     public List<Long> mostAnsweredQuestions(int N, LocalDate begin, LocalDate end){
         List<Question> questions = this.com.getSortedQuestionList(
                 begin, end,
-                Comparator.comparingInt((Question q) -> q.getAnswerCountBetweenDate(begin, end)).reversed(), N);
+                comparingInt((Question q) -> q.getAnswerCountBetweenDate(begin, end)).reversed(), N);
         return idsFromPosts(questions, N);
     }
 
@@ -161,12 +165,7 @@ public class TCD implements TADCommunity{
                     for(String s : ((Question) p).getTags())
                         if(s != null) counts.merge(s, 1L, Long::sum);
         }
-        Queue<Pair<String, Long>> top;
-        Comparator<Pair<String,Long>> c = Comparator.comparingLong(Pair::getSnd);
-        if(N < counts.size() / 10) // if N <<< counts.size()
-            top = new SortedLinkedList<>(c.reversed(), N);
-        else
-            top = new PriorityQueue<>(N, c.reversed());
+        Queue<Pair<String, Long>> top = new PriorityQueue<>(N, comparing(Pair::getSnd, reverseOrder()));
         counts.forEach((key, value) -> top.add(new Pair<>(key, value)));
         N = N < top.size() ? N : top.size();
         List<Long> ids = new ArrayList<>(N);

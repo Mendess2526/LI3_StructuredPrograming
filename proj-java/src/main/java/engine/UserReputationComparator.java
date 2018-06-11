@@ -2,7 +2,7 @@ package main.java.engine;
 
 import java.util.Comparator;
 
-public class UserReputationComparator implements Comparator<User> {
+class UserReputationComparator implements Comparator<User> {
 
     @Override
     public int compare(User user1, User user2){

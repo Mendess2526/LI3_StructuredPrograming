@@ -2,7 +2,7 @@ package main.java.engine;
 
 import java.util.Comparator;
 
-public class UserPostCountComparator implements Comparator<User>{
+class UserPostCountComparator implements Comparator<User>{
 
     @Override
     public int compare(User user1, User user2){

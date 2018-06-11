@@ -7,8 +7,8 @@ import java.util.ListIterator;
 
 public class SortedLinkedList<T> extends LinkedList<T>{
 
-    private int maxSize;
-    private Comparator<T> c;
+    private final int maxSize;
+    private final Comparator<T> c;
 
     public SortedLinkedList(Comparator<T> c){
         super();

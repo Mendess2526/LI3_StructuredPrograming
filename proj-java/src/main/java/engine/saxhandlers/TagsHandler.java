@@ -7,7 +7,7 @@ import main.java.engine.Community;
 
 public class TagsHandler extends DefaultHandler {
 
-    private Community com;
+    private final Community com;
 
     public TagsHandler(Community com){
         super();

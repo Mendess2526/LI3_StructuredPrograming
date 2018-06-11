@@ -7,17 +7,14 @@ import java.util.Iterator;
 import java.util.function.Predicate;
 
 class Hour<T extends Chronological> {
-    private int count;
-    private SortedLinkedList<T> elems;
+    private final SortedLinkedList<T> elems;
 
     Hour(){
-        this.count = 0;
         this.elems = new SortedLinkedList<>(Comparator.comparing(Chronological::getDate));
     }
 
     void addElem(T c){
         this.elems.addLast(c);
-        this.count++;
     }
 
     boolean iterateForward(Predicate<T> predicate){
@@ -33,6 +30,6 @@ class Hour<T extends Chronological> {
     }
 
     int getCount(){
-        return this.count;
+        return this.elems.size();
     }
 }

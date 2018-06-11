@@ -8,11 +8,11 @@ import java.time.LocalTime;
 
 public abstract class Post implements Chronological {
 
-    private long id;
-    private LocalDateTime date;
-    private int score;
-    private long ownerId;
-    private String ownerName;
+    private final long id;
+    private final LocalDateTime date;
+    private final int score;
+    private final long ownerId;
+    private final String ownerName;
 
 
     Post(int score, long id, long ownerId, LocalDateTime date, String ownerName){

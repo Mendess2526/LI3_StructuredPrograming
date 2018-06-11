@@ -3,8 +3,8 @@ package main.java.engine;
 import java.time.LocalDateTime;
 
 public class Answer extends Post{
-    private int commentCount;
-    private long parentId;
+    private final int commentCount;
+    private final long parentId;
     private Question parentPtr;
 
     public Answer(int score, int commentCount, long id, long parentId, long ownerId, LocalDateTime date, String ownerName){
@@ -26,7 +26,7 @@ public class Answer extends Post{
         return this.parentPtr;
     }
 
-    public void setParentPtr(Question question){
+    void setParentPtr(Question question){
         this.parentPtr = question;
     }
 

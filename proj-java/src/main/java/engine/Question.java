@@ -6,10 +6,10 @@ import java.time.LocalTime;
 import java.util.*;
 
 public class Question extends Post{
-    private int answerCount;
-    private String title;
-    private String tags;
-    private LinkedList<Answer> answers;
+    private final int answerCount;
+    private final String title;
+    private final String tags;
+    private final LinkedList<Answer> answers;
     private LocalDate cachedFrom;
     private LocalDate cachedTo;
     private int answerCountBetweenDates;
@@ -40,12 +40,12 @@ public class Question extends Post{
         }
         return tags;
     }
-    //TODO
-    public LinkedList<Answer> getAnswers(){
-        return this.answers;
+
+    public List<Answer> getAnswers(){
+        return new ArrayList<>(this.answers);
     }
 
-    public void addAnswer(Answer answer){
+    void addAnswer(Answer answer){
         answer.setParentPtr(this);
         answers.addFirst(answer);
     }

@@ -5,7 +5,7 @@ import main.java.engine.collections.FixedSizeList;
 import java.util.function.Predicate;
 
 class Day<T extends Chronological> {
-    private FixedSizeList<Hour<T>> hours;
+    private final FixedSizeList<Hour<T>> hours;
 
     Day(){
         this.hours = new FixedSizeList<>(24);

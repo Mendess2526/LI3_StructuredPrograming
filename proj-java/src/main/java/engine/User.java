@@ -6,11 +6,11 @@ import java.util.ArrayList;
 
 public class User {
 
-    private int reputation;
-    private long id;
-    private String name;
-    private String bio;
-    private SortedLinkedList<Post> posts;
+    private final int reputation;
+    private final long id;
+    private final String name;
+    private final String bio;
+    private final SortedLinkedList<Post> posts;
 
     public User(int reputation, long id, String name, String bio){
         this.reputation = reputation;

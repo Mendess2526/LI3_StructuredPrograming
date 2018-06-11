@@ -2,7 +2,7 @@ package main.java.engine;
 
 import java.util.Comparator;
 
-public class AnswerScoreComparator implements Comparator<Answer> {
+class AnswerScoreComparator implements Comparator<Answer> {
 
     @Override
     public int compare(Answer answer1, Answer answer2){

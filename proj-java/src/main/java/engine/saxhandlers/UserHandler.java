@@ -8,7 +8,7 @@ import main.java.engine.User;
 
 public class UserHandler extends DefaultHandler {
 
-    private Community com;
+    private final Community com;
 
     public UserHandler(Community com){
         super();

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 public class PostHandler extends DefaultHandler {
 
-    private Community com;
+    private final Community com;
 
     public PostHandler(Community com){
         super();

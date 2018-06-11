@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 
 @SuppressWarnings({"BooleanMethodIsAlwaysInverted", "Duplicates"})
 class Year<T extends Chronological> {
-    private FixedSizeList<Month<T>> months;
+    private final FixedSizeList<Month<T>> months;
 
     Year(){
         this.months = new FixedSizeList<>(12);
