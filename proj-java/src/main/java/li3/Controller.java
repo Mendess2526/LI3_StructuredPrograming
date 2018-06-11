@@ -47,20 +47,24 @@ public class Controller {
     }
 
     private void pickQuery(){
-        int i = this.view.runPickQueryMenu();
-        if(i != 0) loadIfNeeded();
-        switch(i){
-            case 1: queryHandler(i, runQuery1()); break;
-            case 2: queryHandler(i, runQuery2()); break;
-            case 3: queryHandler(i, runQuery3()); break;
-            case 4: queryHandler(i, runQuery4()); break;
-            case 5: queryHandler(i, runQuery5()); break;
-            case 6: queryHandler(i, runQuery6()); break;
-            case 7: queryHandler(i, runQuery7()); break;
-            case 8: queryHandler(i, runQuery8()); break;
-            case 9: queryHandler(i, runQuery9()); break;
-            case 10: queryHandler(i, runQuery10()); break;
-            case 11: queryHandler(i, runQuery11()); break;
+        boolean keepGoing = true;
+        while(keepGoing){
+            int i = this.view.runPickQueryMenu();
+            if(i != 0) loadIfNeeded();
+            switch(i){
+                case 1: queryHandler(i, runQuery1()); break;
+                case 2: queryHandler(i, runQuery2()); break;
+                case 3: queryHandler(i, runQuery3()); break;
+                case 4: queryHandler(i, runQuery4()); break;
+                case 5: queryHandler(i, runQuery5()); break;
+                case 6: queryHandler(i, runQuery6()); break;
+                case 7: queryHandler(i, runQuery7()); break;
+                case 8: queryHandler(i, runQuery8()); break;
+                case 9: queryHandler(i, runQuery9()); break;
+                case 10: queryHandler(i, runQuery10()); break;
+                case 11: queryHandler(i, runQuery11()); break;
+                default: keepGoing = false;
+            }
         }
     }
 
@@ -73,7 +77,7 @@ public class Controller {
     }
 
     private void runAllQueries(){
-        int i = 0;
+        int i = 1;
         loadIfNeeded();
         queryHandler(i++, runQuery1());
         queryHandler(i++, runQuery2());

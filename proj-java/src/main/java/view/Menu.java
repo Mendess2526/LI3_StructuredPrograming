@@ -4,6 +4,10 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+import static view.View.BOLD;
+import static view.View.RED;
+import static view.View.UNDERLINE;
+
 /**
  * Esta classe implementa um menu em modo texto.
  */
@@ -33,7 +37,6 @@ public class Menu implements Screen<Integer> {
     @Override
     public Menu execute(){
         do{
-            //clearScreen();
             showMenu();
             this.op = readOption();
         }
@@ -45,14 +48,13 @@ public class Menu implements Screen<Integer> {
      * Shows the menu
      */
     private void showMenu(){
-        //clearScreen();
-        System.out.println("\n *** " + this.name + " Menu *** ");
+        System.out.println(UNDERLINE(RED("\n *** " + this.name + " Menu *** ")));
         for(int i = 0; i < this.options.size(); i++){
-            System.out.print(i + 1);
+            System.out.print(BOLD(String.valueOf(i + 1)));
             System.out.print(" - ");
             System.out.println(this.options.get(i));
         }
-        System.out.println("0 - Exit");
+        System.out.println(BOLD("0") + " - Exit");
     }
 
     /**
@@ -80,7 +82,6 @@ public class Menu implements Screen<Integer> {
             System.out.println("Opção Inválida!!!");
             op = -1;
         }
-        is.close();
         return op;
     }
 

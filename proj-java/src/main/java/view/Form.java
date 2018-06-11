@@ -31,7 +31,6 @@ class Form implements Screen<List<String>> {
             System.out.println(field);
             this.answers.add(is.nextLine());
         }
-        is.close();
         return this;
     }
 

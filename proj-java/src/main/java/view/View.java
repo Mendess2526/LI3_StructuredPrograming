@@ -6,7 +6,32 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
+@SuppressWarnings({"WeakerAccess", "SameParameterValue"})
 public class View {
+
+    private static final String RESET = "\033[0m";
+
+    static String RED(String s){
+        return "\033[31m" + s + RESET;
+    }
+    static String GREEN(String s){
+        return "\033[32m" + s + RESET;
+    }
+    static String BLUE(String s){
+        return "\033[34m" + s + RESET;
+    }
+    static String PURPLE(String s){
+        return "\033[35m" + s + RESET;
+    }
+    static String YELLOW(String s){
+        return "\033[33m" + s + RESET;
+    }
+    static String BOLD(String s){
+        return "\033[1m" + s + RESET;
+    }
+    static String UNDERLINE(String s){
+        return "\033[4m" + s + RESET;
+    }
 
     private Menu mainMenu;
     private Menu pickQueryMenu;
@@ -24,9 +49,9 @@ public class View {
     }
 
     public void showResults(int queryNum, Object result, long time){
-        System.out.println("Query " + queryNum + ":");
-        System.out.println(result);
-        System.out.println("Time taken: " + time);
+        System.out.println(GREEN("Query " + queryNum + ":"));
+        System.out.println(YELLOW(result.toString()));
+        System.out.println(PURPLE("Time taken: " + time));
     }
 
     public String requestDumpPath(){
@@ -37,7 +62,7 @@ public class View {
     }
 
     public void notifyLoading(){
-        System.out.println("Loading from xml...");
+        System.out.println(BOLD(BLUE("Loading from xml...")));
     }
 
     private void makeMainMenu(){
