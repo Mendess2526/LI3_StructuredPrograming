@@ -304,7 +304,27 @@
 \chapter{Comparação com a versão em C}
     Em termos de eficiência uma linguagem nativa como C é muito mais rápida a
     executar as queries. Isto notou-se, essencialmente, no parsing.
-    %TODO meter aqui tempos para comparar
+    \begin{table}[h]
+        \centering
+        \caption{My caption}
+        \label{my-label}
+        \begin{tabular}{lll}
+            \textbf{Query}    & \textbf{C}     & \textbf{Java}  \\
+        Load     & 10912 & 16827 \\
+        Query 1  & 0     & 0     \\
+        Query 2  & 25    & 103   \\
+        Query 3  & 0     & 1     \\
+        Query 4  & 0     & 5     \\
+        Query 5  & 0     & 1     \\
+        Query 6  & 0     & 6     \\
+        Query 7  & 0     & 9     \\
+        Query 8  & 0     & 3     \\
+        Query 9  & 0     & 1     \\
+        Query 10 & 0     & 0     \\
+        Query 11 & 22    & 102   \\
+            \textbf{Total}    & 11922 & 111  
+        \end{tabular}
+    \end{table}
 
     A estrutura que sofreu mais alterações foi o Calendario, inicialmente
     transpilamos o codigo para Java, mantendo a matriz de quatro dimemensões.
