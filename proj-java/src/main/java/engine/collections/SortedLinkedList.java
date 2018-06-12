@@ -45,7 +45,7 @@ public class SortedLinkedList<T> extends LinkedList<T>{
         if(this.size() == 0)
             return super.add(t);
         if(this.c.compare(super.peekLast(), t) < 0){
-            if(this.size() < this.maxSize || this.maxSize != - 1)
+            if(this.size() < this.maxSize || this.maxSize == - 1)
                 super.addLast(t);
         }else{
             this.addFirst(t);
