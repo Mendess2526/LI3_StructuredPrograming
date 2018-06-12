@@ -8,14 +8,22 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Predicate;
 
+/**
+ * Classe que organiza as entidades.
+ */
 public class Community {
-
+    /** Map de questões. */
     private final Map<Long,Question> questions;
+    /** Map de respostas. */
     private final Map<Long,Answer> answers;
+    /** Map de users. */
     private final Map<Long,User> users;
+    /** Map de tags. */
     private final Map<String,Long> tags;
 
+    /** Calendário de questões. */
     private final Calendario<Question> calendarioQuestions;
+    /** Calendário de respostas. */
     private final Calendario<Answer> calendarioAnswers;
 
     /**
@@ -31,8 +39,8 @@ public class Community {
     }
 
     /**
-     * Atualiza os posts de um user.
-     * @param ownerId O id do user que vais atualizar.
+     * Adiciona um post à lista de posts de um user.
+     * @param ownerId O id do user a quem vais adicionar.
      * @param post Um post.
      */
     private void updateUserPosts(long ownerId, Post post){
@@ -41,7 +49,7 @@ public class Community {
     }
 
     /**
-     * Atualiza a lista de respostas de uma questão.
+     * Adiciona uma resposta à lista de respostas de uma questão.
      * @param answer Uma resposta.
      */
     private void updateQuestionAnswers(Answer answer){
@@ -164,7 +172,9 @@ public class Community {
         return users;
     }
 
-    //TODO
+    /**
+     * Implementação do predicado para obter questões ordenadas.
+     */
     private class SortedQuestions implements Predicate<Question> {
 
         private final PriorityQueue<Question> list;
@@ -172,6 +182,11 @@ public class Community {
         private SortedQuestions(Comparator<Question> comparator, int max){
             this.list = new PriorityQueue<>(max, comparator);
         }
+
+
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public boolean test(Question question){
             this.list.add(question);
@@ -196,7 +211,10 @@ public class Community {
         return list;
     }
 
-    //TODO
+
+    /**
+     * Implementação do predicado para obter respostas ordenadas.
+     */
     private class SortedAnswers implements Predicate<Answer> {
 
         private final PriorityQueue<Answer> list;
@@ -205,6 +223,10 @@ public class Community {
             this.list = new PriorityQueue<>(max, comparator);
         }
 
+
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public boolean test(Answer answer){
             this.list.add(answer);
@@ -228,7 +250,10 @@ public class Community {
         return list;
     }
 
-    //TODO
+
+    /**
+     * Implementação do predicado para obter questões filtradas.
+     */
     private class FilteredQuestions implements Predicate<Question> {
         private final ArrayList<Question> list;
         private final Predicate<Question> f;
@@ -239,6 +264,10 @@ public class Community {
             this.f = f;
             this.max = max;
         }
+
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public boolean test(Question question){
             if(this.list.size() >= max) return false;
@@ -250,9 +279,9 @@ public class Community {
     /**
      * Retorna uma lista de questões filtrada dentro de um intervalo de tempo.
      * @param from A data de início.
-     * @param to A data do fiim.
+     * @param to A data do fim.
      * @param N O tamanho da lista.
-     * @param f O predicado de questões. //TODO
+     * @param f Função a aplicar a todos os elementos.
      * @return Uma lista de questões filtrada.
      */
     public List<Question> getFilteredQuestions(LocalDate from, LocalDate to, int N, Predicate<Question> f){
