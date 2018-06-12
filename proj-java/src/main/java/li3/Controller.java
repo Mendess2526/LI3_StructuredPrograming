@@ -353,7 +353,7 @@ public class Controller {
     private InputOutputTime<Long,Object,List<Long>> runQuery11(int n, LocalDate begin, LocalDate end){
         loadIfNeeded();
         long before = System.currentTimeMillis();
-        List<Long> r = this.com.mostUsedBestRep(n, begin, end).stream().sorted().collect(Collectors.toList());
+        List<Long> r = this.com.mostUsedBestRep(n, begin, end);
         long after = System.currentTimeMillis();
         return new InputOutputTime<>(after - before, asList(n, begin, end), r);
     }

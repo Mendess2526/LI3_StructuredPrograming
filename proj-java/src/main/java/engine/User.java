@@ -5,6 +5,7 @@ import engine.collections.SortedLinkedList;
 import engine.comparators.PostDateComparator;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Classe que define um user.
@@ -61,7 +62,7 @@ public class User {
      *
      * @return O id do user.
      */
-    public long getId(){
+    long getId(){
         return this.id;
     }
 
@@ -70,7 +71,7 @@ public class User {
      *
      * @return O nome do user.
      */
-    public String getName(){
+    String getName(){
         return this.name;
     }
 
@@ -79,7 +80,7 @@ public class User {
      *
      * @return A biografia do user.
      */
-    public String getBio(){
+    String getBio(){
         return this.bio;
     }
 
@@ -88,7 +89,7 @@ public class User {
      *
      * @return A lista de posts do user.
      */
-    public ArrayList<Post> getPosts(){
+    ArrayList<Post> getPosts(){
         return new ArrayList<>(this.posts);
     }
 
@@ -97,7 +98,7 @@ public class User {
      *
      * @param post Post a adicionar.
      */
-    public void addPost(Post post){
+    void addPost(Post post){
         posts.addLast(post);
     }
 
@@ -114,5 +115,20 @@ public class User {
                + ", bio='" + bio + '\''
                + ", posts=" + posts
                + '}';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object o){
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return reputation == user.reputation &&
+               id == user.id &&
+               Objects.equals(name, user.name) &&
+               Objects.equals(bio, user.bio) &&
+               Objects.equals(posts, user.posts);
     }
 }

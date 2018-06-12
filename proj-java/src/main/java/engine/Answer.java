@@ -1,6 +1,7 @@
 package engine;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * Classe que define uma resposta.
@@ -38,7 +39,7 @@ public class Answer extends Post {
      *
      * @return O número de comentários da resposta.
      */
-    public int getCommentCount(){
+    int getCommentCount(){
         return this.commentCount;
     }
 
@@ -47,7 +48,7 @@ public class Answer extends Post {
      *
      * @return O id do autor da resposta.
      */
-    public long getParentId(){
+    long getParentId(){
         return this.parentId;
     }
 
@@ -56,7 +57,7 @@ public class Answer extends Post {
      *
      * @return A questão à qual foi dada a resposta.
      */
-    public Question getParentPtr(){
+    Question getParentPtr(){
         return this.parentPtr;
     }
 
@@ -67,6 +68,15 @@ public class Answer extends Post {
      */
     void setParentPtr(Question question){
         this.parentPtr = question;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    Question searchUserInThread(long id){
+        if(this.getOwnerId() == id) return this.parentPtr;
+        return this.parentPtr.searchUserInThread(id);
     }
 
     /**
@@ -84,8 +94,13 @@ public class Answer extends Post {
      * {@inheritDoc}
      */
     @Override
-    public Question searchUserInThread(long id){
-        if(this.getOwnerId() == id) return this.parentPtr;
-        return this.parentPtr.searchUserInThread(id);
+    public boolean equals(Object o){
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        if(!super.equals(o)) return false;
+        Answer answer = (Answer) o;
+        return commentCount == answer.commentCount &&
+               parentId == answer.parentId &&
+               Objects.equals(parentPtr, answer.parentPtr);
     }
 }

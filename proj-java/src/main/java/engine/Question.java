@@ -47,20 +47,11 @@ public class Question extends Post {
     }
 
     /**
-     * Retorna o número de respostas da questão.
-     *
-     * @return O número de respostas da questão.
-     */
-    public int getAnswerCount(){
-        return this.answerCount;
-    }
-
-    /**
      * Retorna o título da questão.
      *
      * @return O título da questão.
      */
-    public String getTitle(){
+    String getTitle(){
         return this.title;
     }
 
@@ -69,7 +60,7 @@ public class Question extends Post {
      *
      * @return As tags da questão.
      */
-    public String[] getTags(){
+    String[] getTags(){
         String[] tags = new String[5];
         StringTokenizer st = new StringTokenizer(this.tags.substring(1), "><");
         int i = 0;
@@ -85,7 +76,7 @@ public class Question extends Post {
      *
      * @return A lista de respostas da questão.
      */
-    public List<Answer> getAnswers(){
+    List<Answer> getAnswers(){
         return new ArrayList<>(this.answers);
     }
 
@@ -105,7 +96,7 @@ public class Question extends Post {
      * @param tag Uma tag.
      * @return {@code true} se a questão tem a tag, {@code false} caso contrário.
      */
-    public boolean hasTag(String tag){
+    boolean hasTag(String tag){
         return this.tags.contains(tag);
     }
 
@@ -134,6 +125,16 @@ public class Question extends Post {
      * {@inheritDoc}
      */
     @Override
+    Question searchUserInThread(long id){
+        if(this.getOwnerId() == id) return this;
+        for(Answer a : this.answers) if(a.getOwnerId() == id) return this;
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String toString(){
         return "Question{" +
                "answerCount=" + answerCount +
@@ -141,16 +142,6 @@ public class Question extends Post {
                ", tags='" + tags + '\'' +
                ", answers=" + answers +
                '}';
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Question searchUserInThread(long id){
-        if(this.getOwnerId() == id) return this;
-        for(Answer a : this.answers) if(a.getOwnerId() == id) return this;
-        return null;
     }
 
     /**

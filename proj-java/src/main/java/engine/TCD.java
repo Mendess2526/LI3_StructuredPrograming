@@ -174,7 +174,7 @@ public class TCD implements TADCommunity {
         counts.forEach((key, value) -> top.add(new Pair<>(key, value)));
         N = N < top.size() ? N : top.size();
         List<Long> ids = new ArrayList<>(N);
-        for(i = 0; i < N && !top.isEmpty(); i++)
+        for(i = 0; i < N; i++)
             ids.add(this.com.getTagId(top.poll().getFst()));
         return ids;
     }

@@ -11,7 +11,7 @@ import java.util.function.Predicate;
  *
  * @param <T> Tipo dos elementos guardados.
  */
-public class Calendario<T extends Chronological> {
+class Calendario<T extends Chronological> {
 
     /** Anos de um calendário. */
     private final Map<LocalDate,SortedLinkedList<T>> elems;
@@ -20,7 +20,7 @@ public class Calendario<T extends Chronological> {
     /**
      * Cria um calendário.
      */
-    public Calendario(){
+    Calendario(){
         this.elems = new HashMap<>();
         this.keys = new TreeSet<>();
     }

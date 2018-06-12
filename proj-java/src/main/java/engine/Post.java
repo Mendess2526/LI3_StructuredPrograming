@@ -3,6 +3,7 @@ package engine;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Objects;
 
 /**
  * Classe que define um post.
@@ -42,7 +43,7 @@ public abstract class Post implements Chronological {
      *
      * @return O id do post.
      */
-    public long getId(){
+    long getId(){
         return this.id;
     }
 
@@ -69,7 +70,7 @@ public abstract class Post implements Chronological {
      *
      * @return O id do autor do post.
      */
-    public long getOwnerId(){
+    long getOwnerId(){
         return this.ownerId;
     }
 
@@ -78,24 +79,10 @@ public abstract class Post implements Chronological {
      *
      * @return O nome do autor do post.
      */
-    public String getOwnerName(){
+    String getOwnerName(){
         return this.ownerName;
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString(){
-        return "Post{" +
-               "id=" + id +
-               ", date=" + date +
-               ", score=" + score +
-               ", ownerId=" + ownerId +
-               ", ownerName='" + ownerName + '\'' +
-               '}';
-    }
 
     /**
      * Procura se um user é o autor de algum post na thread.
@@ -103,7 +90,7 @@ public abstract class Post implements Chronological {
      * @param id O user à procura.
      * @return A questão da thread seja autor de algum post, null caso contrário.
      */
-    public abstract Question searchUserInThread(long id);
+    abstract Question searchUserInThread(long id);
 
     /**
      * Verifica se o post está dentro de um intervalo de tempo.
@@ -112,8 +99,36 @@ public abstract class Post implements Chronological {
      * @param to   A data do fim.
      * @return {@code true} se estiver no intervalo de tempo, {@code false} caso contrário.
      */
-    public boolean isBetweenDates(LocalDate from, LocalDate to){
+    boolean isBetweenDates(LocalDate from, LocalDate to){
         return this.date.isAfter(from.atStartOfDay()) && this.date.isBefore(to.atTime(LocalTime.MAX));
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object o){
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        Post post = (Post) o;
+        return id == post.id &&
+               score == post.score &&
+               ownerId == post.ownerId &&
+               Objects.equals(date, post.date) &&
+               Objects.equals(ownerName, post.ownerName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString(){
+        return "Post{" +
+               "id=" + id + '\''
+               + ", date=" + date + '\''
+               + ", score=" + score + '\''
+               + ", ownerId=" + ownerId + '\''
+               + ", ownerName='" + ownerName + '\''
+               + '}';
+    }
 }

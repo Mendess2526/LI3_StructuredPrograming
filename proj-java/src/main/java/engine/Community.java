@@ -29,7 +29,7 @@ public class Community {
     /**
      * Cria uma instância da estrutura.
      */
-    public Community(){
+    Community(){
         this.questions = new HashMap<>();
         this.answers = new HashMap<>();
         this.users = new HashMap<>();
@@ -108,7 +108,7 @@ public class Community {
      * @param id O id da questão que queremos.
      * @return Uma questão.
      */
-    public Question getQuestion(long id){
+    Question getQuestion(long id){
         return this.questions.get(id);
     }
 
@@ -118,7 +118,7 @@ public class Community {
      * @param id O id da resposta que queremos.
      * @return Uma resposta.
      */
-    public Answer getAnswer(long id){
+    Answer getAnswer(long id){
         return this.answers.get(id);
     }
 
@@ -128,7 +128,7 @@ public class Community {
      * @param id O id do user que queremos.
      * @return Um user.
      */
-    public User getUser(long id){
+    User getUser(long id){
         return this.users.get(id);
     }
 
@@ -139,7 +139,7 @@ public class Community {
      * @param tag A tag que queremos.
      * @return Um id.
      */
-    public long getTagId(String tag){
+    long getTagId(String tag){
         Long id = tags.get(tag);
         if(id != null){
             return id;
@@ -152,7 +152,7 @@ public class Community {
      *
      * @return O número de users.
      */
-    public long getUserCount(){
+    long getUserCount(){
         return users.size();
     }
 
@@ -161,7 +161,7 @@ public class Community {
      *
      * @return O número de questões.
      */
-    public long getQuestionCount(){
+    long getQuestionCount(){
         return questions.size();
     }
 
@@ -170,7 +170,7 @@ public class Community {
      *
      * @return O número de respostas.
      */
-    public long getAnswerCount(){
+    long getAnswerCount(){
         return answers.size();
     }
 
@@ -181,7 +181,7 @@ public class Community {
      * @param N              O tamanho da lista.
      * @return Uma lista ordenada de users.
      */
-    public List<User> getSortedUserList(Comparator<User> userComparator, int N){
+    List<User> getSortedUserList(Comparator<User> userComparator, int N){
         SortedLinkedList<User> users = new SortedLinkedList<>(userComparator, N);
         users.addAll(this.users.values());
         return users;
@@ -196,7 +196,7 @@ public class Community {
      * @param N                  O tamanho da lista.
      * @return Uma lista ordenada de questões.
      */
-    public List<Question> getSortedQuestionList(LocalDate from, LocalDate to, Comparator<Question> qComparator, int N){
+    List<Question> getSortedQuestionList(LocalDate from, LocalDate to, Comparator<Question> qComparator, int N){
         SortedQuestions sortedQuestions = new SortedQuestions(qComparator, N);
         this.calendarioQuestions.iterate(from, to, sortedQuestions);
         List<Question> list = new ArrayList<>();
@@ -214,7 +214,7 @@ public class Community {
      * @param N                O tamanho da lista.
      * @return Uma lista ordenada de respostas.
      */
-    public List<Answer> getSortedAnswerList(LocalDate from, LocalDate to, Comparator<Answer> aComparator, int N){
+    List<Answer> getSortedAnswerList(LocalDate from, LocalDate to, Comparator<Answer> aComparator, int N){
         SortedAnswers sortedAnswers = new SortedAnswers(aComparator, N);
         this.calendarioAnswers.iterate(from, to, sortedAnswers);
         List<Answer> list = new ArrayList<>();
@@ -232,7 +232,7 @@ public class Community {
      * @param f    Função a aplicar a todos os elementos.
      * @return Uma lista de questões filtrada.
      */
-    public List<Question> getFilteredQuestions(LocalDate from, LocalDate to, int N, Predicate<Question> f){
+    List<Question> getFilteredQuestions(LocalDate from, LocalDate to, int N, Predicate<Question> f){
         FilteredQuestions filteredQuestions = new FilteredQuestions(f, N);
         this.calendarioQuestions.iterate(from, to, filteredQuestions);
         return filteredQuestions.list;
@@ -245,7 +245,7 @@ public class Community {
      * @param to   A data do fim.
      * @return O número de questões.
      */
-    public long countQuestions(LocalDate from, LocalDate to){
+    long countQuestions(LocalDate from, LocalDate to){
         return this.calendarioQuestions.countElements(from, to);
     }
 
@@ -256,7 +256,7 @@ public class Community {
      * @param to   A data do fim.
      * @return O número de respostas.
      */
-    public long countAnswers(LocalDate from, LocalDate to){
+    long countAnswers(LocalDate from, LocalDate to){
         return this.calendarioAnswers.countElements(from, to);
     }
 
