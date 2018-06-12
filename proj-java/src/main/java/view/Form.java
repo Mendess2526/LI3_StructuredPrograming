@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import static view.View.RED;
+import static view.View.UNDERLINE;
+
 
 /**
  * Classe que define um formulário.
@@ -35,7 +38,7 @@ class Form implements Screen<List<String>> {
      */
     @Override
     public Form execute(){
-        System.out.println("**** " + this.name + " ****");
+        System.out.println(UNDERLINE(RED("**** " + this.name + " ****")));
         Scanner is = new Scanner(System.in);
         for(String field : fields){
             System.out.println(field);

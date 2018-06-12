@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import static view.View.*;
+import static view.View.UNDERLINE;
 
 /**
  * Esta classe implementa um menu em modo texto.
@@ -96,7 +97,9 @@ public class Menu implements Screen<Integer> {
             op = -1;
         }
         if(op < 0 || op > this.options.size()){
-            System.out.println("Opção Inválida!!!");
+            System.out.println(RED("\n=====================\n"
+                                   + "  " + BOLD(UNDERLINE(RED("Opção Inválida!!!\n")))
+                                   + RED("=====================")));
             op = -1;
         }
         return op;

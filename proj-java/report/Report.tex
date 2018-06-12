@@ -72,8 +72,8 @@
 
     \section{Posts}
     Para representar um \textbf{Post} criamos a classe abstrata
-    do mesmo nome. Esta, guarda os dados e representa o comportamento
-    comum a todos os posts. Depois para cada tipo de post considerado, questão
+    do mesmo nome. Esta guarda os dados e representa o comportamento
+    comum a todos os posts. Depois, para cada tipo de post considerado, questão
     ou resposta, foi criada uma classe que extende \textbf{Post}, adicionando
     os dados únicos deste tipo.
         \paragraph{Post}
@@ -102,10 +102,10 @@
             \end{multicols}
 
     Além dos dados fornecidos diretamente pelos ficheiros xml, decidimos também
-    guardar na \textbf{questão} a lista das \textbf{respostas} de cada questão,
-    bem como uma contagem destas. Na \textbf{resposta}, inversamente, guardamos
-    a questão a que esta responde. Com estas informações extra, as pesquisas
-    que envolvem relacionar estas duas entidades tornam-se muito mais
+    guardar na \textbf{questão} a lista das \textbf{respostas} de cada questão.
+    Na \textbf{resposta}, inversamente, guardamos a questão a que esta responde.
+    Com estas informações extra, as pesquisas que envolvem relacionar estas duas
+    entidades tornam-se muito mais
     eficientes.
 
     \section{Utilizadores}
@@ -125,10 +125,10 @@
     (para determinar os utilizadores mais ativos de forma mais rápida) e a lista
     destes para permitir pesquisas mais rápidas.
 
-    Esta lista de posts faz uso de uma coleção concebida para resolver os
-    problemas propostos. Neste caso em particular, uma lista ligada ordenada
-    por data. Devido à forma quase ordenada em que os posts surgem no xml esta
-    ordenação é facilmente mantida.
+    Esta lista de posts faz uso de uma coleção concebida para resolver este
+    tipo de problemas. Neste caso em particular, uma lista ligada ordenada
+    (secção \ref{sec:sortedLinkedList}) por data. Devido à forma quase ordenada
+    em que os posts surgem no xml esta ordenação é facilmente mantida.
 
 
     \begin{figure}[h]
@@ -170,10 +170,10 @@
 
         Assim, esta estrutura permite:
         \begin{itemize}
-                \item Guardar qualquer objeto desde que seja
-                      passada uma data associada ao mesmo.
-                \item Iterar sobre os objetos, dado um intervalo de tempo,
-                      por ordem cronológica normal ou inversa, conforme a
+                \item Guardar qualquer objeto desde que implemente a interface
+                      referida anteriormente.
+                \item Iterar sobre os seus elementos, dado um intervalo de
+                      tempo, por ordem cronológica normal ou inversa, conforme a
                       ordem dos argumentos.
         \end{itemize}
 
@@ -214,13 +214,19 @@
     das inserções forem feitas à cabeça ou na cauda da lista. Opcionalmente,
     esta pode também ter um tamanho máximo.
 
+    \section{TCD}
+    A forma como o nosso modelo interage com o exterior é atravez da classe
+    \mintinline{java}{TCD}. Esta implementa todas as queries necessãrias de
+    forma simples devido à maior parte do processamento ser feito pelos metodos
+    disponiveis no \mintinline{java}{Community}.
+
     \section{Arquitetura}
     Todas estas classes formam a nossa arquitetura que pode ser vista de forma
     esquematizada na Figura \ref{fig:fulldiagram}.
 
     \begin{figure}[h]
         \centering
-        \includegraphics[width=\textwidth]{./images/FullDiagram.png}
+        \includegraphics[width=\textwidth]{./images/Model.png}
         \caption{Diagrama de Classes do Engine}
         \label{fig:fulldiagram}
     \end{figure}
@@ -262,8 +268,8 @@
         \item Pesquisa de listas, ordenadas por qualquer critério, de
         \textbf{utilizadores}, \textbf{questões} e \textbf{respostas}.
         \item Pesquisas de \textbf{questões} filtradas por qualquer critério.
-        \item Pesquisas genéricas de \textbf{questões}/\textbf{respostas}
-        num determinado intervalo de tempo.
+        \item Contagens de \textbf{questões} ou \textbf{respostas}
+              num determinado intervalo de tempo.
     \end{enumerate}
 
     Com estas funções a resolução da maioria das queries mostrou-se
@@ -274,8 +280,7 @@
 
     Para as queries que necessitam de pesquisas de utilizadores ordenados
     (queries: 2 e 11) são conseguidas através de \textbf{3}, sendo que assim
-    basta fornecer uma função de comparação para definir o critério de
-    ordenação.
+    basta fornecer um comparator para definir o critério de ordenação.
 
     Para as queries que necessitam de pesquisas de
     \textbf{perguntas}/\textbf{respostas} num intervalo de tempo ordenadas
@@ -288,8 +293,9 @@
     determinado critério (queries: 4 e 8), são conseguidas através de
     \textbf{4}.
 
-    Nos casos em que estes métodos especializados não são necessários (query: 3)
-    fizemos uso de uma iteração genérica através de \textbf{5}.
+    Para obter o numero de \textbf{perguntas} e \textbf{respostas} dentro
+    de um intervalo de tempo (query: 3) fizemos uso dos metodos desenvolvidos
+    para este mesmo proposito \textbf{5}.
 
     A resolução da query 11 tem quatro fases. A primera consiste em obter o top
     N utilizadores (baseado na reputação destes) para para obter os posts
@@ -309,20 +315,20 @@
         \caption{My caption}
         \label{my-label}
         \begin{tabular}{lll}
-            \textbf{Query}    & \textbf{C}     & \textbf{Java}  \\
-        Load     & 10912 & 16827 \\
-        Query 1  & 0     & 0     \\
-        Query 2  & 25    & 103   \\
-        Query 3  & 0     & 1     \\
-        Query 4  & 0     & 5     \\
-        Query 5  & 0     & 1     \\
-        Query 6  & 0     & 6     \\
-        Query 7  & 0     & 9     \\
-        Query 8  & 0     & 3     \\
-        Query 9  & 0     & 1     \\
-        Query 10 & 0     & 0     \\
-        Query 11 & 22    & 102   \\
-            \textbf{Total}    & 11922 & 111  
+        \textbf{Query}    & \textbf{C} & \textbf{Java}  \\
+        Load              & 10912      & 16827 \\
+        Query 1           & 0          & 0     \\
+        Query 2           & 25         & 103   \\
+        Query 3           & 0          & 1     \\
+        Query 4           & 0          & 5     \\
+        Query 5           & 0          & 1     \\
+        Query 6           & 0          & 6     \\
+        Query 7           & 0          & 9     \\
+        Query 8           & 0          & 3     \\
+        Query 9           & 0          & 1     \\
+        Query 10          & 0          & 0     \\
+        Query 11          & 22         & 102   \\
+        \textbf{Total}    & 11922      & 17058
         \end{tabular}
     \end{table}
 
@@ -342,11 +348,10 @@
     Em suma, o grupo considera que o trabalho foi realizado na sua
     totalidade de forma eficiente e correta, respondendo a todas as queries.
 
-    Um aspeto que poderia ser melhorado é a ordenação de utilizadores. Estes,
-    foram guardados apenas numa tabela de hash e quando é necessária um lista
-    ordenada dos mesmos, esta, tem de ser percorrida na sua totalidade. Esta
-    decisão, centrou-se no facto de que nenhuma única ordenação se apresenta
-    particularmente vantajosa, face às demais.
-
+    Um aspeto que poderia ser melhorado é a ordenação de utilizadores. Estes
+    foram guardados apenas numa tabela de hash, logo, quando é necessária uma
+    lista ordenada dos mesmos, a tabela tem de ser percorrida na sua totalidade.
+    Esta decisão, centrou-se no facto de que nenhuma única ordenação se
+    apresentar particularmente vantajosa, face às demais.
 
 \end{document}
