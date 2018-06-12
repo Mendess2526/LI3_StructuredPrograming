@@ -49,8 +49,9 @@ public class View {
         return this.pickQueryMenu.getResult();
     }
 
-    public void showResults(int queryNum, Object result, long time){
-        System.out.println(GREEN("Query " + queryNum + ":"));
+    public void showResults(int queryNum, List parameters, Object result, long time){
+        System.out.print(BOLD(GREEN("Query " + queryNum + ": ")));
+        System.out.println(GREEN(parameters.toString()));
         System.out.println(YELLOW(result.toString()));
         System.out.println(PURPLE("Time taken: " + time));
     }
@@ -77,8 +78,13 @@ public class View {
         new Scanner(System.in).nextLine();
     }
 
+    public List<String> runForm(List<String> fields){
+        Form form = new Form("Pick parameters", fields);
+        return form.execute().getResult();
+    }
+
     private void makeMainMenu(){
-        this.mainMenu = new Menu("Main", asList("Run all queries", "Pick one query"));
+        this.mainMenu = new Menu("Main", asList("Run all queries", "Pick one query (default parameters)", "Pick one query (pick parameters)"));
     }
 
     private void makePickQueryMenu(){

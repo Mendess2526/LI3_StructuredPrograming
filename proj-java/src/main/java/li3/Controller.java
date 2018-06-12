@@ -6,21 +6,32 @@ import view.View;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 public class Controller {
 
-    private TADCommunity com;
-    private View view;
+    public static void main(String[] args){
+        new Controller(new TCD(), new View()).run(args);
+    }
+
+    private final TADCommunity com;
+    private final View view;
     private boolean loaded = false;
     private String dumpPath;
 
-    Controller(TADCommunity com, View view){
+    private Controller(TADCommunity com, View view){
         this.com = com;
         this.view = view;
     }
 
-    void run(String[] args){
+    private void run(String[] args){
         boolean keepGoing = true;
         while(keepGoing){
             int i = this.view.runMainMenu();
@@ -31,8 +42,11 @@ public class Controller {
                     break;
                 case 2:
                     getDumpPath(args);
-                    pickQuery();
+                    pickQueryDefault();
                     break;
+                case 3:
+                    getDumpPath(args);
+                    pickQuery();
                 default:
                     keepGoing = false;
             }
@@ -51,7 +65,7 @@ public class Controller {
         }
     }
 
-    private void pickQuery(){
+    private void pickQueryDefault(){
         boolean keepGoing = true;
         while(keepGoing){
             int i = this.view.runPickQueryMenu();
@@ -69,6 +83,72 @@ public class Controller {
                     case 9: queryHandler(i, runQuery9()); break;
                     case 10: queryHandler(i, runQuery10()); break;
                     case 11: queryHandler(i, runQuery11()); break;
+                }
+                this.view.requestContinue();
+            }else{
+                keepGoing = false;
+            }
+        }
+    }
+
+    private void pickQuery(){
+        boolean keepGoing = true;
+        while(keepGoing){
+            int i = this.view.runPickQueryMenu();
+            List<String> results;
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            if(i != 0){
+                loadIfNeeded();
+                try{
+                    switch(i){
+                        case 1:
+                            results = this.view.runForm(singletonList("Id: "));
+                            queryHandler(i, runQuery1(Integer.parseInt(results.get(0))));
+                            break;
+                        case 2:
+                            results = this.view.runForm(singletonList("N: "));
+                            queryHandler(i, runQuery2(Integer.parseInt(results.get(0))));
+                            break;
+                        case 3:
+                            results = this.view.runForm(asList("Begin date (dd-mm-yyyy): ", "End date (dd-mm-yyyy): "));
+                            queryHandler(i, runQuery3(LocalDate.parse(results.get(0), formatter), LocalDate.parse(results.get(1), formatter)));
+                            break;
+                        case 4:
+                            results = this.view.runForm(asList("Tag: ", "Begin date (dd-mm-yyyy): ", "End date (dd-mm-yyyy)"));
+                            queryHandler(i, runQuery4(results.get(0), LocalDate.parse(results.get(1), formatter), LocalDate.parse(results.get(2), formatter)));
+                            break;
+                        case 5:
+                            results = this.view.runForm(singletonList("Id: "));
+                            queryHandler(i, runQuery5(Long.parseLong(results.get(0))));
+                            break;
+                        case 6:
+                            results = this.view.runForm(asList("N: ", "Begin date (dd-mm-yyyy): ", "End date (dd-mm-yyyy)"));
+                            queryHandler(i, runQuery6(Integer.parseInt(results.get(0)), LocalDate.parse(results.get(1), formatter), LocalDate.parse(results.get(2), formatter)));
+                            break;
+                        case 7:
+                            results = this.view.runForm(asList("N: ", "Begin date (dd-mm-yyyy): ", "End date (dd-mm-yyyy)"));
+                            queryHandler(i, runQuery7(Integer.parseInt(results.get(0)), LocalDate.parse(results.get(1), formatter), LocalDate.parse(results.get(2), formatter)));
+                            break;
+                        case 8:
+                            results = this.view.runForm(asList("N: ", "Word: "));
+                            queryHandler(i, runQuery8(Integer.parseInt(results.get(0)), results.get(1)));
+                            break;
+                        case 9:
+                            results = this.view.runForm(asList("N: ", "Id1: ", "Id2: "));
+                            List<Long> r = results.stream().map(Long::parseLong).collect(Collectors.toList());
+                            queryHandler(i, runQuery9(Math.toIntExact(r.get(0)), r.get(1), r.get(2)));
+                            break;
+                        case 10:
+                            results = this.view.runForm(singletonList("Id: "));
+                            queryHandler(i, runQuery10(Long.parseLong(results.get(0))));
+                            break;
+                        case 11:
+                            results = this.view.runForm(asList("N: ", "Begin date (dd-mm-yyyy): ", "End date (dd-mm-yyyy)"));
+                            queryHandler(i, runQuery11(Integer.parseInt(results.get(0)), LocalDate.parse(results.get(1), formatter), LocalDate.parse(results.get(2), formatter)));
+                            break;
+                    }
+                }catch(NumberFormatException | DateTimeParseException e){
+                    e.printStackTrace();
                 }
                 this.view.requestContinue();
             }else{
@@ -102,98 +182,151 @@ public class Controller {
         this.view.requestContinue();
     }
 
-    private void queryHandler(int i , Pair<Long, ?> r){
-        this.view.showResults(i, r.getSnd(), r.getFst());
+    private void queryHandler(int i , InputOutputTime<Long, ?, ?> r){
+        this.view.showResults(i, r.input, r.output, r.time);
     }
 
-    private Pair<Long , String> runQuery0() throws NullPointerException{
+    private InputOutputTime<Long,String,String> runQuery0() throws NullPointerException{
         long before = System.currentTimeMillis();
         this.com.load(this.dumpPath);
         long after = System.currentTimeMillis();
-        return new Pair<>(after-before, "done");
+        return new InputOutputTime<>(after-before, singletonList(this.dumpPath), "done");
     }
 
-    private Pair<Long,Pair<String, String>> runQuery1(){
-        long before = System.currentTimeMillis();
-        Pair<String,String> r = this.com.infoFromPost(801049);
-        long after = System.currentTimeMillis();
-        return new Pair<>(after-before, r);
+    private InputOutputTime<Long, Long, Pair<String, String>> runQuery1(){
+        return runQuery1(801049);
     }
 
-    private Pair<Long, List<Long>> runQuery2(){
+    private InputOutputTime<Long, Long, Pair<String, String>> runQuery1(long id){
         long before = System.currentTimeMillis();
-        List<Long> r = this.com.topMostActive(10);
+        Pair<String,String> r = this.com.infoFromPost(id);
         long after = System.currentTimeMillis();
-        return new Pair<>(after-before, r);
+        return new InputOutputTime<>(after-before, singletonList(id), r);
+    }
+
+    private InputOutputTime<Long, Integer, List<Long>> runQuery2(){
+        return runQuery2(10);
+    }
+
+    private InputOutputTime<Long, Integer, List<Long>> runQuery2(int n){
+        long before = System.currentTimeMillis();
+        List<Long> r = this.com.topMostActive(n);
+        long after = System.currentTimeMillis();
+        return new InputOutputTime<>(after-before, singletonList(n), r);
+    }
+
+    private InputOutputTime<Long, LocalDate, Pair<Long,Long>> runQuery3(){
+        return runQuery3(LocalDate.of(2016, Month.JULY, 1), LocalDate.of(2016, Month.JULY, 31));
+    }
+
+    private InputOutputTime<Long, LocalDate, Pair<Long,Long>> runQuery3(LocalDate begin, LocalDate end){
+        long before = System.currentTimeMillis();
+        Pair<Long,Long> r = this.com.totalPosts(begin, end);
+        long after = System.currentTimeMillis();
+        return new InputOutputTime<>(after-before, asList(begin, end), r);
+    }
+
+    private InputOutputTime<Long, Object, List<Long>> runQuery4(){
+        return runQuery4("package-management", LocalDate.of(2013, Month.MARCH, 1), LocalDate.of(2013, Month.MARCH, 31));
+    }
+
+    private InputOutputTime<Long, Object, List<Long>> runQuery4(String tag, LocalDate begin, LocalDate end){
+        long before = System.currentTimeMillis();
+        List<Long> r = this.com.questionsWithTag(tag, begin, end);
+        long after = System.currentTimeMillis();
+        return new InputOutputTime<>(after-before, asList(tag, begin, end), r);
+    }
+
+    private InputOutputTime<Long, Long, Pair<String,List<Long>>> runQuery5(){
+        return runQuery5(15811);
+    }
+
+    private InputOutputTime<Long, Long, Pair<String,List<Long>>> runQuery5(long id){
+        long before = System.currentTimeMillis();
+        Pair<String,List<Long>> r = this.com.getUserInfo(id);
+        long after = System.currentTimeMillis();
+        return new InputOutputTime<>(after-before, singletonList(id), r);
+
+    }
+
+    private InputOutputTime<Long, Object, List<Long>> runQuery6(){
+        return runQuery6(5, LocalDate.of(2015, Month.NOVEMBER, 1), LocalDate.of(2015, Month.NOVEMBER, 30));
+    }
+
+    private InputOutputTime<Long, Object, List<Long>> runQuery6(int n, LocalDate begin, LocalDate end){
+        long before = System.currentTimeMillis();
+        List<Long> r = this.com.mostVotedAnswers(n, begin, end);
+        long after = System.currentTimeMillis();
+        return new InputOutputTime<>(after-before, asList(n, begin, end), r);
+    }
+
+    private InputOutputTime<Long, Object, List<Long>> runQuery7(){
+        return runQuery7(10, LocalDate.of(2014, Month.AUGUST, 1), LocalDate.of(2014, Month.AUGUST, 10));
+        //return runQuery7(10, LocalDate.MIN, LocalDate.MAX);
+    }
+
+    private InputOutputTime<Long, Object, List<Long>> runQuery7(int n, LocalDate begin, LocalDate end){
+        long before = System.currentTimeMillis();
+        List<Long> r = this.com.mostAnsweredQuestions(n, begin, end);
+        long after = System.currentTimeMillis();
+        return new InputOutputTime<>(after-before, asList(10, begin, end), r);
+    }
+
+    private InputOutputTime<Long,Object, List<Long>> runQuery8(){
+        return runQuery8(10, "kde");
+    }
+
+    private InputOutputTime<Long,Object, List<Long>> runQuery8(int n, String word){
+        long before = System.currentTimeMillis();
+        List<Long> r = this.com.containsWord(n, word);
+        long after = System.currentTimeMillis();
+        return new InputOutputTime<>(after-before, asList(n, word), r);
+    }
+
+    private InputOutputTime<Long,Long,List<Long>> runQuery9(){
+        return runQuery9(10, 87, 5691);
+    }
+
+    private InputOutputTime<Long,Long,List<Long>> runQuery9(int n, long id1, long id2){
+        long before = System.currentTimeMillis();
+        List<Long> r = this.com.bothParticipated(n, id1, id2);
+        long after = System.currentTimeMillis();
+        return new InputOutputTime<>(after-before, asList((long) n, id1, id2), r);
+    }
+
+    private InputOutputTime<Long, Long, Long> runQuery10(){
+        return runQuery10(30334L);
+    }
+
+    private InputOutputTime<Long, Long, Long> runQuery10(long id){
+        long before = System.currentTimeMillis();
+        long r = this.com.betterAnswer(id);
+        long after = System.currentTimeMillis();
+        return new InputOutputTime<>(after-before, singletonList(id), r);
+    }
+
+    private InputOutputTime<Long,Object, List<Long>> runQuery11(){
+        return runQuery11(15, LocalDate.of(2013, Month.NOVEMBER, 1), LocalDate.of(2013, Month.NOVEMBER, 30));
+    }
+
+    private InputOutputTime<Long,Object, List<Long>> runQuery11(int n, LocalDate begin, LocalDate end){
+        long before = System.currentTimeMillis();
+        List<Long> r = this.com.mostUsedBestRep(n, begin, end).stream().sorted().collect(Collectors.toList());
+        long after = System.currentTimeMillis();
+        return new InputOutputTime<>(after-before, asList(n, begin, end), r);
     }
     
-    private Pair<Long, Pair<Long,Long>> runQuery3(){
-        long before = System.currentTimeMillis();
-        Pair<Long,Long> r = this.com.totalPosts(LocalDate.of(2016, Month.JULY, 1),
-                                           LocalDate.of(2016, Month.JULY, 31));
-        long after = System.currentTimeMillis();
-        return new Pair<>(after-before, r);
-    }
+    private class InputOutputTime<T,I,O>{
 
-    private Pair<Long,List<Long>> runQuery4(){
-        long before = System.currentTimeMillis();
-        List<Long> r = this.com.questionsWithTag("package-management", LocalDate.of(2013, Month.MARCH, 1),
-                                                LocalDate.of(2013, Month.MARCH, 31));
-        long after = System.currentTimeMillis();
-        return new Pair<>(after-before, r);
-    }
+        private final List<I> input;
+        private final O output;
+        private final T time;
 
-    private Pair<Long,Pair<String,List<Long>>> runQuery5(){
-        long before = System.currentTimeMillis();
-        Pair<String,List<Long>> r = this.com.getUserInfo(15811);
-        long after = System.currentTimeMillis();
-        return new Pair<>(after-before, r);
-
-    }
-
-    private Pair<Long,List<Long>> runQuery6(){
-        long before = System.currentTimeMillis();
-        List<Long> r = this.com.mostVotedAnswers(5, LocalDate.of(2015, Month.NOVEMBER, 1),
-                                            LocalDate.of(2015, Month.NOVEMBER, 30));
-        long after = System.currentTimeMillis();
-        return new Pair<>(after-before, r);
-    }
-
-    private Pair<Long,List<Long>> runQuery7(){
-        long before = System.currentTimeMillis();
-        List<Long> r = this.com.mostAnsweredQuestions(10, LocalDate.of(2014, Month.AUGUST, 1),
-                                                 LocalDate.of(2014, Month.AUGUST, 10));
-        long after = System.currentTimeMillis();
-        return new Pair<>(after-before, r);
-    }
-
-    private Pair<Long,List<Long>> runQuery8(){
-        long before = System.currentTimeMillis();
-        List<Long> r = this.com.containsWord(10, "kde");
-        long after = System.currentTimeMillis();
-        return new Pair<>(after-before, r);
-    }
-
-    private Pair<Long,List<Long>> runQuery9(){
-        long before = System.currentTimeMillis();
-        List<Long> r = this.com.bothParticipated(10, 87, 5691);
-        long after = System.currentTimeMillis();
-        return new Pair<>(after-before, r);
-    }
-
-    private Pair<Long,Long> runQuery10(){
-        long before = System.currentTimeMillis();
-        long r = this.com.betterAnswer(30334);
-        long after = System.currentTimeMillis();
-        return new Pair<>(after-before, r);
-    }
-
-    private Pair<Long,List<Long>> runQuery11(){
-        long before = System.currentTimeMillis();
-        List<Long> r = this.com.mostUsedBestRep(5, LocalDate.of(2013, Month.NOVEMBER, 1),
-                                            LocalDate.of(2013, Month.NOVEMBER, 30));
-        long after = System.currentTimeMillis();
-        return new Pair<>(after-before, r);
+        private InputOutputTime(T time, List<I> input, O output){
+            this.input = input;
+            this.output = output;
+            this.time = time;
+        }
     }
 }
 
