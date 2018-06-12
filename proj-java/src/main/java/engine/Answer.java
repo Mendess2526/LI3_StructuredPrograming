@@ -2,9 +2,15 @@ package engine;
 
 import java.time.LocalDateTime;
 
+/**
+ * Classe que define uma resposta.
+ */
 public class Answer extends Post{
+    /** Número de comentários da resposta. */
     private final int commentCount;
+    /** Id da questão ao qual foi dada a resposta. */
     private final long parentId;
+    /** Questão ao qual foi dada a resposta. */
     private Question parentPtr;
 
     /**
@@ -56,12 +62,20 @@ public class Answer extends Post{
         this.parentPtr = question;
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Question searchUserInThread(long id){
         if(this.getOwnerId() == id) return this.parentPtr;
         return this.parentPtr.searchUserInThread(id);
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString(){
         return "Answer{" +
