@@ -6,12 +6,20 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+/**
+ * Classe que define um post.
+ */
 public abstract class Post implements Chronological {
 
+    /** O id do post. */
     private final long id;
+    /** A data do post. */
     private final LocalDateTime date;
+    /** O score do post. */
     private final int score;
+    /** O id do autor do post. */
     private final long ownerId;
+    /** O nome do autor do post. */
     private final String ownerName;
 
     /**
@@ -70,6 +78,10 @@ public abstract class Post implements Chronological {
         return this.ownerName;
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString(){
         return "Post{" +
@@ -81,14 +93,18 @@ public abstract class Post implements Chronological {
                 '}';
     }
 
-    //TODO
+    /**
+     * Procura se um user é o autor de algum post na thread.
+     * @param id O user à procura.
+     * @return A questão da thread seja autor de algum post, null caso contrário.
+     */
     public abstract Question searchUserInThread(long id);
 
     /**
      * Verifica se o post está dentro de um intervalo de tempo.
      * @param from A data de início.
      * @param to A data do fim.
-     * @return true se estiver no intervalo de tempo, ou false, caso contrário.
+     * @return {@code true} se estiver no intervalo de tempo, {@code false} caso contrário.
      */
     public boolean isBetweenDates(LocalDate from, LocalDate to){
         return this.date.isAfter(from.atStartOfDay()) && this.date.isBefore(to.atTime(LocalTime.MAX));
