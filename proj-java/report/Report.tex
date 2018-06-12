@@ -72,10 +72,10 @@
 
     \section{Posts}
         Para representar um \textbf{Post} criamos a classe abstrata
-        do mesmo nome. Esta guarda os dados e representa o comportamento comum a
+        do mesmo nome. Esta, guarda os dados e representa o comportamento comum a
         todos os posts. Depois para cada tipo de post considerado, questão ou
         resposta, foi criada uma classe que extende \textbf{Post}, adicionando
-        os dados unicos a este tipo.
+        os dados únicos deste tipo.
         \paragraph{Post}
             \begin{multicols}{3}
             \begin{itemize}
@@ -97,16 +97,15 @@
             \begin{itemize}
                 \item Número de comentários
                 \item Id da questão a que responde
-                \item Referência da questão a que responde
+                \item Questão a que responde
             \end{itemize}
             \end{multicols}
 
     Além dos dados fornecidos diretamente pelos ficheiros xml, decidimos também
     guardar na \textbf{questão} a lista das \textbf{respostas} de cada questão,
     bem como uma contagem destas. Na \textbf{resposta}, inversamente, guardamos
-    uma referência para a pergunta a que esta responde. Com estas informações
-    extra as pesquisas que envolvem relacionar estas duas entidades tornam-se
-    muito mais eficientes.
+    a questão a que esta responde. Com estas informações extra, as pesquisas 
+    que envolvem relacionar estas duas entidades tornam-se muito mais eficientes.
 
     \begin{figure}[h]
         \centering
@@ -137,14 +136,14 @@
     (para determinar os utilizadores mais ativos de forma mais rápida) e a lista
     destes para permitir pesquisas mais rápidas.
 
-    Esta lista de posts faz uso de uma das \ref{sec:collections}{duas colleções}
-    concebidas para resolver os problemas prostos. Neste caso em particular uma
-    lista ligada ordenada por data. Devido à forma quase ordenada em que os
-    posts surgem no xml esta ordenação é facilmente mantida.
+    Esta lista de posts faz uso de uma coleção concebida para resolver os 
+    problemas propostos. Neste caso em particular, uma lista ligada ordenada 
+    por data. Devido à forma quase ordenada em que os posts surgem no xml esta
+    ordenação é facilmente mantida.
 
 
 \chapter{Estruturas de Dados}
-    \section{Hashtables}
+    \section{Maps}
         Todas as entidades são armazenadas numa tabela de hash pois para todas
         são necessárias pesquisas por id (ou nome no caso das tags).
 
@@ -154,19 +153,19 @@
         tags e para responder à query 11 é necessário obter os ids das mesmas.
 
     \section{Calendário}
-        Para ser possivel manter as questões e respostas ordenadas por data foi
+        Para ser possível manter as questões e respostas ordenadas por data foi
         concebida uma estrutura à qual demos o nome de \textbf{Calendário} que
         permite acessos em tempo constante $O(1)$ a todos os elementos
-        associados a uma determinada data. Mantemos assim duas instâncias desta
-        na \textbf{Community}, uma para perguntas e outra para respostas.
+        associados a uma determinada data. Mantemos assim duas instâncias desta 
+        estrutura na \textbf{Community}, uma para perguntas e outra para respostas.
 
-        Para que esta estrutura fosse generica criamos também uma interface
+        Para que esta estrutura fosse genérica criamos também uma interface
         \textbf{Chronological} que tem de ser implementada pelos elementos
         que são adicionandos à estrutura. Esta interface obriga à implementação
-        do metodo \mintinline{java}{LocalDateTime getDate()} para estes possam
-        ser guardados no lugar correto.
+        do método \mintinline{java}{LocalDateTime getDate()} para que estes possam
+        ser guardados de forma ordenada.
 
-        Assim esta estrutura permite:
+        Assim, esta estrutura permite:
         \begin{itemize}
                 \item Guardar qualquer objeto desde que seja
                       passada uma data associada ao mesmo.
@@ -175,22 +174,22 @@
                       ordem dos argumentos.
         \end{itemize}
 
-        Para utilizar os metodos de iteração é necessário, para além do
+        Para utilizar os métodos de iteração, é necessário, para além do
         intervalo de tempo, passar um \textit{Predicate} que é uma classe que
-        implemente a interface funcional do mesmo nome. Esta define um metodo
+        implementa a interface funcional do mesmo nome. Esta, define um método
         que será aplicado a todos os elementos do \textbf{Calendario} por ordem
-        cronologica, inversa ou não dependendo da ordem em que as datas são
+        cronológica, inversa ou não, dependendo da ordem em que as datas são
         passadas para definir o intervalo.
-        % TODO rever
+
         A estrutura em si consiste num \mintinline{java}{Map} que associa a cada
-        data uma lista ordenada dos elementos desse dia.
+        data uma lista ordenada dos elementos desse data.
 
         A utilização de listas ligadas para guardar os elementos de um dia é
-        mais eficiente, pois é necessário fazer inserções ordenadas, que são, em
-        quase todos os casos, feitas à cabeça devido aos posts serem inseridos
-        quase cronologicamente. Caso não ouvesse esta certeza poderiam ser
-        substituidas por um \mintinline{java}{TreeSet} para que as inserções
-        serem no pior caso $O(log(N))$.
+        mais eficiente, pois é necessário fazer inserções de forma ordenada, 
+        que são, em quase todos os casos, feitas à cabeça devido aos posts serem
+        inseridos quase cronologicamente. Caso não ouvesse esta certeza, estas 
+        poderiam ser substituídas por um \mintinline{java}{TreeSet} para que 
+        as inserções fossem no pior caso $O(log(N))$.
 
     \section{Community}
     Para armazenar as entidades descritas acima foi implementada uma classe
@@ -207,8 +206,8 @@
     Foi necessário desenvolver um novo tipo de lista para satisfazer as
     necessidades de algumas estruturas.
     Esta lista extende \mintinline{java}{LinkedList} adicionando a noção de
-    ordem. Para que seja eficiente esta deve ser usada quando a maior parte
-    das inserções forem feitas à cabeça ou cauda da lista. Opcionalmente
+    ordem. Para que seja eficiente, esta deve ser usada quando a maior parte
+    das inserções forem feitas à cabeça ou na cauda da lista. Opcionalmente,
     esta pode também ter um tamanho máximo.
 
     \section{Arquitetura}
@@ -226,16 +225,16 @@
 \chapter{Modelo MVC e Encapsulamento}
     A arquitetura de packages desenvolvida é a seguinte:
     \begin{itemize}
-        \item \textbf{common} Onde estão definidas as classes utilitarias.
+        \item \textbf{common} Onde estão definidas as classes utilitárias.
         \item \textbf{engine} Onde está definido o modelo.
         \item \textbf{view} Onde está definida a view.
         \item \textbf{li3} Onde está definido o controlador.
     \end{itemize}
-    Devido ao uso de packages todas as classes que seja publicas para fora da
-    package não tem metodos publicos que permitam alterar o seu estado interno.
-    Desta forma todos os objectos aparecem imutaveis para o exterior.
+    Devido ao uso de packages todas as classes que sejam públicas para fora da
+    package, não têm métodos públicos que permitam alterar o seu estado interno.
+    Desta forma, todos os objetos aparecem imutáveis para o exterior.
 
-    A \textbf{view} define os metodos para interagir com o utilzador.
+    A \textbf{view} define os métodos para interagir com o utilzador.
 
     O \textbf{engine} ou \textit{Modelo} define as operações que se podem
     ser realizadas sobre os dados.
@@ -285,22 +284,22 @@
     A resolução da query 11 tem quatro fases. A primera consiste em obter o top
     N utilizadores (baseado na reputação destes) para para obter os posts
     destes.
-    Depois, usando um \mintinline{java}{Map} conta-se a occurencia de cada
-    \textbf{Tag} nos posts dos utilizadores obtidos. Na terceira fase do
-    problema colocam-se as tags numa \textit{PriorityQueue} que para que a
-    remoção destas seja ordenada por occurencia, que é a ultima fase, para cada
-    uma das \textbf{Tag} removida é adicionando o id desta à lista que será
+    Depois, usando um \mintinline{java}{Map} conta-se a ocorrência de cada
+    \textbf{Tag} nas questões dos utilizadores obtidos. Na terceira fase do
+    problema, colocam-se as tags numa \textit{PriorityQueue} para que a
+    remoção destas seja ordenada por ocorrência, e numa última fase, para cada
+    uma das \textbf{Tags} removidas, é adicionado o id desta à lista que será
     retornada.
 
 \chapter{Comparação com a versão em C}
-    Em termos de eficiencia uma linguagem nativa como C é muito mais rapida a
-    executar as queries. Isto notou-se, especialmente, na query 8 na qual era
+    Em termos de eficiência uma linguagem nativa como C é muito mais rápida a
+    executar as queries. Isto notou-se, essencialmente, na query 8 na qual era
     necessário filtrar \textbf{questões} que continham uma dada palavra.
     %TODO meter aqui tempos para comparar
 
-    Em termos de facilidade de debug e desenvolvimento do código Java é muito
-    mais simples apesar de não ser uma comparação justa visto que, tendo o
-    trabalho feito em C de forma estruturada muitos dos possiveis erros já foram
+    Em termos de facilidade de debug e desenvolvimento, o código Java é muito
+    mais simples, apesar de não ser uma comparação justa, visto que, tendo o
+    trabalho feito em C de forma estruturada, muitos dos possíveis erros já foram
     evitados.
 
 \chapter{Conclusões e Trabalho Futuro}
