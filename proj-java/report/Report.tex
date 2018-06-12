@@ -154,7 +154,7 @@
         tags e para responder à query 11 é necessário obter os ids das mesmas.
 
     \section{Calendário}
-        Para ser possivel manter as questões e respostas ordenadas por data
+        Para ser possivel manter as questões e respostas ordenadas por data foi
         concebida uma estrutura à qual demos o nome de \textbf{Calendário} que
         permite acessos em tempo constante $O(1)$ a todos os elementos
         associados a uma determinada data. Mantemos assim duas instâncias desta
@@ -182,65 +182,34 @@
         cronologica, inversa ou não dependendo da ordem em que as datas são
         passadas para definir o intervalo.
         % TODO rever
-        A estrutura em si consiste numa matriz de quatro dimensões com um lista
-        ligada em cada célula desta.
+        A estrutura em si consiste num \mintinline{java}{Map} que associa a cada
+        data uma lista ordenada dos elementos desse dia.
 
-        No primeiro nível temos um \textit{Map} de \textbf{anos} em que cada ano
-        está associado ao respetivo numero. Cada um destes, é constituído por
-        uma lista de \textbf{meses} que são constituídos por uma lista de
-        \textbf{dias}, cujo tamanho varia entre 29 e 31. Cada \textbf{dia} é
-        constituido por 24 \textbf{horas}, e cada uma destas é constituida por
-        uma lista ligada de elementos ordenada por data.
-
-        Todas as listas acima referenciadas no paragrafo anterior, tirando a
-        lista ligada de elementos, são listas de tamanho fixo desenvolvidas por
-        nos %TODO rever
-        para que, ao contrario das implementações de \textit{List}
-        disponibilizadas por defeito, permite espaços vazios. Isto é importante
-        porque, por exemplo, há horas em que não há posts e não temos assim de
-        gastar memoria a criar uma instância de \mintinline{java}{Hour} se esta
-        vai estar vazia.
-
-        A utilização de uma lista ligada para guardar os elementos de uma hora é
+        A utilização de listas ligadas para guardar os elementos de um dia é
         mais eficiente, pois é necessário fazer inserções ordenadas, que são, em
         quase todos os casos, feitas à cabeça devido aos posts serem inseridos
-        quase cronologicamente.
-
-        Para melhor visualizar esta estrutura, ver Figura \ref{fig:calendario}.
+        quase cronologicamente. Caso não ouvesse esta certeza poderiam ser
+        substituidas por um \mintinline{java}{TreeSet} para que as inserções
+        serem no pior caso $O(log(N))$.
 
     \section{Community}
     Para armazenar as entidades descritas acima foi implementada uma classe
     chamada \textbf{Community} que as armazena de forma a mais tarde facilitar
     as queries que terão de ser feitas sobre estas.
 
-    \begin{figure}[h]
+    \begin{figure}[H]
         \centering
         \includegraphics[width=0.7\textwidth]{./images/Community.png}
         \caption{Community}
     \end{figure}
 
-    \begin{figure}[h]
-        \centering
-        \includegraphics[width=\textwidth]{./images/Calendario.png}
-        \caption{Hierarquia formada pelos posts}
-        \label{fig:calendario}
-    \end{figure}
-
-    \section{Colections}
-    Foi necessário desenvolver dois novos tipos de lista para satisfazer as
+    \section{SortedLinkedList}
+    Foi necessário desenvolver um novo tipo de lista para satisfazer as
     necessidades de algumas estruturas.
-
-        \subsection{\textit{FixedSizeList}}
-        Esta lista serve como um wraper para a implementação predefinida
-        \mintinline{java}{ArrayList} para que permita adicionar elementos
-        em qualquer indice da lista desde que dentro do tamanho maximo definido
-        quando uma instância é criada.
-
-        \subsection{\textit{SortedLinkedList}}
-        Esta lista extende \mintinline{java}{LinkedList} adicionando a noção de
-        ordem. Para que seja eficiente esta deve ser usada quando a maior parte
-        das inserções forem feitas à cabeça ou cauda da lista. Opcionalmente
-        esta pode também ter um tamanho máximo.
+    Esta lista extende \mintinline{java}{LinkedList} adicionando a noção de
+    ordem. Para que seja eficiente esta deve ser usada quando a maior parte
+    das inserções forem feitas à cabeça ou cauda da lista. Opcionalmente
+    esta pode também ter um tamanho máximo.
 
     \section{Arquitetura}
     Todas estas classes formam a nossa arquitetura que pode ser vista de forma
