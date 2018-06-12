@@ -46,6 +46,7 @@ public class Controller {
                 case 3:
                     getDumpPath(args);
                     pickQuery();
+                    break;
                 default:
                     keepGoing = false;
             }
@@ -181,7 +182,7 @@ public class Controller {
                             break;
                     }
                 }catch(NumberFormatException | DateTimeParseException e){
-                    e.printStackTrace();
+                    this.view.apresentarErro("Parametro invalido: ", e.getMessage());
                 }
                 this.view.requestContinue();
             }else{

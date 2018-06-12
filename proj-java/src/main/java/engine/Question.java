@@ -18,11 +18,11 @@ public class Question extends Post {
     private final String tags;
     /** Lista das respostas da questão. */
     private final LinkedList<Answer> answers;
-    /** TODO */
+    /** Ultima data passada ao metodo {@code getAnswerCountBetweenDate} para definir o inicio do intervalo */
     private LocalDate cachedFrom;
-    /** TODO */
+    /** Ultima data passada ao metodo {@code getAnswerCountBetweenDate} para definir o fim do intervalo */
     private LocalDate cachedTo;
-    /** TODO */
+    /** Ultima contagem feita pelo metodo {@code getAnswerCountBetweenDate} */
     private int answerCountBetweenDates;
 
     /**
