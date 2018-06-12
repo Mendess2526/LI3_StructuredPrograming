@@ -14,17 +14,17 @@ import static view.View.UNDERLINE;
  */
 public class Menu implements Screen<Integer> {
 
-    /** Menu name */
+    /** Menu name. */
     private final String name;
-    /** List of options of the menu */
+    /** Lista de opções do menu. */
     private final List<String> options;
-    /** Selected option */
+    /** Opção selecionada. */
     private int op;
 
     /**
-     * Constructor for objects of class Menu
-     * @param name    Name of the menu
-     * @param options List of options from which to pick
+     * Cria um menu.
+     * @param name    Nome do menu.
+     * @param options Lista das opções que pode escolher.
      */
     Menu(String name, List<String> options){
         this.name = name;
@@ -46,7 +46,7 @@ public class Menu implements Screen<Integer> {
     }
 
     /**
-     * Shows the menu
+     * Imprime o menu.
      */
     private void showMenu(){
         clearScreen();
@@ -60,7 +60,7 @@ public class Menu implements Screen<Integer> {
     }
 
     /**
-     * Clears the screen
+     * Limpa o ecrã.
      */
     private void clearScreen(){
         if(System.getProperty("os.name").equals("Linux")){
@@ -74,8 +74,8 @@ public class Menu implements Screen<Integer> {
     }
 
     /**
-     * Reads the users option
-     * @return reads an option
+     * Lê a opção escolhida.
+     * @return A opção escolhida.
      */
     private int readOption(){
         int op;

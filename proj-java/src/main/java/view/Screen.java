@@ -1,19 +1,19 @@
 package view;
 
 /**
- * Defines a Screen where T is the type of results
- * @param <T> The return type
+ * Interface que define um ecrã onde T é o tipo dos resultados.
+ * @param <T> Tipo dos elementos.
  */
 public interface Screen<T> {
 
     /**
-     * Runs the screen and presents the screen
+     * Corre e apresenta o ecrã.
      */
     Screen execute();
 
     /**
-     * Returns the results of executing the screen
-     * @return The results of executing the screen
+     * Retorna os resultados de executar o ecrã.
+     * @return Os resultados de executar o ecrã.
      */
     T getResult();
 }

@@ -5,23 +5,41 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
+/**
+ * Lista ligada ordenada.
+ * @param <T> Tipo dos elementos guardados.
+ */
 public class SortedLinkedList<T> extends LinkedList<T>{
-
+    /** Tamanho máximo da lista. */
     private final int maxSize;
+    /** Comparador dos elementos. */
     private final Comparator<T> c;
 
+    /**
+     * Cria uma lista ligada ordenada.
+     * @param c Comparador para ordenar a lista.
+     */
     public SortedLinkedList(Comparator<T> c){
         super();
         this.c = c;
         this.maxSize = -1;
     }
 
+    /**
+     * Cria uma lista ligada ordenada com tamanho máximo.
+     * @param c Comparador para ordenar a lista
+     * @param maxSize Tamanho máximo da lista.
+     */
     public SortedLinkedList(Comparator<T> c, int maxSize){
         super();
         this.c = c;
         this.maxSize = maxSize;
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean add(T t){
         if(this.size() == 0)
@@ -36,6 +54,10 @@ public class SortedLinkedList<T> extends LinkedList<T>{
         return true;
     }
 
+    /**
+     * Adiciona um elemento começando pelo fim da lista.
+     * @param o Elemento a adicionar.
+     */
     public void addLast(T o){
         if(this.maxSize != -1) throw new UnsupportedOperationException();
         if(this.size() == 0){
@@ -46,7 +68,7 @@ public class SortedLinkedList<T> extends LinkedList<T>{
         boolean inserted = false;
         while(!inserted && it.hasPrevious()){
             T t = it.previous();
-            if(c.compare(o,t) > 0){
+            if(this.c.compare(o,t) > 0){
                 it.next();
                 it.add(o);
                 inserted = true;
@@ -55,6 +77,10 @@ public class SortedLinkedList<T> extends LinkedList<T>{
         if(!inserted) it.add(o);
     }
 
+    /**
+     * Adiciona um elemento começando pelo início da lista.
+     * @param o Elemento a adicionar.
+     */
     public void addFirst(T o){
         if(this.size() == 0){
             super.add(o);
@@ -75,6 +101,10 @@ public class SortedLinkedList<T> extends LinkedList<T>{
         if(max > 0) it.add(o);
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean addAll(Collection<? extends T> c){
         for(T t: c) this.add(t);

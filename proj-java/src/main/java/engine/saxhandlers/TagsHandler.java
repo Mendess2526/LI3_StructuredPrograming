@@ -14,6 +14,9 @@ public class TagsHandler extends DefaultHandler {
         this.com = com;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException{
         super.startElement(uri, localName, qName, attributes);

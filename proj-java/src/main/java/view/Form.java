@@ -2,19 +2,23 @@ package view;
 
 import java.util.*;
 
+
+/**
+ * Classe que define um formulário.
+ */
 class Form implements Screen<List<String>> {
 
-    /** The name of the menu */
+    /** Nome do menu. */
     private final String name;
-    /** The field of the form */
+    /** Campos do formulário. */
     private final List<String> fields;
-    /** The answers to the form */
+    /** Respostas do formulário. */
     private final List<String> answers;
 
     /**
-     * The Form constructor
-     * @param name The form's name
-     * @param fields The form's fields
+     * Cria um formulário.
+     * @param name O nome do formulário.
+     * @param fields Os campos do formulário.
      */
     Form(String name, List<String> fields){
         this.name = name;
@@ -22,7 +26,10 @@ class Form implements Screen<List<String>> {
         this.answers = new ArrayList<>();
     }
 
-    /** {@inheritDoc} */
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Form execute(){
         System.out.println("**** " + this.name + " ****");
@@ -34,7 +41,10 @@ class Form implements Screen<List<String>> {
         return this;
     }
 
-    /** {@inheritDoc} */
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> getResult(){
         return new ArrayList<>(this.answers);
