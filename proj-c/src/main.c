@@ -65,12 +65,16 @@ int main(int argc, const char** argv){
 
     TAD_community com = init();
 
+    clock_t start, finish;
 #if USING_DUMMY
     printf(GREEN"Using dummy values\n"RESET);
 #endif
 
 #if !USING_DUMMY
+    start = clock();
     com = load(com, folder);
+    finish = clock();
+    printf("%ld ms\n", (finish - start)/1000);
 #endif
 
     free(folder);
@@ -130,14 +134,13 @@ int main(int argc, const char** argv){
 #endif
 
     Date begin, end;
-    clock_t start, finish;
 
     printf("%sQUERY  1:%s Info from Post\n", BLUE, RESET);
     printf("%sParams [801049]%s\n", GREEN, RESET);
     start = clock();
     printAndDestroyStrPair(info_from_post(com, 801049));
     finish = clock();
-    printf("%ld ms\n", (finish - start));
+    printf("%ld ms\n", (finish - start)/1000);
     printf("%sParams [796430]%s\n", GREEN, RESET);
     printAndDestroyStrPair(info_from_post(com, 796430));
 
@@ -146,7 +149,7 @@ int main(int argc, const char** argv){
     start = clock();
     printAndDestroyLongList(top_most_active(com, 10));
     finish = clock();
-    printf("%ld ms\n", (finish - start));
+    printf("%ld ms\n", (finish - start)/1000);
     printf("\t%sParams [100]%s\n", GREEN, RESET);
     printAndDestroyLongList(top_most_active(com, 100));
 
@@ -157,7 +160,7 @@ int main(int argc, const char** argv){
     start = clock();
     printAndDestroyLongPair(total_posts(com, begin, end));
     finish = clock();
-    printf("%ld ms\n", (finish - start));
+    printf("%ld ms\n", (finish - start)/1000);
     free_date(begin);
     free_date(end);
     printf("\t%sParams [1/1/2014, 30/12/2014]%s\n", GREEN, RESET);
@@ -176,7 +179,7 @@ int main(int argc, const char** argv){
     printAndDestroyLongList(
             questions_with_tag(com, "package-management", begin, end));
     finish = clock();
-    printf("%ld ms\n", (finish - start));
+    printf("%ld ms\n", (finish - start)/1000);
     free_date(begin);
     free_date(end);
     printf("\t%sParams [nautilus, 1/1/2014, 31/1/2014]%s\n", GREEN, RESET);
@@ -191,7 +194,7 @@ int main(int argc, const char** argv){
     start = clock();
     printAndDestroyUser(get_user_info(com, 15811));
     finish = clock();
-    printf("%ld ms\n", (finish - start));
+    printf("%ld ms\n", (finish - start)/1000);
     printf("\t%sParams [449]%s\n", GREEN, RESET);
     printAndDestroyUser(get_user_info(com, 449));
 
@@ -202,7 +205,7 @@ int main(int argc, const char** argv){
     start = clock();
     printAndDestroyLongList(most_voted_answers(com, 5, begin, end));
     finish = clock();
-    printf("%ld ms\n", (finish - start));
+    printf("%ld ms\n", (finish - start)/1000);
     free_date(begin);
     free_date(end);
     printf("\t%sParams [50, 1/5/2013, 6/5/2013]%s\n", GREEN, RESET);
@@ -219,7 +222,7 @@ int main(int argc, const char** argv){
     start = clock();
     printAndDestroyLongList(most_answered_questions(com, 10, begin, end));
     finish = clock();
-    printf("%ld ms\n", (finish - start));
+    printf("%ld ms\n", (finish - start)/1000);
     free_date(begin);
     free_date(end);
     printf("\t%sParams [100, 1/1/2012, 31/12/2012]%s\n", GREEN, RESET);
@@ -234,7 +237,7 @@ int main(int argc, const char** argv){
     start = clock();
     printAndDestroyLongList(contains_word(com, "kde", 10));
     finish = clock();
-    printf("%ld ms\n", (finish - start));
+    printf("%ld ms\n", (finish - start)/1000);
     printf("\t%sParams [glib, 10]%s\n", GREEN, RESET);
     printAndDestroyLongList(contains_word(com, "glib", 10));
 
@@ -243,7 +246,7 @@ int main(int argc, const char** argv){
     start = clock();
     printAndDestroyLongList(both_participated(com, 87, 5691, 10));
     finish = clock();
-    printf("%ld ms\n", (finish - start));
+    printf("%ld ms\n", (finish - start)/1000);
     printf("\t%sParams [253, 455, 5]%s\n", GREEN, RESET);
     printAndDestroyLongList(both_participated(com, 253, 455, 5));
 
@@ -252,7 +255,7 @@ int main(int argc, const char** argv){
     start = clock();
     printf("Better answer: %ld\n", better_answer(com, 30334));
     finish = clock();
-    printf("%ld ms\n", (finish - start));
+    printf("%ld ms\n", (finish - start)/1000);
     printf("\t%sParams [5942]%s\n", GREEN, RESET);
     printf("Better answer: %ld\n", better_answer(com, 5942));
 
@@ -263,7 +266,7 @@ int main(int argc, const char** argv){
     start = clock();
     printAndDestroyLongList(most_used_best_rep(com, 5, begin, end));
     finish = clock();
-    printf("%ld ms\n", (finish - start));
+    printf("%ld ms\n", (finish - start)/1000);
     free_date(begin);
     free_date(end);
     printf("\t%sParams [10, 1/1/2014, 31/12/2014]%s\n", GREEN, RESET);

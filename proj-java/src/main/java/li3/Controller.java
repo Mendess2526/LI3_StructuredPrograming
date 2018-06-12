@@ -306,7 +306,7 @@ public class Controller {
     }
 
     private InputOutputTime<Long,Object, List<Long>> runQuery11(){
-        return runQuery11(15, LocalDate.of(2013, Month.NOVEMBER, 1), LocalDate.of(2013, Month.NOVEMBER, 30));
+        return runQuery11(5, LocalDate.of(2013, Month.NOVEMBER, 1), LocalDate.of(2013, Month.NOVEMBER, 30));
     }
 
     private InputOutputTime<Long,Object, List<Long>> runQuery11(int n, LocalDate begin, LocalDate end){
