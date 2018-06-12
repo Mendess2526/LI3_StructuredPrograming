@@ -206,6 +206,7 @@
     \end{figure}
 
     \section{SortedLinkedList}
+    \label{sec:sortedLinkedList}
     Foi necessário desenvolver um novo tipo de lista para satisfazer as
     necessidades de algumas estruturas.
     Esta lista extende \mintinline{java}{LinkedList} adicionando a noção de
@@ -244,6 +245,12 @@
 
     A package \textbf{li3} tem o controlador que faz a comunicação entre os
     pedidos do utilizador e as operações do modelo.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=\textwidth]{./images/Top-LevelPackage.png}
+        \caption{Diagrama MVC}
+    \end{figure}
 
 \chapter{Modularização Funcional e Resolução das queries}
     Para aceder aos dados da estrutura principal foi definida uma API
@@ -296,9 +303,15 @@
 
 \chapter{Comparação com a versão em C}
     Em termos de eficiência uma linguagem nativa como C é muito mais rápida a
-    executar as queries. Isto notou-se, essencialmente, na query 8 na qual era
-    necessário filtrar \textbf{questões} que continham uma dada palavra.
+    executar as queries. Isto notou-se, essencialmente, no parsing.
     %TODO meter aqui tempos para comparar
+
+    A estrutura que sofreu mais alterações foi o Calendario, inicialmente
+    transpilamos o codigo para Java, mantendo a matriz de quatro dimemensões.
+    No entanto, quando testamos os tempos das queries verificamos que esta
+    não era de forma alguma eficiente, visto que demorava 8000 ms a calcular
+    o resultado da query 8. Para resolver este problema desenvolvemos uma
+    solução que, no fim, se mostrou relativamente simples.
 
     Em termos de facilidade de debug e desenvolvimento, o código Java é muito
     mais simples, apesar de não ser uma comparação justa, visto que, tendo o
