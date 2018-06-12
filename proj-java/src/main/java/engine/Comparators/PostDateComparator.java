@@ -1,11 +1,13 @@
-package engine;
+package engine.Comparators;
+
+import engine.Post;
 
 import java.util.Comparator;
 
 /**
  * Comparador da data dos posts.
  */
-class PostDateComparator implements Comparator<Post> {
+public class PostDateComparator implements Comparator<Post> {
 
 
     /**

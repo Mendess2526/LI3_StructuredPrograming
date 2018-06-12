@@ -1,11 +1,13 @@
-package engine;
+package engine.Comparators;
+
+import engine.Answer;
 
 import java.util.Comparator;
 
 /**
  * Comparador do score das respostas.
  */
-class AnswerScoreComparator implements Comparator<Answer> {
+public class AnswerScoreComparator implements Comparator<Answer> {
 
 
     /**

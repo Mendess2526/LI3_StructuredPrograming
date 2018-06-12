@@ -2,6 +2,10 @@ package engine;
 
 
 import common.Pair;
+import engine.Comparators.AnswerScoreComparator;
+import engine.Comparators.QuestionAnswerCountComparator;
+import engine.Comparators.UserPostCountComparator;
+import engine.Comparators.UserReputationComparator;
 import li3.TADCommunity;
 
 import java.time.LocalDate;
@@ -95,8 +99,10 @@ public class TCD implements TADCommunity {
     @Override
     public List<Long> mostAnsweredQuestions(int N, LocalDate begin, LocalDate end){
         List<Question> questions = this.com.getSortedQuestionList(
-                begin, end,
-                comparingInt((Question q) -> q.getAnswerCountBetweenDate(begin, end)).reversed(), N);
+                begin,
+                end,
+                new QuestionAnswerCountComparator(begin, end),
+                N);
         return idsFromPosts(questions, N);
     }
 

@@ -1,11 +1,13 @@
-package engine;
+package engine.Comparators;
+
+import engine.User;
 
 import java.util.Comparator;
 
 /**
  * Comparador da reputação dos users.
  */
-class UserReputationComparator implements Comparator<User> {
+public class UserReputationComparator implements Comparator<User> {
 
     /**
      * {@inheritDoc}

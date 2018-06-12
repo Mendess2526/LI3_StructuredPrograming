@@ -1,11 +1,13 @@
-package engine;
+package engine.Comparators;
+
+import engine.User;
 
 import java.util.Comparator;
 
 /**
  * Comparador do número de posts dos users.
  */
-class UserPostCountComparator implements Comparator<User>{
+public class UserPostCountComparator implements Comparator<User>{
 
     /**
      * {@inheritDoc}
