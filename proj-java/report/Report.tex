@@ -71,11 +71,11 @@
     as seguintes entidades:
 
     \section{Posts}
-        Para representar um \textbf{Post} criamos a classe abstrata
-        do mesmo nome. Esta, guarda os dados e representa o comportamento comum a
-        todos os posts. Depois para cada tipo de post considerado, questão ou
-        resposta, foi criada uma classe que extende \textbf{Post}, adicionando
-        os dados únicos deste tipo.
+    Para representar um \textbf{Post} criamos a classe abstrata
+    do mesmo nome. Esta, guarda os dados e representa o comportamento
+    comum a todos os posts. Depois para cada tipo de post considerado, questão
+    ou resposta, foi criada uma classe que extende \textbf{Post}, adicionando
+    os dados únicos deste tipo.
         \paragraph{Post}
             \begin{multicols}{3}
             \begin{itemize}
@@ -104,22 +104,11 @@
     Além dos dados fornecidos diretamente pelos ficheiros xml, decidimos também
     guardar na \textbf{questão} a lista das \textbf{respostas} de cada questão,
     bem como uma contagem destas. Na \textbf{resposta}, inversamente, guardamos
-    a questão a que esta responde. Com estas informações extra, as pesquisas 
-    que envolvem relacionar estas duas entidades tornam-se muito mais eficientes.
-
-    \begin{figure}[h]
-        \centering
-        \includegraphics[width=0.71\textwidth]{./images/PostHierarchy.png}
-        \caption{Hierarquia formada pelos posts}
-    \end{figure}
+    a questão a que esta responde. Com estas informações extra, as pesquisas
+    que envolvem relacionar estas duas entidades tornam-se muito mais
+    eficientes.
 
     \section{Utilizadores}
-
-    \begin{wrapfigure}{r}{0.4\textwidth}
-        \includegraphics[width=0.4\textwidth]{./images/User.png}
-        \caption{Hierarquia formada pelos posts}
-    \end{wrapfigure}
-
     Para representar os \textbf{utilizadores} guardamos os seguintes atributos:
     \begin{multicols}{2}
     \begin{itemize}
@@ -136,10 +125,23 @@
     (para determinar os utilizadores mais ativos de forma mais rápida) e a lista
     destes para permitir pesquisas mais rápidas.
 
-    Esta lista de posts faz uso de uma coleção concebida para resolver os 
-    problemas propostos. Neste caso em particular, uma lista ligada ordenada 
+    Esta lista de posts faz uso de uma coleção concebida para resolver os
+    problemas propostos. Neste caso em particular, uma lista ligada ordenada
     por data. Devido à forma quase ordenada em que os posts surgem no xml esta
     ordenação é facilmente mantida.
+
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[height=0.4\textheight]{./images/PostHierarchy.png}
+        \caption{Hierarquia formada pelos posts}
+    \end{figure}
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.4\textheight]{./images/User.png}
+        \caption{Classe do utilizador}
+    \end{figure}
 
 
 \chapter{Estruturas de Dados}
@@ -156,14 +158,15 @@
         Para ser possível manter as questões e respostas ordenadas por data foi
         concebida uma estrutura à qual demos o nome de \textbf{Calendário} que
         permite acessos em tempo constante $O(1)$ a todos os elementos
-        associados a uma determinada data. Mantemos assim duas instâncias desta 
-        estrutura na \textbf{Community}, uma para perguntas e outra para respostas.
+        associados a uma determinada data. Mantemos assim duas instâncias desta
+        estrutura na \textbf{Community}, uma para perguntas e outra para
+        respostas.
 
         Para que esta estrutura fosse genérica criamos também uma interface
         \textbf{Chronological} que tem de ser implementada pelos elementos
         que são adicionandos à estrutura. Esta interface obriga à implementação
-        do método \mintinline{java}{LocalDateTime getDate()} para que estes possam
-        ser guardados de forma ordenada.
+        do método \mintinline{java}{LocalDateTime getDate()} para que estes
+        possam ser guardados de forma ordenada.
 
         Assim, esta estrutura permite:
         \begin{itemize}
@@ -185,10 +188,10 @@
         data uma lista ordenada dos elementos desse data.
 
         A utilização de listas ligadas para guardar os elementos de um dia é
-        mais eficiente, pois é necessário fazer inserções de forma ordenada, 
+        mais eficiente, pois é necessário fazer inserções de forma ordenada,
         que são, em quase todos os casos, feitas à cabeça devido aos posts serem
-        inseridos quase cronologicamente. Caso não ouvesse esta certeza, estas 
-        poderiam ser substituídas por um \mintinline{java}{TreeSet} para que 
+        inseridos quase cronologicamente. Caso não ouvesse esta certeza, estas
+        poderiam ser substituídas por um \mintinline{java}{TreeSet} para que
         as inserções fossem no pior caso $O(log(N))$.
 
     \section{Community}
@@ -198,7 +201,7 @@
 
     \begin{figure}[H]
         \centering
-        \includegraphics[width=0.7\textwidth]{./images/Community.png}
+        \includegraphics[width=\textwidth]{./images/Community.png}
         \caption{Community}
     \end{figure}
 
@@ -238,7 +241,7 @@
 
     O \textbf{engine} ou \textit{Modelo} define as operações que se podem
     ser realizadas sobre os dados.
-    
+
     A package \textbf{li3} tem o controlador que faz a comunicação entre os
     pedidos do utilizador e as operações do modelo.
 
@@ -299,8 +302,8 @@
 
     Em termos de facilidade de debug e desenvolvimento, o código Java é muito
     mais simples, apesar de não ser uma comparação justa, visto que, tendo o
-    trabalho feito em C de forma estruturada, muitos dos possíveis erros já foram
-    evitados.
+    trabalho feito em C de forma estruturada, muitos dos possíveis erros já
+    foram evitados.
 
 \chapter{Conclusões e Trabalho Futuro}
     Em suma, o grupo considera que o trabalho foi realizado na sua
