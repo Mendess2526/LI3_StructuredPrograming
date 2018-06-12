@@ -5,12 +5,19 @@ import engine.collections.SortedLinkedList;
 
 import java.util.ArrayList;
 
+/**
+ * Classe que define um user.
+ */
 public class User {
-
+    /** Reputação do user. */
     private final int reputation;
+    /** Id do user. */
     private final long id;
+    /** Nome do user. */
     private final String name;
+    /** Biografia do user. */
     private final String bio;
+    /** Lista de posts do user. */
     private final SortedLinkedList<Post> posts;
 
     /**
@@ -84,6 +91,10 @@ public class User {
         posts.addLast(post);
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString(){
         return "User{" +
