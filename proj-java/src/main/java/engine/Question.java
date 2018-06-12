@@ -5,13 +5,23 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
+/**
+ * Classe que define uma questão.
+ */
 public class Question extends Post{
+    /** Número de respostas da questão. */
     private final int answerCount;
+    /** Título da questão. */
     private final String title;
+    /** Tags da questão. */
     private final String tags;
+    /** Lista das respostas da questão. */
     private final LinkedList<Answer> answers;
+    /** TODO */
     private LocalDate cachedFrom;
+    /** TODO */
     private LocalDate cachedTo;
+    /** TODO */
     private int answerCountBetweenDates;
 
     /**
@@ -66,7 +76,7 @@ public class Question extends Post{
 
     /**
      * Retorna a lista de respostas da questão.
-     * @return Retorna a lista de respostas da questão.
+     * @return A lista de respostas da questão.
      */
     public List<Answer> getAnswers(){
         return new ArrayList<>(this.answers);
@@ -84,17 +94,16 @@ public class Question extends Post{
     /**
      * Verifica se uma questão tem uma tag.
      * @param tag Uma tag.
-     * @return true se a questão tem a tag, ou false, caso contrário.
+     * @return {@code true} se a questão tem a tag, {@code false} caso contrário.
      */
     public boolean hasTag(String tag){
         return this.tags.contains(tag);
     }
 
     /**
-     * Procura um user nas respostas de uma questão.
-     * @param id O id do user à procura.
-     * @return Uma questão.
+     * {@inheritDoc}
      */
+    @Override
     public Question searchUserInThread(long id){
         if(this.getOwnerId() == id) return this;
         for(Answer a: this.answers) if(a.getOwnerId() == id) return this;
@@ -121,6 +130,9 @@ public class Question extends Post{
         return (this.answerCountBetweenDates = count);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString(){
         return "Question{" +
@@ -131,6 +143,9 @@ public class Question extends Post{
                 '}';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object o){
         if (this == o) return true;
