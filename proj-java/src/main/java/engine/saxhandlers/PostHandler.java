@@ -24,6 +24,9 @@ public class PostHandler extends DefaultHandler {
         NEITHER
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException{
         super.startElement(uri, localName, qName, attributes);
