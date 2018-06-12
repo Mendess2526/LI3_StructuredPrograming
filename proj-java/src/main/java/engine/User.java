@@ -13,6 +13,13 @@ public class User {
     private final String bio;
     private final SortedLinkedList<Post> posts;
 
+    /**
+     * Cria um user.
+     * @param reputation A reputação do user.
+     * @param id O id do user.
+     * @param name O nome do user.
+     * @param bio A biografia do user.
+     */
     public User(int reputation, long id, String name, String bio){
         this.reputation = reputation;
         this.id = id;
@@ -21,30 +28,58 @@ public class User {
         this.posts = new SortedLinkedList<>(new PostDateComparator().reversed());
     }
 
+    /**
+     * Retorna a reputação do user.
+     * @return A reputação do user.
+     */
     public int getReputation(){
         return this.reputation;
     }
 
+    /**
+     * Retorna o número de posts do user.
+     * @return O número de posts do user.
+     */
     public int getNrPosts(){
         return this.posts.size();
     }
 
+    /**
+     * Retorna o id do user.
+     * @return O id do user.
+     */
     public long getId(){
         return this.id;
     }
 
+    /**
+     * Retorna o nome do user.
+     * @return O nome do user.
+     */
     public String getName(){
         return this.name;
     }
 
+    /**
+     * Retorna a biografia do user.
+     * @return A biografia do user.
+     */
     public String getBio(){
         return this.bio;
     }
 
+    /**
+     * Retorna a lista de posts do user.
+     * @return A lista de posts do user.
+     */
     public ArrayList<Post> getPosts(){
         return new ArrayList<>(this.posts);
     }
 
+    /**
+     * Adiciona um post à lista de posts.
+     * @param post Post a adicionar.
+     */
     public void addPost(Post post){
         posts.addLast(post);
     }
