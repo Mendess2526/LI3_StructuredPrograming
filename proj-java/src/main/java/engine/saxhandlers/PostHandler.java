@@ -18,12 +18,6 @@ public class PostHandler extends DefaultHandler {
         this.com = com;
     }
 
-    private enum PostType {
-        QUESTION,
-        ANSWER,
-        NEITHER
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -62,5 +56,11 @@ public class PostHandler extends DefaultHandler {
         if("1".equals(s)) return PostType.QUESTION;
         if("2".equals(s)) return PostType.ANSWER;
         return PostType.NEITHER;
+    }
+
+    private enum PostType {
+        QUESTION,
+        ANSWER,
+        NEITHER
     }
 }

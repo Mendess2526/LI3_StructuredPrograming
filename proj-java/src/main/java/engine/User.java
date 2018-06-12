@@ -1,8 +1,8 @@
 package engine;
 
 
-import engine.Comparators.PostDateComparator;
 import engine.collections.SortedLinkedList;
+import engine.comparators.PostDateComparator;
 
 import java.util.ArrayList;
 
@@ -10,6 +10,7 @@ import java.util.ArrayList;
  * Classe que define um user.
  */
 public class User {
+
     /** Reputação do user. */
     private final int reputation;
     /** Id do user. */
@@ -23,10 +24,11 @@ public class User {
 
     /**
      * Cria um user.
+     *
      * @param reputation A reputação do user.
-     * @param id O id do user.
-     * @param name O nome do user.
-     * @param bio A biografia do user.
+     * @param id         O id do user.
+     * @param name       O nome do user.
+     * @param bio        A biografia do user.
      */
     public User(int reputation, long id, String name, String bio){
         this.reputation = reputation;
@@ -38,6 +40,7 @@ public class User {
 
     /**
      * Retorna a reputação do user.
+     *
      * @return A reputação do user.
      */
     public int getReputation(){
@@ -46,6 +49,7 @@ public class User {
 
     /**
      * Retorna o número de posts do user.
+     *
      * @return O número de posts do user.
      */
     public int getNrPosts(){
@@ -54,6 +58,7 @@ public class User {
 
     /**
      * Retorna o id do user.
+     *
      * @return O id do user.
      */
     public long getId(){
@@ -62,6 +67,7 @@ public class User {
 
     /**
      * Retorna o nome do user.
+     *
      * @return O nome do user.
      */
     public String getName(){
@@ -70,6 +76,7 @@ public class User {
 
     /**
      * Retorna a biografia do user.
+     *
      * @return A biografia do user.
      */
     public String getBio(){
@@ -78,6 +85,7 @@ public class User {
 
     /**
      * Retorna a lista de posts do user.
+     *
      * @return A lista de posts do user.
      */
     public ArrayList<Post> getPosts(){
@@ -86,6 +94,7 @@ public class User {
 
     /**
      * Adiciona um post à lista de posts.
+     *
      * @param post Post a adicionar.
      */
     public void addPost(Post post){
@@ -99,11 +108,11 @@ public class User {
     @Override
     public String toString(){
         return "User{" +
-                "reputation=" + reputation
-                + ", id=" + id
-                + ", name='" + name + '\''
-                + ", bio='" + bio + '\''
-                + ", posts=" + posts
-                + '}';
+               "reputation=" + reputation
+               + ", id=" + id
+               + ", name='" + name + '\''
+               + ", bio='" + bio + '\''
+               + ", posts=" + posts
+               + '}';
     }
 }

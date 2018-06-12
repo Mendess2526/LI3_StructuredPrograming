@@ -8,9 +8,11 @@ import java.util.function.Predicate;
 
 /**
  * Classe que define o calendário.
+ *
  * @param <T> Tipo dos elementos guardados.
  */
 public class Calendario<T extends Chronological> {
+
     /** Anos de um calendário. */
     private final Map<LocalDate,SortedLinkedList<T>> elems;
     private final TreeSet<LocalDate> keys;
@@ -25,6 +27,7 @@ public class Calendario<T extends Chronological> {
 
     /**
      * Adiciona um elemento no calendário.
+     *
      * @param c Elemento a adicionar.
      */
     public void addElem(T c){
@@ -40,8 +43,9 @@ public class Calendario<T extends Chronological> {
 
     /**
      * Itera o calendário dentro de um intervalo de tempo.
-     * @param from A data de início.
-     * @param to A data do fim.
+     *
+     * @param from      A data de início.
+     * @param to        A data do fim.
      * @param predicate Função a aplicar a todos os elementos.
      */
     public void iterate(LocalDate from, LocalDate to, Predicate<T> predicate){
@@ -51,15 +55,16 @@ public class Calendario<T extends Chronological> {
 
     /**
      * Itera sobre os elementos de um calendário por ordem cronológica.
-     * @param from A data de início.
-     * @param to A data do fim.
+     *
+     * @param from      A data de início.
+     * @param to        A data do fim.
      * @param predicate Função a aplicar a todos os elementos.
      */
     private void iterateForward(LocalDate from, LocalDate to, Predicate<T> predicate){
         LocalDate fromK = this.keys.ceiling(from);
         LocalDate toK = this.keys.floor(to);
         NavigableSet<LocalDate> localDates = this.keys.subSet(fromK, true, toK, true);
-        for(LocalDate d: localDates){
+        for(LocalDate d : localDates){
             for(T t : this.elems.get(d)){
                 if(!predicate.test(t)) return;
             }
@@ -68,8 +73,9 @@ public class Calendario<T extends Chronological> {
 
     /**
      * Itera sobre os elementos de um calendário por ordem cronológica inversa.
-     * @param from A data de início.
-     * @param to A data do fim.
+     *
+     * @param from      A data de início.
+     * @param to        A data do fim.
      * @param predicate Função a aplicar a todos os elementos.
      */
     private void iterateBackwards(LocalDate from, LocalDate to, Predicate<T> predicate){
@@ -89,8 +95,9 @@ public class Calendario<T extends Chronological> {
 
     /**
      * Conta o número de elementos do calendário.
+     *
      * @param from A data de início.
-     * @param to A data do fim.
+     * @param to   A data do fim.
      * @return O número de elementos.
      */
     public long countElements(LocalDate from, LocalDate to){
@@ -98,7 +105,7 @@ public class Calendario<T extends Chronological> {
         LocalDate toK = this.keys.floor(to);
         NavigableSet<LocalDate> localDates = this.keys.subSet(fromK, true, toK, true);
         long count = 0;
-        for(LocalDate d: localDates){
+        for(LocalDate d : localDates){
             count += this.elems.get(d).size();
         }
         return count;

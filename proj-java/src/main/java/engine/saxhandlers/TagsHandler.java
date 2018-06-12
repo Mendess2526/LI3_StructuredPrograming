@@ -23,6 +23,6 @@ public class TagsHandler extends DefaultHandler {
         if(!localName.equals("row")) return;
         long id = Long.parseLong(attributes.getValue("Id"));
         String tagName = attributes.getValue("TagName");
-        this.com.addTag(id,tagName);
+        this.com.addTag(id, tagName);
     }
 }

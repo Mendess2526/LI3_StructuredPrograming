@@ -2,16 +2,17 @@ package engine;
 
 
 import common.Pair;
-import engine.Comparators.AnswerScoreComparator;
-import engine.Comparators.QuestionAnswerCountComparator;
-import engine.Comparators.UserPostCountComparator;
-import engine.Comparators.UserReputationComparator;
+import engine.comparators.AnswerScoreComparator;
+import engine.comparators.QuestionAnswerCountComparator;
+import engine.comparators.UserPostCountComparator;
+import engine.comparators.UserReputationComparator;
 import li3.TADCommunity;
 
 import java.time.LocalDate;
 import java.util.*;
 
-import static java.util.Comparator.*;
+import static java.util.Comparator.comparing;
+import static java.util.Comparator.reverseOrder;
 
 public class TCD implements TADCommunity {
 
@@ -28,7 +29,7 @@ public class TCD implements TADCommunity {
         else
             ids = new ArrayList<>(N);
         int i = 0;
-        for(Iterator<? extends Post> it = posts.iterator(); i++ < N && it.hasNext();){
+        for(Iterator<? extends Post> it = posts.iterator(); i++ < N && it.hasNext(); ){
             ids.add(it.next().getId());
         }
         return ids;
@@ -40,7 +41,7 @@ public class TCD implements TADCommunity {
     }
 
     @Override
-    public Pair<String, String> infoFromPost(long id){
+    public Pair<String,String> infoFromPost(long id){
         Question question = this.com.getQuestion(id);
         if(question == null){
             Answer answer = this.com.getAnswer(id);
@@ -57,7 +58,7 @@ public class TCD implements TADCommunity {
 
     @Override
     public List<Long> topMostActive(int N){
-        List<User> users = this.com.getSortedUserList(new UserPostCountComparator().reversed(),N);
+        List<User> users = this.com.getSortedUserList(new UserPostCountComparator().reversed(), N);
         List<Long> ids = new ArrayList<>(N);
         for(int i = 0; i < N && i < users.size(); i++)
             ids.add(users.get(i).getId());
@@ -65,7 +66,7 @@ public class TCD implements TADCommunity {
     }
 
     @Override
-    public Pair<Long, Long> totalPosts(LocalDate begin, LocalDate end){
+    public Pair<Long,Long> totalPosts(LocalDate begin, LocalDate end){
         return new Pair<>(this.com.countQuestions(begin, end), this.com.countAnswers(begin, end));
     }
 
@@ -82,7 +83,7 @@ public class TCD implements TADCommunity {
         if(user == null) return null;
         String bio = user.getBio();
         List<Long> ids = new ArrayList<>(10);
-        for(Post p: user.getPosts()){
+        for(Post p : user.getPosts()){
             ids.add(p.getId());
             if(ids.size() == 10) break;
         }
@@ -117,7 +118,7 @@ public class TCD implements TADCommunity {
     public List<Long> bothParticipated(int N, long id1, long id2){
         User user1 = this.com.getUser(id1);
         User user2 = this.com.getUser(id2);
-        if(user1 == null|| user2 == null) return new ArrayList<>();
+        if(user1 == null || user2 == null) return new ArrayList<>();
         List<Post> posts;
         long searchId;
         if(user1.getNrPosts() < user2.getNrPosts()){
@@ -129,7 +130,7 @@ public class TCD implements TADCommunity {
         }
         List<Question> questions = new ArrayList<>(N);
         Set<Long> ids = new HashSet<>(N);
-        for(Post p:posts){
+        for(Post p : posts){
             Question q = p.searchUserInThread(searchId);
             if(q != null && !ids.contains(q.getId())){
                 questions.add(q);
@@ -145,7 +146,7 @@ public class TCD implements TADCommunity {
         if(question == null) return 0;
         double bestP = 0;
         long idBest = -1;
-        for(Answer a: question.getAnswers()){
+        for(Answer a : question.getAnswers()){
             int rep = this.com.getUser(a.getOwnerId()).getReputation();
             long idAnswer = a.getId();
             double testScore = (a.getScore() * 0.65) + (rep * 0.25) + (a.getCommentCount() * 0.1);
@@ -159,7 +160,7 @@ public class TCD implements TADCommunity {
 
     @Override
     public List<Long> mostUsedBestRep(int N, LocalDate begin, LocalDate end){
-        List<User> users = this.com.getSortedUserList(new UserReputationComparator().reversed(),N);
+        List<User> users = this.com.getSortedUserList(new UserReputationComparator().reversed(), N);
         Map<String,Long> counts = new HashMap<>();
         int i = 0;
         for(Iterator<User> iterator = users.iterator(); i++ < N && iterator.hasNext(); ){
@@ -169,7 +170,7 @@ public class TCD implements TADCommunity {
                     for(String s : ((Question) p).getTags())
                         if(s != null) counts.merge(s, 1L, Long::sum);
         }
-        Queue<Pair<String, Long>> top = new PriorityQueue<>(N, comparing(Pair::getSnd, reverseOrder()));
+        Queue<Pair<String,Long>> top = new PriorityQueue<>(N, comparing(Pair::getSnd, reverseOrder()));
         counts.forEach((key, value) -> top.add(new Pair<>(key, value)));
         N = N < top.size() ? N : top.size();
         List<Long> ids = new ArrayList<>(N);

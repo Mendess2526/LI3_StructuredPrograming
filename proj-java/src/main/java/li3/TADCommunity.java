@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface TADCommunity {
+
     void load(String dumpPath);
 
     // Query 1

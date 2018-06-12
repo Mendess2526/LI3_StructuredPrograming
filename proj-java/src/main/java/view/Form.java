@@ -1,6 +1,8 @@
 package view;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 
 /**
@@ -17,7 +19,8 @@ class Form implements Screen<List<String>> {
 
     /**
      * Cria um formulário.
-     * @param name O nome do formulário.
+     *
+     * @param name   O nome do formulário.
      * @param fields Os campos do formulário.
      */
     Form(String name, List<String> fields){

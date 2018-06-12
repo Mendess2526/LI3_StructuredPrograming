@@ -11,31 +11,36 @@ import static java.util.Arrays.asList;
 public class View {
 
     private static final String RESET = "\033[0m";
+    private Menu mainMenu;
+    private Menu pickQueryMenu;
 
     static String RED(String s){
         return "\033[31m" + s + RESET;
     }
+
     static String GREEN(String s){
         return "\033[32m" + s + RESET;
     }
+
     static String BLUE(String s){
         return "\033[34m" + s + RESET;
     }
+
     static String PURPLE(String s){
         return "\033[35m" + s + RESET;
     }
+
     static String YELLOW(String s){
         return "\033[33m" + s + RESET;
     }
+
     static String BOLD(String s){
         return "\033[1m" + s + RESET;
     }
+
     static String UNDERLINE(String s){
         return "\033[4m" + s + RESET;
     }
-
-    private Menu mainMenu;
-    private Menu pickQueryMenu;
 
     public int runMainMenu(){
         if(this.mainMenu == null) makeMainMenu();
@@ -84,7 +89,8 @@ public class View {
     }
 
     private void makeMainMenu(){
-        this.mainMenu = new Menu("Main", asList("Run all queries", "Pick one query (default parameters)", "Pick one query (pick parameters)"));
+        this.mainMenu = new Menu("Main", asList("Run all queries", "Pick one query (default parameters)",
+                                                "Pick one query (pick parameters)"));
     }
 
     private void makePickQueryMenu(){

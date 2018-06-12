@@ -5,9 +5,7 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-import static view.View.BOLD;
-import static view.View.RED;
-import static view.View.UNDERLINE;
+import static view.View.*;
 
 /**
  * Esta classe implementa um menu em modo texto.
@@ -23,6 +21,7 @@ public class Menu implements Screen<Integer> {
 
     /**
      * Cria um menu.
+     *
      * @param name    Nome do menu.
      * @param options Lista das opções que pode escolher.
      */
@@ -43,6 +42,14 @@ public class Menu implements Screen<Integer> {
         }
         while(this.op == -1);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Integer getResult(){
+        return this.op;
     }
 
     /**
@@ -75,6 +82,7 @@ public class Menu implements Screen<Integer> {
 
     /**
      * Lê a opção escolhida.
+     *
      * @return A opção escolhida.
      */
     private int readOption(){
@@ -92,13 +100,5 @@ public class Menu implements Screen<Integer> {
             op = -1;
         }
         return op;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Integer getResult(){
-        return this.op;
     }
 }

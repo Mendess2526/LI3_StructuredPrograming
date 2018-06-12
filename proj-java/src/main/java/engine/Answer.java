@@ -5,7 +5,8 @@ import java.time.LocalDateTime;
 /**
  * Classe que define uma resposta.
  */
-public class Answer extends Post{
+public class Answer extends Post {
+
     /** Número de comentários da resposta. */
     private final int commentCount;
     /** Id da questão ao qual foi dada a resposta. */
@@ -15,15 +16,17 @@ public class Answer extends Post{
 
     /**
      * Cria uma resposta.
-     * @param score O score da resposta.
+     *
+     * @param score        O score da resposta.
      * @param commentCount O número de comentários da resposta.
-     * @param id O id da resposta.
-     * @param parentId O id da questão à qual foi dada a resposta.
-     * @param ownerId O id do autor resposta.
-     * @param date A data da resposta.
-     * @param ownerName O nome do autor da resposta.
+     * @param id           O id da resposta.
+     * @param parentId     O id da questão à qual foi dada a resposta.
+     * @param ownerId      O id do autor resposta.
+     * @param date         A data da resposta.
+     * @param ownerName    O nome do autor da resposta.
      */
-    public Answer(int score, int commentCount, long id, long parentId, long ownerId, LocalDateTime date, String ownerName){
+    public Answer(int score, int commentCount, long id, long parentId, long ownerId, LocalDateTime date,
+                  String ownerName){
         super(score, id, ownerId, date, ownerName);
         this.commentCount = commentCount;
         this.parentId = parentId;
@@ -32,6 +35,7 @@ public class Answer extends Post{
 
     /**
      * Retorna o número de comentários da resposta.
+     *
      * @return O número de comentários da resposta.
      */
     public int getCommentCount(){
@@ -40,6 +44,7 @@ public class Answer extends Post{
 
     /**
      * Retorna o id do autor da resposta.
+     *
      * @return O id do autor da resposta.
      */
     public long getParentId(){
@@ -48,6 +53,7 @@ public class Answer extends Post{
 
     /**
      * Retorna a questão à qual foi dada a resposta.
+     *
      * @return A questão à qual foi dada a resposta.
      */
     public Question getParentPtr(){
@@ -56,12 +62,23 @@ public class Answer extends Post{
 
     /**
      * Muda a questão à qual foi dada a resposta.
+     *
      * @param question Uma questão.
      */
     void setParentPtr(Question question){
         this.parentPtr = question;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString(){
+        return "Answer{" +
+               "commentCount=" + commentCount
+               + ", parentId=" + parentId
+               + "} " + super.toString();
+    }
 
     /**
      * {@inheritDoc}
@@ -70,17 +87,5 @@ public class Answer extends Post{
     public Question searchUserInThread(long id){
         if(this.getOwnerId() == id) return this.parentPtr;
         return this.parentPtr.searchUserInThread(id);
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString(){
-        return "Answer{" +
-                "commentCount=" + commentCount
-                + ", parentId=" + parentId
-                + "} " + super.toString();
     }
 }

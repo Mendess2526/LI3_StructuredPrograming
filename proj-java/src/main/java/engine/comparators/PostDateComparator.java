@@ -1,4 +1,4 @@
-package engine.Comparators;
+package engine.comparators;
 
 import engine.Post;
 

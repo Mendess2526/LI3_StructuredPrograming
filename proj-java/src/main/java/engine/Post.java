@@ -22,10 +22,11 @@ public abstract class Post implements Chronological {
 
     /**
      * Cria um post.
-     * @param score O score do post.
-     * @param id O id do post.
-     * @param ownerId O id do autor do post.
-     * @param date A data do post.
+     *
+     * @param score     O score do post.
+     * @param id        O id do post.
+     * @param ownerId   O id do autor do post.
+     * @param date      A data do post.
      * @param ownerName O nome do autor do post.
      */
     Post(int score, long id, long ownerId, LocalDateTime date, String ownerName){
@@ -38,6 +39,7 @@ public abstract class Post implements Chronological {
 
     /**
      * Retorna o id do post.
+     *
      * @return O id do post.
      */
     public long getId(){
@@ -46,6 +48,7 @@ public abstract class Post implements Chronological {
 
     /**
      * Retorna a data do post.
+     *
      * @return A data do post.
      */
     public LocalDateTime getDate(){
@@ -54,6 +57,7 @@ public abstract class Post implements Chronological {
 
     /**
      * Retorna o score do post.
+     *
      * @return O id do post.
      */
     public int getScore(){
@@ -62,6 +66,7 @@ public abstract class Post implements Chronological {
 
     /**
      * Retorna o id do autor do post.
+     *
      * @return O id do autor do post.
      */
     public long getOwnerId(){
@@ -70,6 +75,7 @@ public abstract class Post implements Chronological {
 
     /**
      * Retorna o nome do autor do post.
+     *
      * @return O nome do autor do post.
      */
     public String getOwnerName(){
@@ -83,16 +89,17 @@ public abstract class Post implements Chronological {
     @Override
     public String toString(){
         return "Post{" +
-                "id=" + id +
-                ", date=" + date +
-                ", score=" + score +
-                ", ownerId=" + ownerId +
-                ", ownerName='" + ownerName + '\'' +
-                '}';
+               "id=" + id +
+               ", date=" + date +
+               ", score=" + score +
+               ", ownerId=" + ownerId +
+               ", ownerName='" + ownerName + '\'' +
+               '}';
     }
 
     /**
      * Procura se um user é o autor de algum post na thread.
+     *
      * @param id O user à procura.
      * @return A questão da thread seja autor de algum post, null caso contrário.
      */
@@ -100,8 +107,9 @@ public abstract class Post implements Chronological {
 
     /**
      * Verifica se o post está dentro de um intervalo de tempo.
+     *
      * @param from A data de início.
-     * @param to A data do fim.
+     * @param to   A data do fim.
      * @return {@code true} se estiver no intervalo de tempo, {@code false} caso contrário.
      */
     public boolean isBetweenDates(LocalDate from, LocalDate to){

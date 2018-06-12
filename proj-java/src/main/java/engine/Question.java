@@ -8,7 +8,8 @@ import java.util.*;
 /**
  * Classe que define uma questão.
  */
-public class Question extends Post{
+public class Question extends Post {
+
     /** Número de respostas da questão. */
     private final int answerCount;
     /** Título da questão. */
@@ -26,16 +27,18 @@ public class Question extends Post{
 
     /**
      * Cria uma questão.
-     * @param id O id da questão.
-     * @param date A data da questão.
-     * @param score O score da questão.
-     * @param ownerId O id do autor da questão.
+     *
+     * @param id          O id da questão.
+     * @param date        A data da questão.
+     * @param score       O score da questão.
+     * @param ownerId     O id do autor da questão.
      * @param answerCount O número de respostas da questão.
-     * @param ownerName O nome do autor da questão.
-     * @param title O título da questão.
-     * @param tags As tags da questão.
+     * @param ownerName   O nome do autor da questão.
+     * @param title       O título da questão.
+     * @param tags        As tags da questão.
      */
-    public Question(long id, LocalDateTime date, int score, long ownerId, int answerCount, String ownerName, String title, String tags){
+    public Question(long id, LocalDateTime date, int score, long ownerId, int answerCount, String ownerName,
+                    String title, String tags){
         super(score, id, ownerId, date, ownerName);
         this.answerCount = answerCount;
         this.title = title;
@@ -45,6 +48,7 @@ public class Question extends Post{
 
     /**
      * Retorna o número de respostas da questão.
+     *
      * @return O número de respostas da questão.
      */
     public int getAnswerCount(){
@@ -53,6 +57,7 @@ public class Question extends Post{
 
     /**
      * Retorna o título da questão.
+     *
      * @return O título da questão.
      */
     public String getTitle(){
@@ -61,13 +66,14 @@ public class Question extends Post{
 
     /**
      * Retorna as tags da questão.
+     *
      * @return As tags da questão.
      */
     public String[] getTags(){
         String[] tags = new String[5];
         StringTokenizer st = new StringTokenizer(this.tags.substring(1), "><");
         int i = 0;
-        while (st.hasMoreTokens()){
+        while(st.hasMoreTokens()){
             String s = st.nextToken();
             tags[i++] = s;
         }
@@ -76,6 +82,7 @@ public class Question extends Post{
 
     /**
      * Retorna a lista de respostas da questão.
+     *
      * @return A lista de respostas da questão.
      */
     public List<Answer> getAnswers(){
@@ -84,6 +91,7 @@ public class Question extends Post{
 
     /**
      * Adiciona uma resposta à lista de respostas.
+     *
      * @param answer A resposta a adicionar.
      */
     void addAnswer(Answer answer){
@@ -93,6 +101,7 @@ public class Question extends Post{
 
     /**
      * Verifica se uma questão tem uma tag.
+     *
      * @param tag Uma tag.
      * @return {@code true} se a questão tem a tag, {@code false} caso contrário.
      */
@@ -101,19 +110,10 @@ public class Question extends Post{
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Question searchUserInThread(long id){
-        if(this.getOwnerId() == id) return this;
-        for(Answer a: this.answers) if(a.getOwnerId() == id) return this;
-        return null;
-    }
-
-    /**
      * Retorna o número de respostas dentro de um intervalo de tempo.
+     *
      * @param from A data de início.
-     * @param to A data do fim.
+     * @param to   A data do fim.
      * @return O número de respostas dentro de um intervalo de tempo.
      */
     public int getAnswerCountBetweenDate(LocalDate from, LocalDate to){
@@ -122,7 +122,7 @@ public class Question extends Post{
         this.cachedFrom = from;
         this.cachedTo = to;
         int count = 0;
-        for(Answer a: this.answers){
+        for(Answer a : this.answers){
             if(a.getDate().isAfter(from.atStartOfDay())
                && a.getDate().isBefore(to.atTime(LocalTime.MAX)))
                 count++;
@@ -136,11 +136,21 @@ public class Question extends Post{
     @Override
     public String toString(){
         return "Question{" +
-                "answerCount=" + answerCount +
-                ", title='" + title + '\'' +
-                ", tags='" + tags + '\'' +
-                ", answers=" + answers +
-                '}';
+               "answerCount=" + answerCount +
+               ", title='" + title + '\'' +
+               ", tags='" + tags + '\'' +
+               ", answers=" + answers +
+               '}';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Question searchUserInThread(long id){
+        if(this.getOwnerId() == id) return this;
+        for(Answer a : this.answers) if(a.getOwnerId() == id) return this;
+        return null;
     }
 
     /**
@@ -148,13 +158,13 @@ public class Question extends Post{
      */
     @Override
     public boolean equals(Object o){
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
         Question question = (Question) o;
         return answerCount == question.answerCount &&
-                Objects.equals(title, question.title) &&
-                Objects.equals(tags, question.tags) &&
-                Objects.equals(answers, question.answers);
+               Objects.equals(title, question.title) &&
+               Objects.equals(tags, question.tags) &&
+               Objects.equals(answers, question.answers);
     }
 
 }
