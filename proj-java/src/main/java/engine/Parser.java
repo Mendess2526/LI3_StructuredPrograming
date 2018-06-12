@@ -12,8 +12,20 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Classe encarregue de fazer parse dos ficheiros xml.
+ */
 class Parser {
 
+    private Parser(){
+    }
+
+    /**
+     * Realiza o parse dos ficheiros xml que se encontram no {@code path}
+     *
+     * @param com  Instância de {@link Community} onde serão guardados os resultados
+     * @param path O caminho para os executáveis.
+     */
     static void parse(Community com, String path){
         SAXParserFactory spf = SAXParserFactory.newInstance();
         spf.setNamespaceAware(true);
@@ -31,6 +43,11 @@ class Parser {
         }
     }
 
+    /**
+     * Converte o caminho para um {@code FileUrl}.
+     * @param filename O caminho para o ficheiro.
+     * @return A string convertida.
+     */
     private static String convertToFileURL(String filename){
         String path = new File(filename).getAbsolutePath();
         if(File.separatorChar != '/'){

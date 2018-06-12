@@ -7,8 +7,14 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class TagsHandler extends DefaultHandler {
 
+    /** Instância onde guardar as tags parsed. */
     private final Community com;
 
+    /**
+     * Cria o handler de tags.
+     *
+     * @param com Instância onde guardar as tags parsed.
+     */
     public TagsHandler(Community com){
         super();
         this.com = com;

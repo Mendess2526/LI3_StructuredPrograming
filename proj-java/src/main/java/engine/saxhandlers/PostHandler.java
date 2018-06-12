@@ -11,8 +11,14 @@ import java.time.LocalDateTime;
 
 public class PostHandler extends DefaultHandler {
 
+    /** Instância onde guardar as tags parsed. */
     private final Community com;
 
+    /**
+     * Cria o handler de posts.
+     *
+     * @param com Instância onde guardar os posts parsed.
+     */
     public PostHandler(Community com){
         super();
         this.com = com;
@@ -52,15 +58,26 @@ public class PostHandler extends DefaultHandler {
         }
     }
 
+    /**
+     * Converte uma string para o tipo de post correspondente.
+     * @param s String para converter.
+     * @return O tipo de post.
+     */
     private PostType postTypeFromString(String s){
         if("1".equals(s)) return PostType.QUESTION;
         if("2".equals(s)) return PostType.ANSWER;
         return PostType.NEITHER;
     }
 
+    /**
+     * Define os tipos de post
+     */
     private enum PostType {
+        /** Questão */
         QUESTION,
+        /** Resposta */
         ANSWER,
+        /** Nenhum dos anteriores */
         NEITHER
     }
 }

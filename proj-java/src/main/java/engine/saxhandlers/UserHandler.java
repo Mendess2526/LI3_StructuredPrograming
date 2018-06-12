@@ -8,13 +8,18 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class UserHandler extends DefaultHandler {
 
+    /** Instância onde guardar os users parsed. */
     private final Community com;
 
+    /**
+     * Cria o handler de users.
+     *
+     * @param com Instância onde guardar os users parsed.
+     */
     public UserHandler(Community com){
         super();
         this.com = com;
     }
-
 
     /**
      * {@inheritDoc}

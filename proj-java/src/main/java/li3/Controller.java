@@ -70,7 +70,6 @@ public class Controller {
         while(keepGoing){
             int i = this.view.runPickQueryMenu();
             if(i != 0){
-                loadIfNeeded();
                 switch(i){
                     case 1:
                         queryHandler(i, runQuery1());
@@ -118,9 +117,8 @@ public class Controller {
         while(keepGoing){
             int i = this.view.runPickQueryMenu();
             List<String> results;
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             if(i != 0){
-                loadIfNeeded();
                 try{
                     switch(i){
                         case 1:
@@ -132,13 +130,13 @@ public class Controller {
                             queryHandler(i, runQuery2(Integer.parseInt(results.get(0))));
                             break;
                         case 3:
-                            results = this.view.runForm(asList("Begin date (dd-mm-yyyy): ", "End date (dd-mm-yyyy): "));
+                            results = this.view.runForm(asList("Begin date (yyyy-MM-dd): ", "End date (yyyy-MM-dd): "));
                             queryHandler(i, runQuery3(LocalDate.parse(results.get(0), formatter),
                                                       LocalDate.parse(results.get(1), formatter)));
                             break;
                         case 4:
                             results = this.view.runForm(
-                                    asList("Tag: ", "Begin date (dd-mm-yyyy): ", "End date (dd-mm-yyyy)"));
+                                    asList("Tag: ", "Begin date (yyyy-MM-dd): ", "End date (yyyy-MM-dd)"));
                             queryHandler(i, runQuery4(results.get(0), LocalDate.parse(results.get(1), formatter),
                                                       LocalDate.parse(results.get(2), formatter)));
                             break;
@@ -148,14 +146,14 @@ public class Controller {
                             break;
                         case 6:
                             results = this.view.runForm(
-                                    asList("N: ", "Begin date (dd-mm-yyyy): ", "End date (dd-mm-yyyy)"));
+                                    asList("N: ", "Begin date (yyyy-MM-dd): ", "End date (yyyy-MM-dd)"));
                             queryHandler(i, runQuery6(Integer.parseInt(results.get(0)),
                                                       LocalDate.parse(results.get(1), formatter),
                                                       LocalDate.parse(results.get(2), formatter)));
                             break;
                         case 7:
                             results = this.view.runForm(
-                                    asList("N: ", "Begin date (dd-mm-yyyy): ", "End date (dd-mm-yyyy)"));
+                                    asList("N: ", "Begin date (yyyy-MM-dd): ", "End date (yyyy-MM-dd)"));
                             queryHandler(i, runQuery7(Integer.parseInt(results.get(0)),
                                                       LocalDate.parse(results.get(1), formatter),
                                                       LocalDate.parse(results.get(2), formatter)));
@@ -175,7 +173,7 @@ public class Controller {
                             break;
                         case 11:
                             results = this.view.runForm(
-                                    asList("N: ", "Begin date (dd-mm-yyyy): ", "End date (dd-mm-yyyy)"));
+                                    asList("N: ", "Begin date (yyyy-MM-dd): ", "End date (yyyy-MM-dd)"));
                             queryHandler(i, runQuery11(Integer.parseInt(results.get(0)),
                                                        LocalDate.parse(results.get(1), formatter),
                                                        LocalDate.parse(results.get(2), formatter)));
@@ -232,6 +230,7 @@ public class Controller {
     }
 
     private InputOutputTime<Long,Long,Pair<String,String>> runQuery1(long id){
+        loadIfNeeded();
         long before = System.currentTimeMillis();
         Pair<String,String> r = this.com.infoFromPost(id);
         long after = System.currentTimeMillis();
@@ -243,6 +242,7 @@ public class Controller {
     }
 
     private InputOutputTime<Long,Integer,List<Long>> runQuery2(int n){
+        loadIfNeeded();
         long before = System.currentTimeMillis();
         List<Long> r = this.com.topMostActive(n);
         long after = System.currentTimeMillis();
@@ -254,6 +254,7 @@ public class Controller {
     }
 
     private InputOutputTime<Long,LocalDate,Pair<Long,Long>> runQuery3(LocalDate begin, LocalDate end){
+        loadIfNeeded();
         long before = System.currentTimeMillis();
         Pair<Long,Long> r = this.com.totalPosts(begin, end);
         long after = System.currentTimeMillis();
@@ -265,6 +266,7 @@ public class Controller {
     }
 
     private InputOutputTime<Long,Object,List<Long>> runQuery4(String tag, LocalDate begin, LocalDate end){
+        loadIfNeeded();
         long before = System.currentTimeMillis();
         List<Long> r = this.com.questionsWithTag(tag, begin, end);
         long after = System.currentTimeMillis();
@@ -276,6 +278,7 @@ public class Controller {
     }
 
     private InputOutputTime<Long,Long,Pair<String,List<Long>>> runQuery5(long id){
+        loadIfNeeded();
         long before = System.currentTimeMillis();
         Pair<String,List<Long>> r = this.com.getUserInfo(id);
         long after = System.currentTimeMillis();
@@ -288,6 +291,7 @@ public class Controller {
     }
 
     private InputOutputTime<Long,Object,List<Long>> runQuery6(int n, LocalDate begin, LocalDate end){
+        loadIfNeeded();
         long before = System.currentTimeMillis();
         List<Long> r = this.com.mostVotedAnswers(n, begin, end);
         long after = System.currentTimeMillis();
@@ -296,10 +300,10 @@ public class Controller {
 
     private InputOutputTime<Long,Object,List<Long>> runQuery7(){
         return runQuery7(10, LocalDate.of(2014, Month.AUGUST, 1), LocalDate.of(2014, Month.AUGUST, 10));
-        //return runQuery7(10, LocalDate.MIN, LocalDate.MAX);
     }
 
     private InputOutputTime<Long,Object,List<Long>> runQuery7(int n, LocalDate begin, LocalDate end){
+        loadIfNeeded();
         long before = System.currentTimeMillis();
         List<Long> r = this.com.mostAnsweredQuestions(n, begin, end);
         long after = System.currentTimeMillis();
@@ -311,6 +315,7 @@ public class Controller {
     }
 
     private InputOutputTime<Long,Object,List<Long>> runQuery8(int n, String word){
+        loadIfNeeded();
         long before = System.currentTimeMillis();
         List<Long> r = this.com.containsWord(n, word);
         long after = System.currentTimeMillis();
@@ -322,6 +327,7 @@ public class Controller {
     }
 
     private InputOutputTime<Long,Long,List<Long>> runQuery9(int n, long id1, long id2){
+        loadIfNeeded();
         long before = System.currentTimeMillis();
         List<Long> r = this.com.bothParticipated(n, id1, id2);
         long after = System.currentTimeMillis();
@@ -333,6 +339,7 @@ public class Controller {
     }
 
     private InputOutputTime<Long,Long,Long> runQuery10(long id){
+        loadIfNeeded();
         long before = System.currentTimeMillis();
         long r = this.com.betterAnswer(id);
         long after = System.currentTimeMillis();
@@ -344,6 +351,7 @@ public class Controller {
     }
 
     private InputOutputTime<Long,Object,List<Long>> runQuery11(int n, LocalDate begin, LocalDate end){
+        loadIfNeeded();
         long before = System.currentTimeMillis();
         List<Long> r = this.com.mostUsedBestRep(n, begin, end).stream().sorted().collect(Collectors.toList());
         long after = System.currentTimeMillis();

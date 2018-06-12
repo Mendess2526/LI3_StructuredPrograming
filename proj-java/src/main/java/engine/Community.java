@@ -192,16 +192,16 @@ public class Community {
      *
      * @param from               A data de início.
      * @param to                 A data do fim.
-     * @param questionComparator Um comparador de questões.
+     * @param qComparator Um comparador de questões.
      * @param N                  O tamanho da lista.
      * @return Uma lista ordenada de questões.
      */
-    public List<Question> getSortedQuestionList(LocalDate from, LocalDate to, Comparator<Question> questionComparator,
-                                                int N){
-        SortedQuestions sortedQuestions = new SortedQuestions(questionComparator, N);
+    public List<Question> getSortedQuestionList(LocalDate from, LocalDate to, Comparator<Question> qComparator, int N){
+        SortedQuestions sortedQuestions = new SortedQuestions(qComparator, N);
         this.calendarioQuestions.iterate(from, to, sortedQuestions);
         List<Question> list = new ArrayList<>();
-        for(int i = 0; i < N; i++) list.add(sortedQuestions.list.remove());
+        for(int i = 0; i < N && !sortedQuestions.list.isEmpty(); i++)
+            list.add(sortedQuestions.list.poll());
         return list;
     }
 
@@ -210,15 +210,16 @@ public class Community {
      *
      * @param from             A data de início.
      * @param to               A data do fim.
-     * @param answerComparator Um comparador de respostas.
+     * @param aComparator Um comparador de respostas.
      * @param N                O tamanho da lista.
      * @return Uma lista ordenada de respostas.
      */
-    public List<Answer> getSortedAnswerList(LocalDate from, LocalDate to, Comparator<Answer> answerComparator, int N){
-        SortedAnswers sortedAnswers = new SortedAnswers(answerComparator, N);
+    public List<Answer> getSortedAnswerList(LocalDate from, LocalDate to, Comparator<Answer> aComparator, int N){
+        SortedAnswers sortedAnswers = new SortedAnswers(aComparator, N);
         this.calendarioAnswers.iterate(from, to, sortedAnswers);
         List<Answer> list = new ArrayList<>();
-        for(int i = 0; i < N; i++) list.add(sortedAnswers.list.remove());
+        for(int i = 0; i < N && !sortedAnswers.list.isEmpty(); i++)
+            list.add(sortedAnswers.list.poll());
         return list;
     }
 
@@ -270,7 +271,6 @@ public class Community {
             this.list = new PriorityQueue<>(max, comparator);
         }
 
-
         /**
          * {@inheritDoc}
          */
@@ -292,7 +292,6 @@ public class Community {
         private SortedAnswers(Comparator<Answer> comparator, int max){
             this.list = new PriorityQueue<>(max, comparator);
         }
-
 
         /**
          * {@inheritDoc}
